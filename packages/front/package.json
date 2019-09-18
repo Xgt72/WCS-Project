@@ -9,10 +9,17 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "precommit": "lint-staged",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "npx eslint --fix src/**/*.js*"
+  },
+  "lint-staged": {
+    "src/**/*.js*": [
+      "yarn lint",
+      "git add"
+    ]
   },
   "eslintConfig": {
     "env": {
@@ -56,6 +63,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "lint-staged": "^9.2.5",
     "typescript": "^3.6.3"
   }
 }
