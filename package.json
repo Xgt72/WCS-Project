@@ -1,0 +1,11 @@
+{
+  "name": "WCS-Project",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/Xgt72/WCS-Project.git",
+  "author": "Xgt72 <xavier.georget@wildcodeschool.fr>",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.16.4"
+  }
+}
