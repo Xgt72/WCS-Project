@@ -16,6 +16,11 @@
       "git add"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx lerna run --concurrency 1 --stream precommit"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
