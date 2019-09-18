@@ -9,9 +9,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn test",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "npx eslint --fix src/**/*.js*"
   },
@@ -27,7 +27,9 @@
       "es6": true,
       "jest": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+      "airbnb"
+    ],
     "globals": {
       "Atomics": "readonly",
       "SharedArrayBuffer": "readonly"

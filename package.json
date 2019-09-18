@@ -6,6 +6,7 @@
   "author": "Xgt72 <xavier.georget@wildcodeschool.fr>",
   "license": "MIT",
   "devDependencies": {
+    "cross-env": "^6.0.0",
     "husky": "^3.0.5",
     "lerna": "^3.16.4"
   },
