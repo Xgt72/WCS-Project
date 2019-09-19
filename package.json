@@ -14,5 +14,9 @@
     "hooks": {
       "pre-commit": "npx lerna run --concurrency 1 --stream precommit"
     }
+  },
+  "scripts": {
+    "lint": "lerna run lint --stream",
+    "start": "lerna run start --stream"
   }
 }
