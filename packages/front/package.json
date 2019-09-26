@@ -5,11 +5,13 @@
   "dependencies": {
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
+    "react-scripts": "3.1.1",
+    "three": "^0.108.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "precommit": "lint-staged && yarn test",
+    "lolcommit": "lint-staged",
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
@@ -45,7 +47,11 @@
     "plugins": [
       "react"
     ],
-    "rules": {}
+    "rules": {
+      "class-methods-use-this": 0,
+      "no-plusplus": 0,
+      "no-new": 0
+    }
   },
   "browserslist": {
     "production": [
@@ -60,6 +66,7 @@
     ]
   },
   "devDependencies": {
+    "canvas": "^2.6.0",
     "eslint": "^6.2.2",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
