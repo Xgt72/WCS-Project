@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Header from './components/Header';
 
 function App() {
   const [foo, setFoo] = useState('N/A');
@@ -22,6 +23,7 @@ function App() {
         {' '}
         {foo}
       </p>
+      <Header />
     </div>
   );
 }
