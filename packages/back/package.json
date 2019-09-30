@@ -2,12 +2,12 @@
   "name": "back",
   "version": "0.0.1",
   "description": "",
-  "main": "build/index.js",
+  "main": "build/app.js",
   "scripts": {
     "lint": "npx eslint --fix *.js src test *.js",
     "precommit": "lint-staged && yarn test",
     "build": "npx babel src -d build",
-    "start": "nodemon --exec ./node_modules/@babel/node/bin/babel-node.js src/index",
+    "start": "tsc && nodemon ./dist/app.js",
     "test": "jest"
   },
   "lint-staged": {
@@ -21,13 +21,19 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mysql": "^2.17.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.19"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.0",
     "@babel/core": "^7.6.0",
     "@babel/node": "^7.6.1",
     "@babel/preset-env": "^7.6.0",
+    "@types/body-parser": "^1.17.1",
+    "@types/express": "^4.17.1",
+    "@types/node": "^12.7.8",
     "eslint": "6.2.2",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
