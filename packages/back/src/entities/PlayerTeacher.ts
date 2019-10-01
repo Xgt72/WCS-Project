@@ -13,4 +13,10 @@ export class PlayerTeacher {
 
     @Column()
     price: number;
+
+    constructor(player_id: number, name: string, price: number) {
+        this.player_id = player_id;
+        this.name = name;
+        this.price = price;
+    }
 }
