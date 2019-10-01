@@ -1,0 +1,16 @@
+{
+   "type": "mysql",
+   "host": "localhost",
+   "port": 3306,
+   "username": "root",
+   "password": "Xgt72@web-dev!",
+   "database": "wcs_game",
+   "synchronize": true,
+   "logging": false,
+   "entities": [
+      "dist/entities/*.js"
+   ],
+   "cli": {
+      "entitiesDir": "dist/entities"
+   }
+}
