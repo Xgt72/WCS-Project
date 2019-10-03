@@ -11,6 +11,6 @@
       "dist/entities/*.js"
    ],
    "cli": {
-      "entitiesDir": "dist/entities"
+      "entitiesDir": ["dist/entities"]
    }
 }

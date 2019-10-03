@@ -1,16 +1,20 @@
+import "reflect-metadata";
 import express from "express";
 import * as bodyParser from "body-parser";
-import { createConnection } from "typeorm";
+
 
 /**
  * Controllers (route handlers).
  */
 import * as studentController from "./controllers/StudentController";
+import * as indicatorController from "./controllers/IndicatorController";
+import { getSingletonConnection } from "./connection";
 
 /**
  * Create Express server.
  */
-const app = express();
+
+export const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -19,31 +23,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
  */
 app.set("port", process.env.PORT || 5000);
 
-/**
- * Start Express server.
- */
-app.listen(app.get("port"), (err: any) => {
-    if(err) {
-        console.error(`ERROR: ${err.message}`);
-    } else {
-        console.log(`Listening on port ${app.get("port")}`);
-    }
-});
+
+
 
 /**
  * Primary app routes.
  */
-app.get("/getAllStudents", studentController.getAllStudents);
-app.post("/saveStudent", studentController.saveStudent);
-app.delete("/deleteStudent", studentController.deleteStudent);
+// app.get("/getAllStudents", studentController.getAllStudents);
+// app.post("/saveStudent", studentController.saveStudent);
+// app.delete("/deleteStudent", studentController.deleteStudent);
+app.get("/getAllIndicators", indicatorController.getAllIndicators);
+app.get("/getIndicatorsByPlayerId", indicatorController.getIndicatorsByPlayerId);
+app.get("/getIndicatorById", indicatorController.getIndicatorById);
+app.post("/saveIndicator", indicatorController.saveIndicator);
+app.delete("/deleteIndicator", indicatorController.deleteIndicator);
+app.post("/updateIndicator", indicatorController.updateIndicator);
+
 
 
 /**
- * Create connection to DB using configuration provided in app-config file.
+ * Start Express server.
  */
-createConnection().then(async connection => {
-    console.log("Connected to DB");
+export const server = app.listen(app.get("port"), (err: any) => {
+    if (err) {
+        console.error(`ERROR: ${err.message}`);
+    }
+    
+    console.log(`Listening on port ${app.get("port")}`);
+    getSingletonConnection();
 
-}).catch(error => console.log("TypeORM connection error: ", error));
-
-module.exports = app;
+});
