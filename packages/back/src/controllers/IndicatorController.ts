@@ -9,7 +9,7 @@ export let getAllIndicators = async (req: Request, res: Response) => {
         res.send(indicators);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -19,7 +19,7 @@ export let getIndicatorsByPlayerId = async (req: Request, res: Response) => {
         res.send(indicators);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -29,7 +29,7 @@ export let getIndicatorById = async (req: Request, res: Response) => {
         res.send(indicator);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -40,7 +40,7 @@ export let saveIndicator = async (req: Request, res: Response) => {
         res.send(result);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -51,7 +51,7 @@ export let deleteIndicator = async (req: Request, res: Response) => {
         res.send(result);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -71,6 +71,6 @@ export let updateIndicator = async (req: Request, res: Response) => {
         res.send(result);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
