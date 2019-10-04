@@ -25,7 +25,7 @@ export let getMutatorsById = async (req: Request, res: Response) => {
 
 export let saveMutator = async (req: Request, res: Response) => {
     try {
-        let mutator = new Mutator(req.body.name, req.body.player_id, req.body.value);
+        let mutator = new Mutator(req.body.name, req.body.indicator_id, req.body.value);
         let result = await mutatorRepo.saveMutator(mutator);
         res.send(result);
     }
@@ -36,8 +36,8 @@ export let saveMutator = async (req: Request, res: Response) => {
 
 export let deleteMutator = async (req: Request, res: Response) => {
     try {
-        let indicator = await mutatorRepo.getMutatorById(req.body.id);
-        let result = await mutatorRepo.deleteMutator(indicator);
+        let mutator = await mutatorRepo.getMutatorById(req.body.id);
+        let result = await mutatorRepo.deleteMutator(mutator);
         res.send(result);
     }
     catch(e) {
