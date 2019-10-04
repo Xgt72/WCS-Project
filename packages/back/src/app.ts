@@ -6,9 +6,11 @@ import * as bodyParser from "body-parser";
 /**
  * Controllers (route handlers).
  */
-import * as studentController from "./controllers/StudentController";
-import * as indicatorController from "./controllers/IndicatorController";
 import { getSingletonConnection } from "./connection";
+import * as indicatorController from "./controllers/IndicatorController";
+import * as mutatorController from "./controllers/MutatorController";
+import * as playerBuildingsController from "./controllers/PlayerBuildingsController";
+import * as playerTeacherController from "./controllers/PlayerTeacherController";
 
 /**
  * Create Express server.
@@ -23,9 +25,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
  */
 app.set("port", process.env.PORT || 5000);
 
-
-
-
 /**
  * Indicator routes.
  */
@@ -33,10 +32,37 @@ app.get("/getAllIndicators", indicatorController.getAllIndicators);
 app.get("/getIndicatorsByPlayerId", indicatorController.getIndicatorsByPlayerId);
 app.get("/getIndicatorById", indicatorController.getIndicatorById);
 app.post("/saveIndicator", indicatorController.saveIndicator);
-app.delete("/deleteIndicator", indicatorController.deleteIndicator);
 app.post("/updateIndicator", indicatorController.updateIndicator);
+app.delete("/deleteIndicator", indicatorController.deleteIndicator);
 
+/**
+ * Mutator routes.
+ */
+app.get("/getAllMutators", mutatorController.getAllMutators);
+app.get("/getMutatorsById", mutatorController.getMutatorsById);
+app.post("/saveMutator", mutatorController.saveMutator);
+app.post("/updateMutator", mutatorController.updateMutator);
+app.delete("/deleteMutator", mutatorController.deleteMutator);
 
+/**
+ * PlayerBuildings routes.
+ */
+app.get("/getAllPlayersBuildings", playerBuildingsController.getAllPlayersBuildings);
+app.get("/getOnePlayerBuildings"), playerBuildingsController.getOnePlayerBuildings;
+app.get("/getPlayerBuildingById", playerBuildingsController.getPlayerBuildingById);
+app.post("/savePlayerBuilding", playerBuildingsController.savePlayerBuilding);
+app.post("/updatePlayerBuilding", playerBuildingsController.updatePlayerBuilding);
+app.delete("/deletePlayerBuilding", playerBuildingsController.deletePlayerBuilding);
+
+/**
+ * PlayerTeacher routes.
+ */
+app.get("/getAllPlayersTeachers", playerTeacherController.getAllPlayersTeachers);
+app.get("/getOnePlayerTeachers", playerTeacherController.getOnePlayerTeachers);
+app.get("/getPlayerTeacherById", playerTeacherController.getPlayerTeacherById);
+app.post("/savePlayerTeacher", playerTeacherController.savePlayerTeacher);
+app.post("/updatePlayerTeacher", playerTeacherController.updatePlayerTeacher);
+app.delete("/deletePlayerTeacher", playerTeacherController.deletePlayerTeacher);
 
 /**
  * Start Express server.
