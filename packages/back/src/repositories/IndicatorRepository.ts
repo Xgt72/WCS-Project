@@ -7,7 +7,7 @@ export class IndicatorRepository {
     }
 
     getAllIndicatorsByPlayerId(playerId: number) {
-        return getManager().getRepository(Indicator).createQueryBuilder("indicator").where("indicator.player_id = :id", {id: playerId});
+        return getManager().getRepository(Indicator).createQueryBuilder("indicator").where("indicator.player_id = :id", {id: playerId}).getMany();
     }
 
     saveIndicator(indicator: Indicator) {

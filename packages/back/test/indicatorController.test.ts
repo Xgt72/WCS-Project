@@ -9,21 +9,21 @@ let connection:Connection = null;
 
 describe('Indicator', () => {
 
+    beforeAll(async (done) => {
+        connection = await getSingletonConnection("test");
+        done();
+    });
+
     afterAll( async(done) => {
         connection.close();
         server.close();
-        done();
-    })
-
-    beforeAll(async (done) => {
-        connection = await getSingletonConnection("test");
         done();
     });
 
     test(
         "should save one indicator",
         async (done) => {
-            const ind =  new Indicator("wilder", 4, 1000)
+            const ind =  new Indicator("wilder", 4, 1000);
             const response = await post("/saveIndicator",ind);
             expect(response.status).toBe(200);
             expect(response.body.name).toEqual(ind.name);
@@ -43,9 +43,51 @@ describe('Indicator', () => {
         }
     );
 
+    test(
+        "should return indicator by ID",
+        async (done) => {
+            let ind =  new Indicator("wilder", 4, 1000);
+            let response = await post("/saveIndicator",ind);
+            ind = response.body;
+            response = await get("/getIndicatorById", {id: ind.id});
+            expect(response.status).toEqual(200);
+            expect(response.body).toEqual(ind);
+            done();
+        }
+    );
 
+    test(
+        "should return player indicators by player ID",
+        async (done) => {
+            let ind =  new Indicator("wilder", 5, 1000);
+            let response = await post("/saveIndicator",ind);
+            ind = response.body;
+            response = await get("/getIndicatorsByPlayerId", {player_id: ind.player_id});
+            expect(response.status).toEqual(200);
+            expect(parseInt(response.body.length)).toBeGreaterThan(0);
+            done();
+        }
+    );
 
+    test(
+        "should delete one indicator",
+        async (done) => {
+            let response = await deleteIndicator("/deleteIndicator", {id: 2});
+            expect(response.status).toEqual(200);
+            done();
+        }
+    );
 
+    test(
+        "should update one indicator",
+        async (done) => {
+            const ind = new Indicator("wilderTest", 3, 1000);
+            let response = await post("/updateIndicator", {id: 1, ...ind});
+            expect(response.status).toEqual(200);
+            expect(response.body).toEqual({id: 1, ...ind});
+            done();
+        }
+    );
 });
 
 export function get(url: string, body: any) {
@@ -58,6 +100,14 @@ export function get(url: string, body: any) {
 
 export function post(url: string, body: any) {
     const httpRequest = request(app).post(url);
+    httpRequest.send(body);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function deleteIndicator(url: string, body: any) {
+    const httpRequest = request(app).delete(url);
     httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
