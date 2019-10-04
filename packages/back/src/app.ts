@@ -27,11 +27,8 @@ app.set("port", process.env.PORT || 5000);
 
 
 /**
- * Primary app routes.
+ * Indicator routes.
  */
-// app.get("/getAllStudents", studentController.getAllStudents);
-// app.post("/saveStudent", studentController.saveStudent);
-// app.delete("/deleteStudent", studentController.deleteStudent);
 app.get("/getAllIndicators", indicatorController.getAllIndicators);
 app.get("/getIndicatorsByPlayerId", indicatorController.getIndicatorsByPlayerId);
 app.get("/getIndicatorById", indicatorController.getIndicatorById);
