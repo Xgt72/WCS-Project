@@ -3,8 +3,8 @@ import request from 'supertest';
 import { Indicator } from "../src/entities/Indicator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import {app, server} from "../src/app";
-let connection:Connection = null;
+import { app, server } from "../src/app";
+let connection: Connection = null;
 
 
 describe('Indicator', () => {
@@ -14,7 +14,7 @@ describe('Indicator', () => {
         done();
     });
 
-    afterAll( async(done) => {
+    afterAll(async (done) => {
         connection.close();
         server.close();
         done();
@@ -23,8 +23,8 @@ describe('Indicator', () => {
     test(
         "should save one indicator",
         async (done) => {
-            const ind =  new Indicator("wilder", 4, 1000);
-            const response = await post("/saveIndicator",ind);
+            const ind = new Indicator("wilder", 4, 1000);
+            const response = await post("/saveIndicator", ind);
             expect(response.status).toBe(200);
             expect(response.body.name).toEqual(ind.name);
             expect(response.body.player_id).toEqual(ind.player_id);
@@ -46,10 +46,10 @@ describe('Indicator', () => {
     test(
         "should return indicator by ID",
         async (done) => {
-            let ind =  new Indicator("wilder", 4, 1000);
-            let response = await post("/saveIndicator",ind);
+            let ind = new Indicator("wilder", 4, 1000);
+            let response = await post("/saveIndicator", ind);
             ind = response.body;
-            response = await get("/getIndicatorById", {id: ind.id});
+            response = await get("/getIndicatorById", { id: ind.id });
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(ind);
             done();
@@ -59,21 +59,12 @@ describe('Indicator', () => {
     test(
         "should return player indicators by player ID",
         async (done) => {
-            let ind =  new Indicator("wilder", 5, 1000);
-            let response = await post("/saveIndicator",ind);
+            let ind = new Indicator("wilder", 5, 1000);
+            let response = await post("/saveIndicator", ind);
             ind = response.body;
-            response = await get("/getIndicatorsByPlayerId", {player_id: ind.player_id});
+            response = await get("/getIndicatorsByPlayerId", { player_id: ind.player_id });
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
-            done();
-        }
-    );
-
-    test(
-        "should delete one indicator",
-        async (done) => {
-            let response = await deleteIndicator("/deleteIndicator", {id: 2});
-            expect(response.status).toEqual(200);
             done();
         }
     );
@@ -82,9 +73,18 @@ describe('Indicator', () => {
         "should update one indicator",
         async (done) => {
             const ind = new Indicator("wilderTest", 3, 1000);
-            let response = await post("/updateIndicator", {id: 1, ...ind});
+            let response = await post("/updateIndicator", { id: 1, ...ind });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual({id: 1, ...ind});
+            expect(response.body).toEqual({ id: 1, ...ind });
+            done();
+        }
+    );
+
+    test(
+        "should delete one indicator",
+        async (done) => {
+            let response = await deleteIndicator("/deleteIndicator", { id: 2 });
+            expect(response.status).toEqual(200);
             done();
         }
     );
