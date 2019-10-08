@@ -48,7 +48,7 @@ app.delete("/deleteMutator", mutatorController.deleteMutator);
  * PlayerBuildings routes.
  */
 app.get("/getAllPlayersBuildings", playerBuildingsController.getAllPlayersBuildings);
-app.get("/getOnePlayerBuildings"), playerBuildingsController.getOnePlayerBuildings;
+app.get("/getOnePlayerBuildings", playerBuildingsController.getOnePlayerBuildings);
 app.get("/getPlayerBuildingById", playerBuildingsController.getPlayerBuildingById);
 app.post("/savePlayerBuilding", playerBuildingsController.savePlayerBuilding);
 app.post("/updatePlayerBuilding", playerBuildingsController.updatePlayerBuilding);

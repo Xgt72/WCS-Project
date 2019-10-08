@@ -12,7 +12,7 @@ const config: any = {
         "port": 3306,
         "username": "root",
         "password": "Xgt72@web-dev!",
-        "database": "wcs_game",
+        "database": "wcs_game_test",
         "synchronize": true,
         "logging": false,
         "entities": [
@@ -20,7 +20,8 @@ const config: any = {
         ],
         "cli": {
             "entitiesDir": ["src/entities"]
-        }
+        },
+        "dropSchema": true
     }
 };
 
