@@ -7,7 +7,7 @@ export class PlayerTeacherRepository {
     }
 
     getOnePlayerTeachers(playerId: number) {
-        return getManager().getRepository(PlayerTeacher).createQueryBuilder("pt").where("pt.id = :id", {id: playerId});
+        return getManager().getRepository(PlayerTeacher).createQueryBuilder("pt").where("pt.player_id = :id", {id: playerId}).getMany();
     }
 
     savePlayerTeacher(playerTeacher: PlayerTeacher) {
