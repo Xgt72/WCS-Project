@@ -13,14 +13,18 @@ export class PlayerBuilding {
     name: string;
 
     @Column()
+    template: boolean;
+
+    @Column()
     price: number;
 
-    @OneToMany(type => Mutator, mutator => {})
+    @OneToMany(type => Mutator, mutator => mutator.playerBuilding)
     mutators: Mutator[];
 
-    constructor(player_id: number, name: string, price: number) {
+    constructor(player_id: number, name: string, price: number, template:boolean = false ) {
         this.player_id = player_id;
         this.name = name;
         this.price = price;
+        this.template = template;
     }
 }

@@ -5,11 +5,12 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 let connection: Connection = null;
-
+let lastId = 1;
 
 describe('Player Teacher', () => {
 
     beforeAll(async (done) => {
+        
         connection = await getSingletonConnection("test");
         done();
     });
@@ -61,6 +62,7 @@ describe('Player Teacher', () => {
             let pTeacher = new PlayerTeacher(1, "Xavier", 550);
             let response = await post("/savePlayerTeacher", pTeacher);
             pTeacher = response.body;
+            lastId = pTeacher.id;
             response = await get("/getOnePlayerTeachers", { player_id: pTeacher.player_id });
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
@@ -82,7 +84,7 @@ describe('Player Teacher', () => {
     test(
         "should delete one player building",
         async (done) => {
-            let response = await deletePlayerTeacher("/deletePlayerTeacher", { id: 2 });
+            let response = await deletePlayerTeacher("/deletePlayerTeacher", { id: lastId });
             expect(response.status).toEqual(200);
             done();
         }

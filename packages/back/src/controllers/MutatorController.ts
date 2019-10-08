@@ -9,7 +9,7 @@ export let getAllMutators = async (req: Request, res: Response) => {
         res.send(mutators);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -19,7 +19,7 @@ export let getMutatorsById = async (req: Request, res: Response) => {
         res.send(mutator);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -30,7 +30,7 @@ export let saveMutator = async (req: Request, res: Response) => {
         res.send(result);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -41,7 +41,7 @@ export let deleteMutator = async (req: Request, res: Response) => {
         res.send(result);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
 
@@ -61,6 +61,6 @@ export let updateMutator = async (req: Request, res: Response) => {
         res.send(result);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
 }
