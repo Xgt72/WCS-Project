@@ -10,7 +10,7 @@ export let getAllPlayersTeachers = async (req: Request, res: Response) => {
         res.send(playersTeachers);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
  }
 
@@ -20,7 +20,7 @@ export let getAllPlayersTeachers = async (req: Request, res: Response) => {
          res.send(playerTeachers);
      }
      catch(e) {
-         res.json(e);
+         res.status(501).json(e);
      }
  }
 
@@ -30,7 +30,7 @@ export let getAllPlayersTeachers = async (req: Request, res: Response) => {
      res.send(playerTeacher); 
      }
      catch(e) {
-         res.json(e);
+         res.status(501).json(e);
      }   
  }
 
@@ -41,7 +41,7 @@ export let getAllPlayersTeachers = async (req: Request, res: Response) => {
          res.send(result);
      }
      catch(e) {
-         res.json(e);
+         res.status(501).json(e);
      }
  }
 
@@ -52,7 +52,7 @@ export let getAllPlayersTeachers = async (req: Request, res: Response) => {
          res.send(result);
      }
      catch(e) {
-         res.json(e);
+         res.status(501).json(e);
      }
  }
 
@@ -72,6 +72,6 @@ export let getAllPlayersTeachers = async (req: Request, res: Response) => {
         res.send(result);
     }
     catch(e) {
-        res.json(e);
+        res.status(501).json(e);
     }
  }

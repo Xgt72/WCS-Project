@@ -64,6 +64,7 @@ app.post("/savePlayerTeacher", playerTeacherController.savePlayerTeacher);
 app.post("/updatePlayerTeacher", playerTeacherController.updatePlayerTeacher);
 app.delete("/deletePlayerTeacher", playerTeacherController.deletePlayerTeacher);
 
+
 /**
  * Start Express server.
  */

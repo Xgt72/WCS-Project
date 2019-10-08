@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { PlayerBuilding } from "./PlayerBuilding";
 
 @Entity("mutator")
 export class Mutator {
@@ -13,6 +14,11 @@ export class Mutator {
 
     @Column()
     value: number;
+
+    
+    @ManyToOne(type => PlayerBuilding, playerBuilding => playerBuilding.mutators)
+    playerBuilding: PlayerBuilding;
+    
 
     constructor(name: string, indicator_id: number, value: number) {
         this.name = name;
