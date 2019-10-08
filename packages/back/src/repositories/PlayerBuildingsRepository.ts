@@ -7,7 +7,7 @@ export class PlayerBuildingsRepository {
     }
 
     getOnePlayerBuildings(playerId: number) {
-        return getManager().getRepository(PlayerBuilding).createQueryBuilder("pb").where("pb.id = :id", {id: playerId});
+        return getManager().getRepository(PlayerBuilding).createQueryBuilder("pb").where("pb.id = :id", {id: playerId}).getMany();
     }
 
     savePlayerBuilding(playerBuilding: PlayerBuilding) {

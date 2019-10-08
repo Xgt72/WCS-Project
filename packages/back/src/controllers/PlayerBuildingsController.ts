@@ -15,7 +15,7 @@ export let getAllPlayersBuildings = async (req: Request, res: Response) => {
 
 export let getOnePlayerBuildings = async (req: Request, res: Response) => {
     try {
-        let playerBuildings = await playerBuildingsRepo.getOnePlayerBuildings(req.body.id);
+        let playerBuildings = await playerBuildingsRepo.getOnePlayerBuildings(req.body.player_id);
         res.send(playerBuildings);
     }
     catch(e) {
