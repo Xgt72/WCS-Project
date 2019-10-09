@@ -3,15 +3,29 @@ import { getManager } from "typeorm";
 
 export class PlayerBuildingsRepository {
     getAllPlayersBuildings() {
-        return getManager().getRepository(PlayerBuilding).find();
+        return getManager()
+            .getRepository(PlayerBuilding)
+            .createQueryBuilder("pb")
+            .innerJoinAndSelect("pb.mutators", "mutator")
+            .getMany();
     }
 
     getOnePlayerBuildings(playerId: number) {
-        return getManager().getRepository(PlayerBuilding).createQueryBuilder("pb").where("pb.player_id = :id", {id: playerId}).getMany();
+        return getManager()
+            .getRepository(PlayerBuilding)
+            .createQueryBuilder("pb")
+            .innerJoinAndSelect("pb.mutators", "mutator")
+            .where("pb.player_id = :id", {id: playerId})
+            .getMany();
     }
 
     getAllBuildingTemplates() {
-        return getManager().getRepository(PlayerBuilding).createQueryBuilder("pb").where("pb.isTemplate = true").getMany();
+        return getManager()
+            .getRepository(PlayerBuilding)
+            .createQueryBuilder("pb")
+            .innerJoinAndSelect("pb.mutators", "mutator")
+            .where("pb.isTemplate = true")
+            .getMany();
     }
 
     savePlayerBuilding(playerBuilding: PlayerBuilding) {
@@ -23,6 +37,11 @@ export class PlayerBuildingsRepository {
     }
 
     getPlayerBuildingById(playerBuildingId: number) {
-        return getManager().getRepository(PlayerBuilding).findOne(playerBuildingId);
+        return getManager()
+            .getRepository(PlayerBuilding)
+            .createQueryBuilder("pb")
+            .innerJoinAndSelect("pb.mutators", "mutator")
+            .where("pb.id = :id", {id: playerBuildingId})
+            .getOne();
     }
 }

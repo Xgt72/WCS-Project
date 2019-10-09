@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import request from 'supertest';
 import { PlayerBuilding } from "../src/entities/PlayerBuilding";
+import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
@@ -24,6 +25,10 @@ describe('Player Building', () => {
         "should save one player building",
         async (done) => {
             const pBuilding = new PlayerBuilding(1, "classroom", 1000);
+            pBuilding.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 1, -100)
+            ];
             const response = await post("/savePlayerBuilding", pBuilding);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(pBuilding.player_id);
@@ -37,6 +42,10 @@ describe('Player Building', () => {
         "should save two building template",
         async (done) => {
             const buildingOne = new PlayerBuilding(1, "classroom", 1000, true);
+            buildingOne.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 1, -100)
+            ];
             let response = await post("/savePlayerBuilding", buildingOne);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(buildingOne.player_id);
@@ -45,6 +54,10 @@ describe('Player Building', () => {
             expect(response.body.isTemplate).toEqual(buildingOne.isTemplate);
 
             const buidlingTwo = new PlayerBuilding(1, "parking", 500, true);
+            buidlingTwo.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 1, -100)
+            ];
             response = await post("/savePlayerBuilding", buidlingTwo);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(buidlingTwo.player_id);
@@ -68,6 +81,10 @@ describe('Player Building', () => {
         "should return one player building",
         async (done) => {
             let pBuilding = new PlayerBuilding(2, "cafeteria", 500);
+            pBuilding.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 1, -100)
+            ];
             let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
             response = await get("/getPlayerBuildingById", { id: pBuilding.id });
@@ -81,6 +98,10 @@ describe('Player Building', () => {
         "should return player buildings by player ID",
         async (done) => {
             let pBuilding = new PlayerBuilding(2, "classroom", 1000);
+            pBuilding.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 2, -100)
+            ];
             let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
             response = await get("/getOnePlayerBuildings", { player_id: pBuilding.player_id });
@@ -104,6 +125,10 @@ describe('Player Building', () => {
         "should update one player building",
         async (done) => {
             const pBuilding = new PlayerBuilding(2, "flatsharing", 580);
+            pBuilding.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 2, -100)
+            ];
             let response = await post("/updatePlayerBuilding", { id: 1, ...pBuilding });
             expect(response.status).toEqual(200);
             expect(response.body).toEqual({ id: 1, ...pBuilding });

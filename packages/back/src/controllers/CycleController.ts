@@ -10,10 +10,10 @@ let buildingRepo = new PlayerBuildingsRepository();
 export let doCycle = async (req: Request, res: Response) => {
     try {
         let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(req.body.player_id);
+        // console.log("Indicators: ", indicators)
         let buildings = await buildingRepo.getOnePlayerBuildings(req.body.player_id); 
+        // console.log("Buildings: ", buildings);
 
-        // new Mutator("depression", 1, -100)
-        
         buildings.map(
             (currentBuilding:PlayerBuilding) => {
                 currentBuilding.mutators.map(
@@ -30,7 +30,8 @@ export let doCycle = async (req: Request, res: Response) => {
             }
         ); 
 
-        indicatorRepo.saveAllIndicators(indicators);
+        await indicatorRepo.saveAllIndicators(indicators);
+        // console.log("Indicators Updated: ", indicators);
         res.send(indicators);
     }
     catch(e) {
