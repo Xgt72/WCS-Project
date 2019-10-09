@@ -16,7 +16,7 @@ export class Mutator {
     value: number;
 
     
-    @ManyToOne(type => PlayerBuilding, playerBuilding => playerBuilding.mutators)
+    @ManyToOne(type => PlayerBuilding, playerBuilding => playerBuilding.mutators, {onDelete: 'CASCADE'})
     playerBuilding: PlayerBuilding;
     
 
