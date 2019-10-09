@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { PlayerBuilding } from "../entities/PlayerBuilding";
 import { PlayerBuildingsRepository } from "../repositories/PlayerBuildingsRepository";
-import { Mutator } from "../entities/Mutator";
 import { MutatorRepository } from "../repositories/MutatorRepository";
 let playerBuildingsRepo = new PlayerBuildingsRepository();
 let mutatorRepository = new MutatorRepository();
@@ -36,9 +35,19 @@ export let getPlayerBuildingById = async (req: Request, res: Response) => {
     }
 }
 
+export let getAllBuildingTemplates = async (req: Request, res: Response) => {
+    try {
+        let buildingTemplates = await playerBuildingsRepo.getAllBuildingTemplates();
+        res.send(buildingTemplates);
+    }
+    catch(e) {
+        res.status(501).json(e);
+    }
+}
+
 export let savePlayerBuilding = async (req: Request, res: Response) => {
     try {
-        let playerBuilding = new PlayerBuilding(req.body.player_id, req.body.name, req.body.price);
+        let playerBuilding = new PlayerBuilding(req.body.player_id, req.body.name, req.body.price, req.body.isTemplate);
         let mutators = req.body.mutators || [];
 
         if (mutators.length > 0) {

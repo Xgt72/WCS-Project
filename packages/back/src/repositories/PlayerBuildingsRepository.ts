@@ -10,6 +10,10 @@ export class PlayerBuildingsRepository {
         return getManager().getRepository(PlayerBuilding).createQueryBuilder("pb").where("pb.player_id = :id", {id: playerId}).getMany();
     }
 
+    getAllBuildingTemplates() {
+        return getManager().getRepository(PlayerBuilding).createQueryBuilder("pb").where("pb.isTemplate = true").getMany();
+    }
+
     savePlayerBuilding(playerBuilding: PlayerBuilding) {
         return getManager().getRepository(PlayerBuilding).save(playerBuilding);
     }

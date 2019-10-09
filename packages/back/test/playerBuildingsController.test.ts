@@ -34,6 +34,28 @@ describe('Player Building', () => {
     );
 
     test(
+        "should save two building template",
+        async (done) => {
+            const buildingOne = new PlayerBuilding(1, "classroom", 1000, true);
+            let response = await post("/savePlayerBuilding", buildingOne);
+            expect(response.status).toBe(200);
+            expect(response.body.player_id).toEqual(buildingOne.player_id);
+            expect(response.body.name).toEqual(buildingOne.name);
+            expect(response.body.price).toEqual(buildingOne.price);
+            expect(response.body.isTemplate).toEqual(buildingOne.isTemplate);
+
+            const buidlingTwo = new PlayerBuilding(1, "parking", 500, true);
+            response = await post("/savePlayerBuilding", buidlingTwo);
+            expect(response.status).toBe(200);
+            expect(response.body.player_id).toEqual(buidlingTwo.player_id);
+            expect(response.body.name).toEqual(buidlingTwo.name);
+            expect(response.body.price).toEqual(buidlingTwo.price);
+            expect(response.body.isTemplate).toEqual(buidlingTwo.isTemplate);
+            done();
+        }
+    );
+
+    test(
         "should return at least one player building",
         async (done) => {
             const response = await get("/getAllPlayersBuildings", {});
@@ -64,6 +86,16 @@ describe('Player Building', () => {
             response = await get("/getOnePlayerBuildings", { player_id: pBuilding.player_id });
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
+            done();
+        }
+    );
+
+    test(
+        "should return all building templates",
+        async (done) => {
+            let response = await get("/getAllBuildingTemplates", {});
+            expect(response.status).toEqual(200);
+            expect(parseInt(response.body.length)).toBeGreaterThan(1);
             done();
         }
     );
