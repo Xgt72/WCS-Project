@@ -13,7 +13,7 @@ export class PlayerBuilding {
     name: string;
 
     @Column()
-    template: boolean;
+    isTemplate: boolean;
 
     @Column()
     price: number;
@@ -21,10 +21,10 @@ export class PlayerBuilding {
     @OneToMany(type => Mutator, mutator => mutator.playerBuilding)
     mutators: Mutator[];
 
-    constructor(player_id: number, name: string, price: number, template:boolean = false ) {
+    constructor(player_id: number, name: string, price: number, isTemplate: boolean = false ) {
         this.player_id = player_id;
         this.name = name;
         this.price = price;
-        this.template = template;
+        this.isTemplate = isTemplate;
     }
 }
