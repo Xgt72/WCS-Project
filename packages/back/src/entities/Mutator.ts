@@ -25,4 +25,17 @@ export class Mutator {
         this.indicator_id = indicator_id;
         this.value = value;
     }
+
+    static clone(mutator:Mutator):Mutator{
+        return new Mutator(mutator.name, mutator.indicator_id, mutator.value);
+    }
+
+    static cloneList(mutators:Mutator[]):Mutator[]{
+        let results:Mutator[] = []; 
+        mutators.map( mut => {
+            results.push(Mutator.clone(mut));
+        });
+
+        return results;
+    }
 }
