@@ -13,6 +13,7 @@ import * as playerBuildingsController from "./controllers/PlayerBuildingsControl
 import * as playerTeacherController from "./controllers/PlayerTeacherController";
 import * as playerController from "./controllers/PlayerController";
 import * as cycleController from "./controllers/CycleController";
+import * as buyBuildingController from "./controllers/BuyBuildingController";
 
 /**
  * Create Express server.
@@ -80,6 +81,11 @@ app.delete("/deletePlayer", playerController.deletePlayer);
  * Cycle routes.
  */
 app.get("/doCycle", cycleController.doCycle);
+
+/**
+ * Buy a building routes.
+ */
+app.post("/buyBuilding", buyBuildingController.buyBuilding);
 
 /**
  * Start Express server.
