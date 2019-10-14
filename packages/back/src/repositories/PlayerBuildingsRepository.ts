@@ -44,4 +44,13 @@ export class PlayerBuildingsRepository {
             .where("pb.id = :id", {id: playerBuildingId})
             .getOne();
     }
+
+    getBuildingTemplateById(playerBuildingId: number) {
+        return getManager()
+            .getRepository(PlayerBuilding)
+            .createQueryBuilder("pb")
+            .innerJoinAndSelect("pb.mutators", "mutator")
+            .where("pb.id = :id AND pb.isTemplate = :temp", {id: playerBuildingId, temp:true})
+            .getOne();
+    }
 }
