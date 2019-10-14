@@ -14,6 +14,7 @@ import * as playerTeacherController from "./controllers/PlayerTeacherController"
 import * as playerController from "./controllers/PlayerController";
 import * as cycleController from "./controllers/CycleController";
 import * as buyBuildingController from "./controllers/BuyBuildingController";
+import * as teacherActivitiesCalendarController from "./controllers/TeacherActivitiesCalendarController";
 
 /**
  * Create Express server.
@@ -86,6 +87,11 @@ app.get("/doCycle", cycleController.doCycle);
  * Buy a building routes.
  */
 app.post("/buyBuilding", buyBuildingController.buyBuilding);
+
+/**
+ * Teacher Activities Calendar routes.
+ */
+app.post("/saveTeacherActivity", teacherActivitiesCalendarController.saveTeacherActivity);
 
 /**
  * Start Express server.

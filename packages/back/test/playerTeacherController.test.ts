@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import request from 'supertest';
 import { PlayerTeacher } from "../src/entities/PlayerTeacher";
+import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
@@ -25,6 +26,11 @@ describe('Player Teacher', () => {
         "should save one player teacher",
         async (done) => {
             const pTeacher = new PlayerTeacher(1, "Nicolas", 900);
+            pTeacher.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 1, -100)
+            ];
+
             const response = await post("/savePlayerTeacher", pTeacher);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(pTeacher.player_id);
