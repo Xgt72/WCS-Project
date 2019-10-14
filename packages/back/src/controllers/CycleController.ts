@@ -16,6 +16,10 @@ export let doCycle = async (req: Request, res: Response) => {
 
         buildings.map(
             (currentBuilding:PlayerBuilding) => {
+
+                if( currentBuilding.isTemplate )
+                    return; 
+                    
                 currentBuilding.mutators.map(
                     (currentMutator:Mutator) => {
                         indicators.map(
