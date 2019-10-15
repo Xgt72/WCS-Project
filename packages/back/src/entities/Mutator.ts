@@ -3,6 +3,7 @@ import { PlayerBuilding } from "./PlayerBuilding";
 import { Indicator } from "./Indicator";
 import { TeacherActivitiesCalendar } from "./TeacherActivitiesCalendar";
 import { PlayerTeacher } from "./PlayerTeacher";
+import { PlayerCampusManager } from "./PlayerCampusManager";
 
 @Entity("mutator")
 export class Mutator {
@@ -27,6 +28,9 @@ export class Mutator {
 
     @ManyToOne(type => PlayerTeacher, playerTeacher => playerTeacher.mutators, { onDelete: 'CASCADE' })
     playerTeacher: PlayerTeacher;
+
+    @ManyToOne(type => PlayerCampusManager, playerCampusManager => playerCampusManager.mutators, { onDelete: 'CASCADE' })
+    playerCampusManager: PlayerCampusManager;
 
 
     constructor(name: string, indicator_id: number, value: number) {
