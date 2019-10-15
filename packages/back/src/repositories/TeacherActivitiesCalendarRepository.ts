@@ -19,12 +19,12 @@ export class TeacherActivitiesCalendarRepository {
             .getMany();
     }
 
-    getTeacherActivitiesCalendarById(id: number) {
+    getTeacherActivityCalendarById(id: number) {
         return getManager()
             .getRepository(TeacherActivitiesCalendar)
             .createQueryBuilder("tac")
             .innerJoinAndSelect("tac.mutators", "mutator")
-            .where("pb.id = :id", {id: id})
+            .where("tac.id = :id", {id: id})
             .getOne();
     }
 

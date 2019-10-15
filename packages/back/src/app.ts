@@ -91,7 +91,13 @@ app.post("/buyBuilding", buyBuildingController.buyBuilding);
 /**
  * Teacher Activities Calendar routes.
  */
+app.get("/getAllTeachersActivitiesCalendar", teacherActivitiesCalendarController.getAllTeachersActivitiesCalendar);
+app.get("/getTeacherActivityCalendarById", teacherActivitiesCalendarController.getTeacherActivityCalendarById);
+app.get("/getTeacherActivitiesCalendarByTeacherId", teacherActivitiesCalendarController.getTeacherActivitiesCalendarByTeacherId);
 app.post("/saveTeacherActivity", teacherActivitiesCalendarController.saveTeacherActivity);
+app.post("/updateTeacherActivityCalendar", teacherActivitiesCalendarController.updateTeacherActivityCalendar);
+app.delete("/deleteTeacherAcitvityCalendar", teacherActivitiesCalendarController.deleteTeacherAcitvityCalendar);
+
 
 /**
  * Start Express server.
