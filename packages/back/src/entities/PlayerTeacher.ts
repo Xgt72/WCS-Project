@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Mutator } from "./Mutator";
+
 
 @Entity("player_teacher")
 export class PlayerTeacher {
@@ -13,6 +15,10 @@ export class PlayerTeacher {
 
     @Column()
     price: number;
+
+
+    @OneToMany(type => Mutator, mutator => mutator.playerTeacher)
+    mutators: Mutator[];
 
     constructor(player_id: number, name: string, price: number) {
         this.player_id = player_id;
