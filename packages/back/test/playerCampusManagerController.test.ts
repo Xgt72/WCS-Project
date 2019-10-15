@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import request from 'supertest';
-import { PlayerTeacher } from "../src/entities/PlayerTeacher";
+import { PlayerCampusManager } from "../src/entities/PlayerCampusManager";
 import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
@@ -8,7 +8,7 @@ import { app, server } from "../src/app";
 let connection: Connection = null;
 let lastId = 1;
 
-describe('Player Teacher', () => {
+describe('Player Campus Manager', () => {
 
     beforeAll(async (done) => {
         
@@ -23,53 +23,54 @@ describe('Player Teacher', () => {
     });
 
     test(
-        "should save one player teacher",
+        "should save one player campus manager",
         async (done) => {
-            const pTeacher = new PlayerTeacher(1, "Nicolas", 900);
-            pTeacher.mutators = [
+            const pCampusManager = new PlayerCampusManager(1, "Maxime", 900);
+            pCampusManager.mutators = [
                 new Mutator("incReputation", 1, 5),
                 new Mutator("decBudget", 1, -100)
             ];
 
-            const response = await post("/savePlayerTeacher", pTeacher);
+            const response = await post("/savePlayerCampusManager", pCampusManager);
             expect(response.status).toBe(200);
-            expect(response.body.player_id).toEqual(pTeacher.player_id);
-            expect(response.body.name).toEqual(pTeacher.name);
-            expect(response.body.price).toEqual(pTeacher.price);
+            expect(response.body.player_id).toEqual(pCampusManager.player_id);
+            expect(response.body.name).toEqual(pCampusManager.name);
+            expect(response.body.price).toEqual(pCampusManager.price);
             done();
         }
     );
 
     test(
-        "should return at least one player teacher",
+        "should return at least one player campus manager",
         async (done) => {
-            const response = await get("/getAllPlayersTeachers", {});
+            const response = await get("/getAllPlayersCampusManagers", {});
+            expect(response.status).toBe(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
     );
 
     test(
-        "should return one player teacher",
+        "should return one player campus manager",
         async (done) => {
-            let pTeacher = new PlayerTeacher(2, "Victor", 900);
-            let response = await post("/savePlayerTeacher", pTeacher);
-            pTeacher = response.body;
-            response = await get("/getPlayerTeacherById", { id: pTeacher.id });
+            let pCampusManager = new PlayerCampusManager(2, "Leila", 900);
+            let response = await post("/savePlayerCampusManager", pCampusManager);
+            pCampusManager = response.body;
+            response = await get("/getPlayerCampusManagerById", { id: pCampusManager.id });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual(pTeacher);
+            expect(response.body).toEqual(pCampusManager);
             done();
         }
     );
 
     test(
-        "should return player teachers by player ID",
+        "should return player campus managers by player ID",
         async (done) => {
-            let pTeacher = new PlayerTeacher(1, "Xavier", 550);
-            let response = await post("/savePlayerTeacher", pTeacher);
-            pTeacher = response.body;
-            lastId = pTeacher.id;
-            response = await get("/getOnePlayerTeachers", { player_id: pTeacher.player_id });
+            let pCampusManager = new PlayerCampusManager(1, "Obiwan", 550);
+            let response = await post("/savePlayerCampusManager", pCampusManager);
+            pCampusManager = response.body;
+            lastId = pCampusManager.id;
+            response = await get("/getOnePlayerCampusManagers", { player_id: pCampusManager.player_id });
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -77,20 +78,20 @@ describe('Player Teacher', () => {
     );
 
     test(
-        "should update one player teacher",
+        "should update one player campus manager",
         async (done) => {
-            const pTeacher = new PlayerTeacher(4, "Jean", 280);
-            let response = await post("/updatePlayerTeacher", { id: 1, ...pTeacher });
+            const pCampusManager = new PlayerCampusManager(4, "Luke", 280);
+            let response = await post("/updatePlayerCampusManager", { id: 1, ...pCampusManager });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual({ id: 1, ...pTeacher });
+            expect(response.body).toEqual({ id: 1, ...pCampusManager });
             done();
         }
     );
 
     test(
-        "should delete one player teacher",
+        "should delete one player campus manager",
         async (done) => {
-            let response = await deletePlayerTeacher("/deletePlayerTeacher", { id: lastId });
+            let response = await deletePlayerCampusManager("/deletePlayerCampusManager", { id: lastId });
             expect(response.status).toEqual(200);
             done();
         }
@@ -113,7 +114,7 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deletePlayerTeacher(url: string, body: any) {
+export function deletePlayerCampusManager(url: string, body: any) {
     const httpRequest = request(app).delete(url);
     httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');

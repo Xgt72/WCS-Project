@@ -1,6 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { PlayerBuilding } from "./PlayerBuilding";
 import { Indicator } from "./Indicator";
+import { TeacherActivitiesCalendar } from "./TeacherActivitiesCalendar";
+import { PlayerTeacher } from "./PlayerTeacher";
+import { PlayerCampusManager } from "./PlayerCampusManager";
+import { CampusManagerActivitiesCalendar } from "./CampusManagerActivitiesCalendar";
 
 @Entity("mutator")
 export class Mutator {
@@ -19,6 +23,18 @@ export class Mutator {
 
     @ManyToOne(type => PlayerBuilding, playerBuilding => playerBuilding.mutators, { onDelete: 'CASCADE' })
     playerBuilding: PlayerBuilding;
+
+    @ManyToOne(type => TeacherActivitiesCalendar, teacherActivitiesCalendar => teacherActivitiesCalendar.mutators, { onDelete: 'CASCADE' })
+    teacherActivitiesCalendar: TeacherActivitiesCalendar;
+
+    @ManyToOne(type => PlayerTeacher, playerTeacher => playerTeacher.mutators, { onDelete: 'CASCADE' })
+    playerTeacher: PlayerTeacher;
+
+    @ManyToOne(type => PlayerCampusManager, playerCampusManager => playerCampusManager.mutators, { onDelete: 'CASCADE' })
+    playerCampusManager: PlayerCampusManager;
+
+    @ManyToOne(type => CampusManagerActivitiesCalendar, campusManagerActivitiesCalendar => campusManagerActivitiesCalendar.mutators, { onDelete: 'CASCADE' })
+    campusManagerActivitiesCalendar: CampusManagerActivitiesCalendar;
 
 
     constructor(name: string, indicator_id: number, value: number) {

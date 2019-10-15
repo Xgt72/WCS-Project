@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Mutator } from "./Mutator";
 
 
-@Entity("player_teacher")
-export class PlayerTeacher {
+@Entity("player_campus_manager")
+export class PlayerCampusManager {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -17,7 +17,7 @@ export class PlayerTeacher {
     price: number;
 
 
-    @OneToMany(type => Mutator, mutator => mutator.playerTeacher)
+    @OneToMany(type => Mutator, mutator => mutator.playerCampusManager)
     mutators: Mutator[];
 
     constructor(player_id: number, name: string, price: number) {

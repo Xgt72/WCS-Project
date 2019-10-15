@@ -14,6 +14,9 @@ import * as playerTeacherController from "./controllers/PlayerTeacherController"
 import * as playerController from "./controllers/PlayerController";
 import * as cycleController from "./controllers/CycleController";
 import * as buyBuildingController from "./controllers/BuyBuildingController";
+import * as teacherActivitiesCalendarController from "./controllers/TeacherActivitiesCalendarController";
+import * as playerCampusManagerController from "./controllers/PlayerCampusManagerController";
+import * as campusManagerActivitiesCalendarController from "./controllers/CampusManagerActivitiesCalendarController";
 
 /**
  * Create Express server.
@@ -48,6 +51,15 @@ app.post("/updateMutator", mutatorController.updateMutator);
 app.delete("/deleteMutator", mutatorController.deleteMutator);
 
 /**
+ * Player routes.
+ */
+app.get("/getAllPlayers", playerController.getAllPlayers);
+app.get("/getPlayerById", playerController.getPlayerById);
+app.post("/savePlayer", playerController.savePlayer);
+app.post("/updatePlayer", playerController.updatePlayer);
+app.delete("/deletePlayer", playerController.deletePlayer);
+
+/**
  * PlayerBuildings routes.
  */
 app.get("/getAllPlayersBuildings", playerBuildingsController.getAllPlayersBuildings);
@@ -69,13 +81,34 @@ app.post("/updatePlayerTeacher", playerTeacherController.updatePlayerTeacher);
 app.delete("/deletePlayerTeacher", playerTeacherController.deletePlayerTeacher);
 
 /**
- * Player routes.
+ * Teacher Activities Calendar routes.
  */
-app.get("/getAllPlayers", playerController.getAllPlayers);
-app.get("/getPlayerById", playerController.getPlayerById);
-app.post("/savePlayer", playerController.savePlayer);
-app.post("/updatePlayer", playerController.updatePlayer);
-app.delete("/deletePlayer", playerController.deletePlayer);
+app.get("/getAllTeachersActivitiesCalendar", teacherActivitiesCalendarController.getAllTeachersActivitiesCalendar);
+app.get("/getTeacherActivityCalendarById", teacherActivitiesCalendarController.getTeacherActivityCalendarById);
+app.get("/getTeacherActivitiesCalendarByTeacherId", teacherActivitiesCalendarController.getTeacherActivitiesCalendarByTeacherId);
+app.post("/saveTeacherActivity", teacherActivitiesCalendarController.saveTeacherActivity);
+app.post("/updateTeacherActivityCalendar", teacherActivitiesCalendarController.updateTeacherActivityCalendar);
+app.delete("/deleteTeacherAcitvityCalendar", teacherActivitiesCalendarController.deleteTeacherAcitvityCalendar);
+
+/**
+ * Player Campus Manager routes.
+ */
+app.get("/getAllPlayersCampusManagers", playerCampusManagerController.getAllPlayersCampusManagers);
+app.get("/getOnePlayerCampusManagers", playerCampusManagerController.getOnePlayerCampusManagers);
+app.get("/getPlayerCampusManagerById", playerCampusManagerController.getPlayerCampusManagerById);
+app.post("/savePlayerCampusManager", playerCampusManagerController.savePlayerCampusManager);
+app.post("/updatePlayerCampusManager", playerCampusManagerController.updatePlayerCampusManager);
+app.delete("/deletePlayerCampusManager", playerCampusManagerController.deletePlayerCampusManager);
+
+/**
+ * Campus ManagerActivities Calendar routes.
+ */
+app.get("/getAllCampusManagersActivitiesCalendar", campusManagerActivitiesCalendarController.getAllCampusManagersActivitiesCalendar);
+app.get("/getCampusManagerActivityCalendarById", campusManagerActivitiesCalendarController.getCampusManagerActivityCalendarById);
+app.get("/getCampusManagerActivitiesCalendarByCampusManagerId", campusManagerActivitiesCalendarController.getCampusManagerActivitiesCalendarByCampusManagerId);
+app.post("/saveCampusManagerActivity", campusManagerActivitiesCalendarController.saveCampusManagerActivity);
+app.post("/updateCampusManagerActivityCalendar", campusManagerActivitiesCalendarController.updateCampusManagerActivityCalendar);
+app.delete("/deleteCampusManagerAcitvityCalendar", campusManagerActivitiesCalendarController.deleteCampusManagerAcitvityCalendar);
 
 /**
  * Cycle routes.
