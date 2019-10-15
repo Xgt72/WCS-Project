@@ -3,10 +3,10 @@ import request from "supertest";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
-import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
+import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
 import { Mutator } from "../src/entities/Mutator";
 let connection: Connection = null;
-let teacherActivityCalendarId: number = null;
+let campusManagerActivityCalendarId: number = null;
 
 describe('Teacher Calendar', () => {
 
@@ -22,17 +22,17 @@ describe('Teacher Calendar', () => {
     });
 
     test(
-        "should save one activity in teacher calendar",
+        "should save one activity in campus manager calendar",
         async (done) => {
-            const teacherActivity = new TeacherActivitiesCalendar(1, 1, false, true, 1);
-            teacherActivity.mutators = [
+            const campusManagerActivity = new CampusManagerActivitiesCalendar(1, 1, false, true, 1);
+            campusManagerActivity.mutators = [
                 new Mutator("incReputation", 1, 5),
                 new Mutator("decBudget", 2, -100)
             ];
-            const response = await post("/saveTeacherActivity", teacherActivity);
-            teacherActivityCalendarId = response.body.id;
+            const response = await post("/saveCampusManagerActivity", campusManagerActivity);
+            campusManagerActivityCalendarId = response.body.id;
             expect(response.status).toBe(200);
-            expect(response.body.teacher_id).toEqual(1);
+            expect(response.body.campus_manager_id).toEqual(1);
             expect(response.body.activity_id).toEqual(1);
             expect(response.body.morning).toEqual(false);
             expect(response.body.afternoon).toEqual(true);
@@ -43,9 +43,9 @@ describe('Teacher Calendar', () => {
     );
 
     test(
-        "should return at least one teacher activity calendar",
+        "should return at least one campus manager activity calendar",
         async (done) => {
-            let response = await get("/getAllTeachersActivitiesCalendar", {});
+            let response = await get("/getAllCampusManagersActivitiesCalendar", {});
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -53,29 +53,29 @@ describe('Teacher Calendar', () => {
     );
 
     test(
-        "should return teacher activity calendar by ID",
+        "should return campus manager activity calendar by ID",
         async (done) => {
-            let response = await get("/getTeacherActivityCalendarById", {id: teacherActivityCalendarId});
+            let response = await get("/getCampusManagerActivityCalendarById", {id: campusManagerActivityCalendarId});
             expect(response.status).toEqual(200);
-            expect(response.body.id).toEqual(teacherActivityCalendarId);
+            expect(response.body.id).toEqual(campusManagerActivityCalendarId);
             done();
         }
     );
 
     test(
-        "should return teacher activities calendar by teacher ID",
+        "should return campus manager activities calendar by campus manager ID",
         async (done) => {
-            let response = await get("/getTeacherActivitiesCalendarByTeacherId", {teacherId: 1});
+            let response = await get("/getCampusManagerActivitiesCalendarByCampusManagerId", {campusManagerId: 1});
             expect(response.status).toEqual(200);
             done();
         }
     );
 
     test(
-        "should update a teacher activity calendar",
+        "should update a campus manager activity calendar",
         async (done) => {
-            let teacherActivityCalendar = new TeacherActivitiesCalendar(2, 1, true, false, 2);
-            let response = await post("/updateTeacherActivityCalendar", {id: 1, ...teacherActivityCalendar});
+            let campusManagerActivityCalendar = new CampusManagerActivitiesCalendar(2, 1, true, false, 2);
+            let response = await post("/updateCampusManagerActivityCalendar", {id: 1, ...campusManagerActivityCalendar});
             expect(response.status).toEqual(200);
             expect(response.body.day).toEqual(2);
             expect(response.body.afternoon).toEqual(false);
@@ -85,9 +85,9 @@ describe('Teacher Calendar', () => {
     );
 
     test(
-        "should delete one teacher activity calendar",
+        "should delete one campus manager activity calendar",
         async (done) => {
-            let response = await deleteTeacherActivity("/deleteTeacherAcitvityCalendar", {id: 1});
+            let response = await deleteCampusManagerActivity("/deleteCampusManagerAcitvityCalendar", {id: 1});
             expect(response.status).toEqual(200);
             done();
         }
@@ -110,7 +110,7 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deleteTeacherActivity(url: string, body: any) {
+export function deleteCampusManagerActivity(url: string, body: any) {
     const httpRequest = request(app).delete(url);
     httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');

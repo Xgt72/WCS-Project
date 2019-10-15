@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { TeacherActivitiesCalendar } from "../entities/TeacherActivitiesCalendar";
 import { MutatorRepository } from "../repositories/MutatorRepository";
 import { TeacherActivitiesCalendarRepository } from "../repositories/TeacherActivitiesCalendarRepository";
-import { json } from "body-parser";
 let teacherActivitiesCalendarRepo = new TeacherActivitiesCalendarRepository();
 let mutatorRepository = new MutatorRepository();
 
