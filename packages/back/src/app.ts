@@ -17,6 +17,7 @@ import * as buyBuildingController from "./controllers/BuyBuildingController";
 import * as teacherActivitiesCalendarController from "./controllers/TeacherActivitiesCalendarController";
 import * as playerCampusManagerController from "./controllers/PlayerCampusManagerController";
 import * as campusManagerActivitiesCalendarController from "./controllers/CampusManagerActivitiesCalendarController";
+import * as activityController from "./controllers/ActivityController";
 
 /**
  * Create Express server.
@@ -109,6 +110,16 @@ app.get("/getCampusManagerActivitiesCalendarByCampusManagerId", campusManagerAct
 app.post("/saveCampusManagerActivity", campusManagerActivitiesCalendarController.saveCampusManagerActivity);
 app.post("/updateCampusManagerActivityCalendar", campusManagerActivitiesCalendarController.updateCampusManagerActivityCalendar);
 app.delete("/deleteCampusManagerAcitvityCalendar", campusManagerActivitiesCalendarController.deleteCampusManagerAcitvityCalendar);
+
+/**
+ * Activity routes.
+ */
+app.get("/getAllActivities", activityController.getAllActivities);
+app.get("/getActivityById", activityController.getActivityById);
+app.post("/saveActivity", activityController.saveActivity);
+app.post("/saveAllActivities", activityController.saveAllActivities);
+app.post("/updateActivity", activityController.updateActivity);
+app.delete("/deleteActivity", activityController.deleteActivity);
 
 /**
  * Cycle routes.
