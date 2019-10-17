@@ -17,6 +17,9 @@ import * as buyBuildingController from "./controllers/BuyBuildingController";
 import * as teacherActivitiesCalendarController from "./controllers/TeacherActivitiesCalendarController";
 import * as playerCampusManagerController from "./controllers/PlayerCampusManagerController";
 import * as campusManagerActivitiesCalendarController from "./controllers/CampusManagerActivitiesCalendarController";
+import * as activityController from "./controllers/ActivityController";
+import * as hireTeacherController from "./controllers/HireTeacherController";
+import * as hireCampusManagerController from "./controllers/HireCampusManagerController";
 
 /**
  * Create Express server.
@@ -111,14 +114,34 @@ app.post("/updateCampusManagerActivityCalendar", campusManagerActivitiesCalendar
 app.delete("/deleteCampusManagerAcitvityCalendar", campusManagerActivitiesCalendarController.deleteCampusManagerAcitvityCalendar);
 
 /**
- * Cycle routes.
+ * Activity routes.
+ */
+app.get("/getAllActivities", activityController.getAllActivities);
+app.get("/getActivityById", activityController.getActivityById);
+app.post("/saveActivity", activityController.saveActivity);
+app.post("/saveAllActivities", activityController.saveAllActivities);
+app.post("/updateActivity", activityController.updateActivity);
+app.delete("/deleteActivity", activityController.deleteActivity);
+
+/**
+ * Cycle route.
  */
 app.get("/doCycle", cycleController.doCycle);
 
 /**
- * Buy a building routes.
+ * Buy a building route.
  */
 app.post("/buyBuilding", buyBuildingController.buyBuilding);
+
+/**
+ * Hire a teacher route.
+ */
+app.post("/hireTeacher", hireTeacherController.hireTeacher);
+
+/**
+ * Hire a campus manager route.
+ */
+app.post("/hireCampusManager", hireCampusManagerController.hireCampusManager);
 
 /**
  * Start Express server.
