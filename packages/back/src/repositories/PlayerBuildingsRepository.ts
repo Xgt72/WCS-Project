@@ -24,7 +24,7 @@ export class PlayerBuildingsRepository {
             .getRepository(PlayerBuilding)
             .createQueryBuilder("pb")
             .innerJoinAndSelect("pb.mutators", "mutator")
-            .where("pb.isTemplate = true")
+            .where("pb.isTemplate = :template", {template: true})
             .getMany();
     }
 

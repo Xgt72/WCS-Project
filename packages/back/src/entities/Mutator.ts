@@ -55,8 +55,8 @@ export class Mutator {
 
     static cloneListWithIndicators(mutators: Mutator[], indicators: Indicator[]): Mutator[] {
         let results: Mutator[] = [];
-        let reputationIndicatorId: number = null;
-        let budgetIndicatorId: number = null;
+        let reputationIndicatorId: number = -1;
+        let budgetIndicatorId: number = -1;
         indicators.map(
             indicator => {
                 switch (indicator.name) {

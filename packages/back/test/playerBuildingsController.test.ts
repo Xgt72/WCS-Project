@@ -72,13 +72,13 @@ describe('Player Building', () => {
         "should return at least one player building",
         async (done) => {
             const response = await get("/getAllPlayersBuildings", {});
-            expect(parseInt(response.body.length)).toBeGreaterThan(0);
+            expect(parseInt(response.body.length)).toBeGreaterThan(2);
             done();
         }
     );
 
     test(
-        "should return one player building",
+        "should return one player building by building ID",
         async (done) => {
             let pBuilding = new PlayerBuilding(2, "cafeteria", 500);
             pBuilding.mutators = [
@@ -106,7 +106,7 @@ describe('Player Building', () => {
             pBuilding = response.body;
             response = await get("/getOnePlayerBuildings", { player_id: pBuilding.player_id });
             expect(response.status).toEqual(200);
-            expect(parseInt(response.body.length)).toBeGreaterThan(0);
+            expect(parseInt(response.body.length)).toEqual(2);
             done();
         }
     );
