@@ -57,6 +57,7 @@ export class Mutator {
         let results: Mutator[] = [];
         let reputationIndicatorId: number = -1;
         let budgetIndicatorId: number = -1;
+        // console.log("indicators in mutator: ", indicators);
         indicators.map(
             indicator => {
                 switch (indicator.name) {

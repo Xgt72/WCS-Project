@@ -9,11 +9,13 @@ let buildingRepo = new PlayerBuildingsRepository();
 
 export let doCycle = async (req: Request, res: Response) => {
     try {
+        // get all indicators of the player
         let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(req.body.player_id);
-        // console.log("Indicators: ", indicators)
-        let buildings = await buildingRepo.getOnePlayerBuildings(req.body.player_id); 
-        // console.log("Buildings: ", buildings);
 
+        // get all the buildings of the player
+        let buildings = await buildingRepo.getOnePlayerBuildings(req.body.player_id); 
+
+        // update all the indicators of the player
         buildings.map(
             (currentBuilding:PlayerBuilding) => {
 
@@ -33,9 +35,10 @@ export let doCycle = async (req: Request, res: Response) => {
                 );
             }
         ); 
-
+        
+        // save all the new values of the indicators
         await indicatorRepo.saveAllIndicators(indicators);
-        // console.log("Indicators Updated: ", indicators);
+
         res.send(indicators);
     }
     catch(e) {
