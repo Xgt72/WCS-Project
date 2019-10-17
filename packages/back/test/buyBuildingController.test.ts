@@ -8,8 +8,8 @@ import { Indicator } from "../src/entities/Indicator";
 import { classroomTemplate, parkingTemplate } from "../src/models/Templates";
 
 let connection: Connection = null;
-let playerId: number = null;
-let budgetId: number = null;
+let playerId: number = 0;
+let budgetId: number = 0;
 
 describe('buy a building', () => {
 
@@ -64,7 +64,7 @@ describe('buy a building', () => {
             
             let response = await post("/buyBuilding", { player_id: playerId, building_template_id: 1 });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual("You can not buy this building you do not have the necessary budget.");
+            expect(response.body).toEqual("You can't buy this building, you don't have the necessary budget.");
 
             done();
         }

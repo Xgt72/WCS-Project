@@ -10,7 +10,7 @@ let connection: Connection = null;
 let playerId: number = 0;
 let budgetIndicatorId: number = 0;
 
-describe('Hire a teacher', () => {
+describe('Hire a campus manager', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
@@ -38,32 +38,33 @@ describe('Hire a teacher', () => {
 
     test("should hire a teacher for a player",
     async (done) => {
-        let response = await post("/hireTeacher", {playerId: playerId, teacherName: "Xavier"});
+        let response = await post("/hireCampusManager", {playerId: playerId, campusManagerName: "Maxime"});
         expect(response.status).toEqual(200);
         done();
     });
 
-    test("should not hire a teacher for a player because the budget is not enought",
+    test("should not hire a campus manager for a player because the budget is not enought",
     async (done) => {
         let updatedIndicator = await post("/updateIndicator", {id: budgetIndicatorId, value: 100});
         expect(updatedIndicator.status).toEqual(200);
-        let response = await post("/hireTeacher", {playerId: playerId, teacherName: "Xavier"});
+
+        let response = await post("/hireCampusManager", {playerId: playerId, campusManagerName: "Julien"});
         expect(response.status).toEqual(200);
-        expect(response.body).toEqual("You can't hire this teacher, you don't have the necessary budget.");
+        expect(response.body).toEqual("You can't hire this campus manager, you don't have the necessary budget.");
         done();
     });
 
-    test("should not hire a teacher for a player because he have already 2 teachers",
+    test("should not hire a campus manager for a player because he have already 2 campus managers",
     async (done) => {
         let updatedIndicator = await post("/updateIndicator", {id: budgetIndicatorId, value: 1000});
         expect(updatedIndicator.status).toEqual(200);
 
-        let response = await post("/hireTeacher", {playerId: playerId, teacherName: "Nicolas"});
+        let response = await post("/hireCampusManager", {playerId: playerId, campusManagerName: "Marylou"});
         expect(response.status).toEqual(200);
         
-        response = await post("/hireTeacher", {playerId: playerId, teacherName: "Victor"});
+        response = await post("/hireCampusManager", {playerId: playerId, campusManagerName: "Cécile"});
         expect(response.status).toEqual(200);
-        expect(response.body).toEqual("You already have two teachers, you can't hire one more.");
+        expect(response.body).toEqual("You already have two campus managers, you can't hire one more.");
         done();
     });
 });

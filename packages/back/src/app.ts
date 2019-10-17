@@ -19,6 +19,7 @@ import * as playerCampusManagerController from "./controllers/PlayerCampusManage
 import * as campusManagerActivitiesCalendarController from "./controllers/CampusManagerActivitiesCalendarController";
 import * as activityController from "./controllers/ActivityController";
 import * as hireTeacherController from "./controllers/HireTeacherController";
+import * as hireCampusManagerController from "./controllers/HireCampusManagerController";
 
 /**
  * Create Express server.
@@ -131,10 +132,16 @@ app.get("/doCycle", cycleController.doCycle);
  * Buy a building route.
  */
 app.post("/buyBuilding", buyBuildingController.buyBuilding);
+
 /**
  * Hire a teacher route.
  */
 app.post("/hireTeacher", hireTeacherController.hireTeacher);
+
+/**
+ * Hire a campus manager route.
+ */
+app.post("/hireCampusManager", hireCampusManagerController.hireCampusManager);
 
 /**
  * Start Express server.
