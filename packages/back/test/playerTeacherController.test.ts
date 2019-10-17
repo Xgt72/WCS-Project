@@ -28,7 +28,7 @@ describe('Player Teacher', () => {
             const pTeacher = new PlayerTeacher(1, "Nicolas", 900);
             pTeacher.mutators = [
                 new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 1, -100)
+                new Mutator("decBudget", 2, -100)
             ];
 
             const response = await post("/savePlayerTeacher", pTeacher);
