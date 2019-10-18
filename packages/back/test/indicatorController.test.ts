@@ -33,6 +33,18 @@ describe('Indicator', () => {
         }
     );
 
+    test(
+        "should save two indicators",
+        async (done) => {
+            const indOne = new Indicator("reputation", 4, 1000);
+            const indTwo = new Indicator("budget", 5, 20);
+            const response = await post("/saveAllIndicators", [indOne, indTwo]);
+            expect(response.status).toBe(200);
+            expect(parseInt(response.body.length)).toEqual(2);
+            done();
+        }
+    );
+
 
     test(
         "should return at least one indicator",

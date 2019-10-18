@@ -25,10 +25,7 @@ describe('Teacher Calendar', () => {
         "should save one activity in teacher calendar",
         async (done) => {
             const teacherActivity = new TeacherActivitiesCalendar(1, 1, false, true, 1);
-            teacherActivity.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
-            ];
+
             const response = await post("/saveTeacherActivity", teacherActivity);
             teacherActivityCalendarId = response.body.id;
             expect(response.status).toBe(200);
@@ -37,7 +34,7 @@ describe('Teacher Calendar', () => {
             expect(response.body.morning).toEqual(false);
             expect(response.body.afternoon).toEqual(true);
             expect(response.body.day).toEqual(1);
-            expect(parseInt(response.body.mutators.length)).toBeGreaterThan(1);
+
             done();
         }
     );

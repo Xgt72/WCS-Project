@@ -53,6 +53,11 @@ describe('Player Teacher', () => {
         "should return one player teacher",
         async (done) => {
             let pTeacher = new PlayerTeacher(2, "Victor", 900);
+            pTeacher.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 2, -100)
+            ];
+
             let response = await post("/savePlayerTeacher", pTeacher);
             pTeacher = response.body;
             response = await get("/getPlayerTeacherById", { id: pTeacher.id });
@@ -66,6 +71,11 @@ describe('Player Teacher', () => {
         "should return player teachers by player ID",
         async (done) => {
             let pTeacher = new PlayerTeacher(1, "Xavier", 550);
+            pTeacher.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 2, -100)
+            ];
+
             let response = await post("/savePlayerTeacher", pTeacher);
             pTeacher = response.body;
             lastId = pTeacher.id;
@@ -80,9 +90,13 @@ describe('Player Teacher', () => {
         "should update one player teacher",
         async (done) => {
             const pTeacher = new PlayerTeacher(4, "Jean", 280);
+            
             let response = await post("/updatePlayerTeacher", { id: 1, ...pTeacher });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual({ id: 1, ...pTeacher });
+            expect(response.body.id).toEqual(1);
+            expect(response.body.player_id).toEqual(pTeacher.player_id);
+            expect(response.body.name).toEqual(pTeacher.name);
+            expect(response.body.price).toEqual(pTeacher.price);
             done();
         }
     );

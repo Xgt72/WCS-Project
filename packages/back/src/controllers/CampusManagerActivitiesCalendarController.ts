@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { CampusManagerActivitiesCalendar } from "../entities/CampusManagerActivitiesCalendar";
-import { MutatorRepository } from "../repositories/MutatorRepository";
 import { CampusManagerActivitiesCalendarRepository } from "../repositories/CampusManagerActivitiesCalendarRepository";
+
 let campusManagerActivitiesCalendarRepo = new CampusManagerActivitiesCalendarRepository();
-let mutatorRepository = new MutatorRepository();
 
 export let getAllCampusManagersActivitiesCalendar = async (req: Request, res: Response) => {
     try {
@@ -38,16 +37,6 @@ export let getCampusManagerActivitiesCalendarByCampusManagerId = async (req: Req
 export let saveCampusManagerActivity = async (req: Request, res: Response) => {
     try {
         let campusManagerActivitiesCalendar = new CampusManagerActivitiesCalendar(req.body.campus_manager_id, req.body.activity_id, req.body.morning, req.body.afternoon, req.body.day);
-        let mutators = req.body.mutators || [];
-
-        if (mutators.length > 0) {
-            for (let i = 0; i < mutators.length; i++) {
-                mutators[i] = await mutatorRepository.saveMutator(mutators[i]);
-            }
-
-            campusManagerActivitiesCalendar.mutators = mutators;
-        }
-
         let result = await campusManagerActivitiesCalendarRepo.saveCampusManagerActivity(campusManagerActivitiesCalendar);
         res.send(result);
     }
@@ -73,9 +62,6 @@ export let updateCampusManagerActivityCalendar = async (req: Request, res: Respo
         }
         if (req.body.day != null) {
             campusManagerActivityToUpdate.day = req.body.day;
-        }
-        if (req.body.mutators != null) {
-            campusManagerActivityToUpdate.mutators = req.body.mutators;
         }
         let response = await campusManagerActivitiesCalendarRepo.saveCampusManagerActivity(campusManagerActivityToUpdate);
         res.send(response);

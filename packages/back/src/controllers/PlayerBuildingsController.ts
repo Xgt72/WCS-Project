@@ -90,7 +90,12 @@ export let updatePlayerBuilding = async (req: Request, res: Response) => {
             playerBuilding.price = req.body.price;
         }
         if (req.body.mutators != null) {
-            playerBuilding.mutators = req.body.mutators;
+            if (req.body.mutators.length > 0) {
+                for (let i = 0; i < req.body.mutators.length; i++) {
+                    req.body.mutators[i] = await mutatorRepository.saveMutator(req.body.mutators[i]);
+                }
+                playerBuilding.mutators = req.body.mutators;
+            }
         }
         let result = await playerBuildingsRepo.savePlayerBuilding(playerBuilding);
         res.send(result);

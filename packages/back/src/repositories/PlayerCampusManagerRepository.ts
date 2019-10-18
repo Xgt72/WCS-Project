@@ -3,11 +3,20 @@ import { getManager } from "typeorm";
 
 export class PlayerCampusManagerRepository {
     getAllPlayersCampusManagers() {
-        return getManager().getRepository(PlayerCampusManager).find();
+        return getManager()
+            .getRepository(PlayerCampusManager)
+            .createQueryBuilder("pcm")
+            .innerJoinAndSelect("pcm.mutators", "mutator")
+            .getMany();
     }
 
     getOnePlayerCampusManagers(playerId: number) {
-        return getManager().getRepository(PlayerCampusManager).createQueryBuilder("pt").where("pt.player_id = :id", {id: playerId}).getMany();
+        return getManager()
+            .getRepository(PlayerCampusManager)
+            .createQueryBuilder("pcm")
+            .innerJoinAndSelect("pcm.mutators", "mutator")
+            .where("pcm.player_id = :id", { id: playerId })
+            .getMany();
     }
 
     savePlayerCampusManager(playerCampusManager: PlayerCampusManager) {
@@ -19,6 +28,11 @@ export class PlayerCampusManagerRepository {
     }
 
     getPlayerCampusManagerById(playerCampusManagerId: number) {
-        return getManager().getRepository(PlayerCampusManager).findOne(playerCampusManagerId);
+        return getManager()
+            .getRepository(PlayerCampusManager)
+            .createQueryBuilder("pcm")
+            .innerJoinAndSelect("pcm.mutators", "mutator")
+            .where("pcm.id = :id", { id: playerCampusManagerId })
+            .getOne();
     }
 }

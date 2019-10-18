@@ -5,27 +5,21 @@ export class TeacherActivitiesCalendarRepository {
     getAllTeachersActivitiesCalendar() {
         return getManager()
             .getRepository(TeacherActivitiesCalendar)
-            .createQueryBuilder("tac")
-            .innerJoinAndSelect("tac.mutators", "mutator")
-            .getMany();
+            .find();
     }
 
     getTeacherActivitiesCalendarByTeacherId(teacherId: number) {
         return getManager()
             .getRepository(TeacherActivitiesCalendar)
             .createQueryBuilder("tac")
-            .innerJoinAndSelect("tac.mutators", "mutator")
-            .where("tac.teacher_id = :id", {id: teacherId})
+            .where("tac.teacher_id = :id", { id: teacherId })
             .getMany();
     }
 
     getTeacherActivityCalendarById(id: number) {
         return getManager()
             .getRepository(TeacherActivitiesCalendar)
-            .createQueryBuilder("tac")
-            .innerJoinAndSelect("tac.mutators", "mutator")
-            .where("tac.id = :id", {id: id})
-            .getOne();
+            .findOne(id);
     }
 
     saveTeacherActivity(teacherActivity: TeacherActivitiesCalendar) {
