@@ -1,6 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Mutator } from "./Mutator";
-
 
 @Entity("teacher_activities_calendar")
 export class TeacherActivitiesCalendar {
@@ -21,9 +19,6 @@ export class TeacherActivitiesCalendar {
 
     @Column()
     day: number;
-
-    @OneToMany(type => Mutator, mutator => mutator.teacherActivitiesCalendar)
-    mutators: Mutator[];
 
     constructor(teacher_id: number, activity_id: number, morning: boolean, afternoon: boolean, day: number) {
         this.teacher_id = teacher_id;

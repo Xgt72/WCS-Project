@@ -5,26 +5,20 @@ export class CampusManagerActivitiesCalendarRepository {
     getAllCampusManagersActivitiesCalendar() {
         return getManager()
             .getRepository(CampusManagerActivitiesCalendar)
-            .createQueryBuilder("cmac")
-            .innerJoinAndSelect("cmac.mutators", "mutator")
-            .getMany();
+            .find();
     }
 
     getCampusManagerActivitiesCalendarByCampusManagerId(campusManagerId: number) {
         return getManager()
             .getRepository(CampusManagerActivitiesCalendar)
-            .createQueryBuilder("cmac")
-            .innerJoinAndSelect("cmac.mutators", "mutator")
-            .where("cmac.campus_manager_id = :id", {id: campusManagerId})
-            .getMany();
+            .findOne(campusManagerId);
     }
 
     getCampusManagerActivityCalendarById(id: number) {
         return getManager()
             .getRepository(CampusManagerActivitiesCalendar)
             .createQueryBuilder("cmac")
-            .innerJoinAndSelect("cmac.mutators", "mutator")
-            .where("cmac.id = :id", {id: id})
+            .where("cmac.id = :id", { id: id })
             .getOne();
     }
 

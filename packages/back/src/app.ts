@@ -41,6 +41,7 @@ app.get("/getAllIndicators", indicatorController.getAllIndicators);
 app.get("/getIndicatorsByPlayerId", indicatorController.getIndicatorsByPlayerId);
 app.get("/getIndicatorById", indicatorController.getIndicatorById);
 app.post("/saveIndicator", indicatorController.saveIndicator);
+app.post("/saveAllIndicators", indicatorController.saveAllIndicators);
 app.post("/updateIndicator", indicatorController.updateIndicator);
 app.delete("/deleteIndicator", indicatorController.deleteIndicator);
 

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Mutator } from "./Mutator";
 
 @Entity("activity")
 export class Activity {
@@ -11,8 +12,11 @@ export class Activity {
     @Column()
     value: number;
 
-    @Column({length: 6})
+    @Column({ length: 6 })
     color: string;
+
+    @OneToMany(type => Mutator, mutator => mutator.activity)
+    mutators: Mutator[];
 
     constructor(name: string, value: number, color: string) {
         this.name = name;

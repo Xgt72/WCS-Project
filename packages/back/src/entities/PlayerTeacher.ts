@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Mutator } from "./Mutator";
 
-
 @Entity("player_teacher")
 export class PlayerTeacher {
     @PrimaryGeneratedColumn()
@@ -10,7 +9,7 @@ export class PlayerTeacher {
     @Column()
     player_id: number;
 
-    @Column({length: 100})
+    @Column({ length: 100 })
     name: string;
 
     @Column()

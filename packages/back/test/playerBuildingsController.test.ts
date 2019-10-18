@@ -131,7 +131,10 @@ describe('Player Building', () => {
             ];
             let response = await post("/updatePlayerBuilding", { id: 1, ...pBuilding });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual({ id: 1, ...pBuilding });
+            expect(response.body.id).toEqual(1);
+            expect(response.body.player_id).toEqual(pBuilding.player_id);
+            expect(response.body.name).toEqual(pBuilding.name);
+            expect(response.body.price).toEqual(pBuilding.price);
             done();
         }
     );

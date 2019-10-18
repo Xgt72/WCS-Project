@@ -11,7 +11,7 @@ let lastId = 1;
 describe('Player Campus Manager', () => {
 
     beforeAll(async (done) => {
-        
+
         connection = await getSingletonConnection("test");
         done();
     });
@@ -54,6 +54,11 @@ describe('Player Campus Manager', () => {
         "should return one player campus manager",
         async (done) => {
             let pCampusManager = new PlayerCampusManager(2, "Leila", 900);
+            pCampusManager.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 1, -100)
+            ];
+
             let response = await post("/savePlayerCampusManager", pCampusManager);
             pCampusManager = response.body;
             response = await get("/getPlayerCampusManagerById", { id: pCampusManager.id });
@@ -67,6 +72,11 @@ describe('Player Campus Manager', () => {
         "should return player campus managers by player ID",
         async (done) => {
             let pCampusManager = new PlayerCampusManager(1, "Obiwan", 550);
+            pCampusManager.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 1, -100)
+            ];
+
             let response = await post("/savePlayerCampusManager", pCampusManager);
             pCampusManager = response.body;
             lastId = pCampusManager.id;
@@ -81,9 +91,13 @@ describe('Player Campus Manager', () => {
         "should update one player campus manager",
         async (done) => {
             const pCampusManager = new PlayerCampusManager(4, "Luke", 280);
+
             let response = await post("/updatePlayerCampusManager", { id: 1, ...pCampusManager });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual({ id: 1, ...pCampusManager });
+            expect(response.body.id).toEqual(1);
+            expect(response.body.player_id).toEqual(pCampusManager.player_id);
+            expect(response.body.name).toEqual(pCampusManager.name);
+            expect(response.body.price).toEqual(pCampusManager.price);;
             done();
         }
     );

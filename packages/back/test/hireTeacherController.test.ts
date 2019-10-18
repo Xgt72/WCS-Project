@@ -38,7 +38,7 @@ describe('Hire a teacher', () => {
 
     test("should hire a teacher for a player",
     async (done) => {
-        let response = await post("/hireTeacher", {playerId: playerId, teacherName: "Xavier"});
+        let response = await post("/hireTeacher", {player_id: playerId, teacherName: "Xavier"});
         expect(response.status).toEqual(200);
         done();
     });
@@ -47,7 +47,7 @@ describe('Hire a teacher', () => {
     async (done) => {
         let updatedIndicator = await post("/updateIndicator", {id: budgetIndicatorId, value: 100});
         expect(updatedIndicator.status).toEqual(200);
-        let response = await post("/hireTeacher", {playerId: playerId, teacherName: "Xavier"});
+        let response = await post("/hireTeacher", {player_id: playerId, teacherName: "Xavier"});
         expect(response.status).toEqual(200);
         expect(response.body).toEqual("You can't hire this teacher, you don't have the necessary budget.");
         done();
@@ -58,10 +58,10 @@ describe('Hire a teacher', () => {
         let updatedIndicator = await post("/updateIndicator", {id: budgetIndicatorId, value: 1000});
         expect(updatedIndicator.status).toEqual(200);
 
-        let response = await post("/hireTeacher", {playerId: playerId, teacherName: "Nicolas"});
+        let response = await post("/hireTeacher", {player_id: playerId, teacherName: "Nicolas"});
         expect(response.status).toEqual(200);
         
-        response = await post("/hireTeacher", {playerId: playerId, teacherName: "Victor"});
+        response = await post("/hireTeacher", {player_id: playerId, teacherName: "Victor"});
         expect(response.status).toEqual(200);
         expect(response.body).toEqual("You already have two teachers, you can't hire one more.");
         done();
