@@ -13,13 +13,13 @@ let mutatorRepository = new MutatorRepository();
 export let hireTeacher = async (req: Request, res: Response) => {
     try {
         // get the number of teachers for the player 
-        let numberOfPlayerTeacher = await playerTeacherRepository.getOnePlayerTeachers(req.body.playerId);
+        let numberOfPlayerTeacher = await playerTeacherRepository.getOnePlayerTeachers(req.body.player_id);
 
         // get all the player indicators
-        let indicators = await indicatorRepository.getAllIndicatorsByPlayerId(req.body.playerId);
+        let indicators = await indicatorRepository.getAllIndicatorsByPlayerId(req.body.player_id);
 
         // get the budget indicator
-        let budgetIndicator = await indicatorRepository.getAllIndicatorsByPlayerIdAndName(req.body.playerId, "budget");
+        let budgetIndicator = await indicatorRepository.getAllIndicatorsByPlayerIdAndName(req.body.player_id, "budget");
 
         // if the player don't have the budget to hire the teacher, he can not hire a teacher
         if (budgetIndicator.value - teacherTemplate.price < 0) {
@@ -34,8 +34,9 @@ export let hireTeacher = async (req: Request, res: Response) => {
         }
 
         // creation of the new teacher
-        let teacher = new PlayerTeacher(req.body.playerId, req.body.teacherName, teacherTemplate.price);
+        let teacher = new PlayerTeacher(req.body.player_id, req.body.teacherName, teacherTemplate.price);
         let mutators = Mutator.cloneListWithIndicators(teacherTemplate.mutators, indicators);
+        
         if (mutators.length > 0) {
             for (let i = 0; i < mutators.length; i++) {
                 mutators[i] = await mutatorRepository.saveMutator(mutators[i]);

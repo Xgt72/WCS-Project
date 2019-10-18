@@ -4,7 +4,7 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
-import { Mutator } from "../src/entities/Mutator";
+
 let connection: Connection = null;
 let campusManagerActivityCalendarId: number = null;
 
@@ -25,10 +25,7 @@ describe('Teacher Calendar', () => {
         "should save one activity in campus manager calendar",
         async (done) => {
             const campusManagerActivity = new CampusManagerActivitiesCalendar(1, 1, false, true, 1);
-            campusManagerActivity.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
-            ];
+
             const response = await post("/saveCampusManagerActivity", campusManagerActivity);
             campusManagerActivityCalendarId = response.body.id;
             expect(response.status).toBe(200);
@@ -37,7 +34,6 @@ describe('Teacher Calendar', () => {
             expect(response.body.morning).toEqual(false);
             expect(response.body.afternoon).toEqual(true);
             expect(response.body.day).toEqual(1);
-            expect(parseInt(response.body.mutators.length)).toBeGreaterThan(1);
             done();
         }
     );

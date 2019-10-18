@@ -44,6 +44,17 @@ export let saveIndicator = async (req: Request, res: Response) => {
     }
 }
 
+export let saveAllIndicators = async (req: Request, res: Response) => {
+    try {
+        let indicators = req.body.map((indicator: Indicator) => indicator);
+        let result = await indicatorRepo.saveAllIndicators(indicators);
+        res.send(result);
+    }
+    catch (e) {
+        res.status(501).json(e);
+    }
+}
+
 export let deleteIndicator = async (req: Request, res: Response) => {
     try {
         let indicator = await indicatorRepo.getIndicatorById(req.body.id);

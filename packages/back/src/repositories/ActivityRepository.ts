@@ -3,10 +3,14 @@ import { getManager } from "typeorm";
 
 export class ActivityRepository {
     getAllActivities() {
-        return getManager().getRepository(Activity).find();
+        return getManager()
+            .getRepository(Activity)
+            .createQueryBuilder("activity")
+            .innerJoinAndSelect("activity.mutators", "mutator")
+            .getMany();
     }
 
-    saveAllActivities(activities: Activity[]){
+    saveAllActivities(activities: Activity[]) {
         return getManager().getRepository(Activity).save(activities);
     }
 
@@ -19,6 +23,11 @@ export class ActivityRepository {
     }
 
     getActivityById(activityId: number) {
-        return getManager().getRepository(Activity).findOne(activityId);
+        return getManager()
+            .getRepository(Activity)
+            .createQueryBuilder("activity")
+            .innerJoinAndSelect("activity.mutators", "mutator")
+            .where("activity.id = :id", { id: activityId })
+            .getOne();
     }
 }

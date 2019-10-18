@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import { PlayerCampusManager } from "../entities/PlayerCampusManager";
 import { PlayerCampusManagerRepository } from "../repositories/PlayerCampusManagerRepository";
-import { request } from "https";
+import { MutatorRepository } from "../repositories/MutatorRepository";
+import bodyParser = require("body-parser");
+
 let playerCampusManagerRepo = new PlayerCampusManagerRepository();
+let mutatorRepository = new MutatorRepository();
 
 export let getAllPlayersCampusManagers = async (req: Request, res: Response) => {
     try {
@@ -37,6 +40,16 @@ export let getAllPlayersCampusManagers = async (req: Request, res: Response) => 
  export let savePlayerCampusManager = async (req: Request, res: Response) => {
      try {
          let playerCampusManager = new PlayerCampusManager(req.body.player_id, req.body.name, req.body.price);
+
+         let mutators = req.body.mutators || [];
+
+         if (mutators.length > 0) {
+             for (let i = 0; i < mutators.length; i++) {
+                 mutators[i] = await mutatorRepository.saveMutator(mutators[i]);
+             }
+             playerCampusManager.mutators = mutators;
+         }
+
          let result = await playerCampusManagerRepo.savePlayerCampusManager(playerCampusManager);
          res.send(result);
      }
@@ -67,6 +80,14 @@ export let getAllPlayersCampusManagers = async (req: Request, res: Response) => 
         }
         if(req.body.price != null) {
             playerCampusManager.price = req.body.price;
+        }
+        if (req.body.mutators != null) {
+            if (req.body.mutators.length > 0) {
+                for (let i = 0; i < req.body.mutators.length; i++) {
+                    req.body.mutators[i] = await mutatorRepository.saveMutator(req.body.mutators[i]);
+                }
+                playerCampusManager.mutators = req.body.mutators;
+            }
         }
         let result = await playerCampusManagerRepo.savePlayerCampusManager(playerCampusManager);
         res.send(result);

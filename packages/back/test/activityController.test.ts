@@ -4,6 +4,8 @@ import { Activity } from "../src/entities/Activity";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
+import { Mutator } from "../src/entities/Mutator";
+
 let connection: Connection = null;
 
 describe('Activity', () => {
@@ -23,6 +25,11 @@ describe('Activity', () => {
         "should save one activity",
         async (done) => {
             const activity = new Activity("Wild Breakfast", 100, "FFB399");
+            activity.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 2, -100)
+            ];
+
             const response = await post("/saveActivity", activity);
             expect(response.status).toBe(200);
             expect(response.body.name).toEqual(activity.name);
@@ -36,6 +43,11 @@ describe('Activity', () => {
         "should save many activities",
         async (done) => {
             const activity = new Activity("Wild Breakfast", 100, "FFB399");
+            activity.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 2, -100)
+            ];
+
             const response = await post("/saveAllActivities", [activity, activity, activity, activity]);
             expect(response.status).toBe(200);
             expect(parseInt(response.body.length)).toEqual(4);
@@ -57,6 +69,11 @@ describe('Activity', () => {
         "should return activity by ID",
         async (done) => {
             let activity = new Activity("Organise RNCP", 200, "FFE205");
+            activity.mutators = [
+                new Mutator("incReputation", 1, 5),
+                new Mutator("decBudget", 2, -100)
+            ];
+
             let response = await post("/saveActivity", activity);
             activity = response.body;
             response = await get("/getActivityById", { id: activity.id });
@@ -72,7 +89,10 @@ describe('Activity', () => {
             const activity = new Activity("Buy Publicities", 350, "75FF05");
             let response = await post("/updateActivity", { id: 1, ...activity });
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual({ id: 1, ...activity });
+            expect(response.body.id).toEqual(1);
+            expect(response.body.name).toEqual(activity.name);
+            expect(response.body.value).toEqual(activity.value);
+            expect(response.body.color).toEqual(activity.color);
             done();
         }
     );
@@ -80,7 +100,7 @@ describe('Activity', () => {
     test(
         "should delete one activity",
         async (done) => {
-            let response = await deleteActivity("/deleteActivity", { id: 2 });
+            let response = await deleteActivity("/deleteActivity", { id: 1 });
             expect(response.status).toEqual(200);
             done();
         }

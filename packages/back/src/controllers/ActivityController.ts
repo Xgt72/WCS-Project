@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import { Activity } from "../entities/Activity";
 import { ActivityRepository } from "../repositories/ActivityRepository";
+import { MutatorRepository } from "../repositories/MutatorRepository";
+import { Mutator } from "../entities/Mutator";
+
 let activityRepo = new ActivityRepository();
+let mutatorRepository = new MutatorRepository();
 
 
 export let getAllActivities = async (req: Request, res: Response) => {
@@ -27,6 +31,16 @@ export let getActivityById = async (req: Request, res: Response) => {
 export let saveActivity = async (req: Request, res: Response) => {
     try {
         let activity = new Activity(req.body.name, req.body.value, req.body.color);
+        let mutators = req.body.mutators || [];
+
+        if (mutators.length > 0) {
+            for (let i = 0; i < mutators.length; i++) {
+                mutators[i] = await mutatorRepository.saveMutator(mutators[i]);
+            }
+
+            activity.mutators = mutators;
+        }
+
         let result = await activityRepo.saveActivity(activity);
         res.send(result);
     }
@@ -37,7 +51,16 @@ export let saveActivity = async (req: Request, res: Response) => {
 
 export let saveAllActivities = async (req: Request, res: Response) => {
     try {
-        let activities: Activity[] = req.body;       
+        let activities: Activity[] = req.body;
+    
+        activities.map((activity: Activity) => {
+            if (activity.mutators != null) {
+                activity.mutators.map(async (mutator: Mutator) => {
+                    mutator = await mutatorRepository.saveMutator(mutator);
+                });
+            }
+        });
+
         let result = await activityRepo.saveAllActivities(activities);
         res.send(result);
     }
