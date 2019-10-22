@@ -11,7 +11,9 @@ export class CampusManagerActivitiesCalendarRepository {
     getCampusManagerActivitiesCalendarByCampusManagerId(campusManagerId: number) {
         return getManager()
             .getRepository(CampusManagerActivitiesCalendar)
-            .findOne(campusManagerId);
+            .createQueryBuilder("cmac")
+            .where("cmac.campus_manager_id = :id", { id: campusManagerId })
+            .getMany();
     }
 
     getCampusManagerActivityCalendarById(id: number) {
@@ -22,8 +24,28 @@ export class CampusManagerActivitiesCalendarRepository {
             .getOne();
     }
 
+    getActivityByCampusManagerIdByDayByMorning(campusManagerId: number, day: number) {
+        return getManager()
+        .getRepository(CampusManagerActivitiesCalendar)
+        .createQueryBuilder("cmac")
+        .where("cmac.campus_manager_id = :id AND cmac.day = :day AND cmac.morning = true", { id: campusManagerId, day: day })
+        .getOne();
+    }
+
+    getActivityByCampusManagerIdByDayByAfternoon(campusManagerId: number, day: number) {
+        return getManager()
+        .getRepository(CampusManagerActivitiesCalendar)
+        .createQueryBuilder("cmac")
+        .where("cmac.campus_manager_id = :id AND cmac.day = :day AND cmac.afternoon = true", { id: campusManagerId, day: day })
+        .getOne();
+    }
+
     saveCampusManagerActivity(campusManagerActivity: CampusManagerActivitiesCalendar) {
         return getManager().getRepository(CampusManagerActivitiesCalendar).save(campusManagerActivity);
+    }
+
+    saveMultipleActivitiesCampusManager(campusManagerActivities: CampusManagerActivitiesCalendar[]) {
+        return getManager().getRepository(CampusManagerActivitiesCalendar).save(campusManagerActivities);
     }
 
     deleteCampusManagerActivity(campusManagerActivity: CampusManagerActivitiesCalendar) {

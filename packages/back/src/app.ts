@@ -20,6 +20,7 @@ import * as campusManagerActivitiesCalendarController from "./controllers/Campus
 import * as activityController from "./controllers/ActivityController";
 import * as hireTeacherController from "./controllers/HireTeacherController";
 import * as hireCampusManagerController from "./controllers/HireCampusManagerController";
+import * as campusManagerCalendarController from "./controllers/CampusManagerCalendarController";
 
 /**
  * Create Express server.
@@ -110,7 +111,9 @@ app.delete("/deletePlayerCampusManager", playerCampusManagerController.deletePla
 app.get("/getAllCampusManagersActivitiesCalendar", campusManagerActivitiesCalendarController.getAllCampusManagersActivitiesCalendar);
 app.get("/getCampusManagerActivityCalendarById", campusManagerActivitiesCalendarController.getCampusManagerActivityCalendarById);
 app.get("/getCampusManagerActivitiesCalendarByCampusManagerId", campusManagerActivitiesCalendarController.getCampusManagerActivitiesCalendarByCampusManagerId);
+app.get("/getActivityByCampusManagerIdByDayByPeriod", campusManagerActivitiesCalendarController.getActivitiesByCampusManagerIdAndByDayByPeriod);
 app.post("/saveCampusManagerActivity", campusManagerActivitiesCalendarController.saveCampusManagerActivity);
+app.post("/saveMultipleActivitiesCampusManager", campusManagerActivitiesCalendarController.saveMultipleActivitiesCampusManager);
 app.post("/updateCampusManagerActivityCalendar", campusManagerActivitiesCalendarController.updateCampusManagerActivityCalendar);
 app.delete("/deleteCampusManagerAcitvityCalendar", campusManagerActivitiesCalendarController.deleteCampusManagerAcitvityCalendar);
 
@@ -143,6 +146,11 @@ app.post("/hireTeacher", hireTeacherController.hireTeacher);
  * Hire a campus manager route.
  */
 app.post("/hireCampusManager", hireCampusManagerController.hireCampusManager);
+
+/**
+ * Campus manager calendar route.
+ */
+app.post("/addActivitiesInCampusManagerCalendar", campusManagerCalendarController.addActivitiesInCampusManagerCalendar);
 
 /**
  * Start Express server.
