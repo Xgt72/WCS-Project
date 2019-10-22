@@ -31,7 +31,7 @@ describe('doCycle', () => {
         response = await post("/saveIndicator", budgetIndicator);
         budgetId = response.body.id;
 
-        // create t2 building templates
+        // create 2 building templates
         response = await post("/savePlayerBuilding", classroomTemplate);
         response = await post("/savePlayerBuilding", parkingTemplate);
 

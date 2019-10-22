@@ -82,17 +82,8 @@ describe('buy a building', () => {
 
                 done();
             }
-        )
-
+        );
 });
-
-export function get(url: string, body: any) {
-    const httpRequest = request(app).get(url);
-    httpRequest.send(body);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}
 
 export function post(url: string, body: any) {
     const httpRequest = request(app).post(url);
