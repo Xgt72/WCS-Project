@@ -13,13 +13,13 @@ let mutatorRepository = new MutatorRepository();
 export let hireCampusManager = async (req: Request, res: Response) => {
     try {
         // get the number of campus managers for the player 
-        let numberOfPlayerCampusManager = await playerCaMaRepository.getOnePlayerCampusManagers(req.body.playerId);
+        let numberOfPlayerCampusManager = await playerCaMaRepository.getOnePlayerCampusManagers(req.body.player_id);
 
         // get all the player indicators
-        let indicators = await indicatorRepository.getAllIndicatorsByPlayerId(req.body.playerId);
+        let indicators = await indicatorRepository.getAllIndicatorsByPlayerId(req.body.player_id);
 
         // get the budget indicator
-        let budgetIndicator = await indicatorRepository.getAllIndicatorsByPlayerIdAndName(req.body.playerId, "budget");
+        let budgetIndicator = await indicatorRepository.getAllIndicatorsByPlayerIdAndName(req.body.player_id, "budget");
 
         // if the player don't have the budget to hire the campus manager, he can not hire a campus manager
         if (budgetIndicator.value - campusManagerTemplate.price < 0) {
@@ -34,7 +34,7 @@ export let hireCampusManager = async (req: Request, res: Response) => {
         }
 
         // creation of the new campus manager
-        let campusManager = new PlayerCampusManager(req.body.playerId, req.body.campusManagerName, campusManagerTemplate.price);
+        let campusManager = new PlayerCampusManager(req.body.player_id, req.body.campusManagerName, campusManagerTemplate.price);
         let mutators = Mutator.cloneListWithIndicators(campusManagerTemplate.mutators, indicators);
         if (mutators.length > 0) {
             for (let i = 0; i < mutators.length; i++) {

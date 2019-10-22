@@ -21,6 +21,7 @@ import * as activityController from "./controllers/ActivityController";
 import * as hireTeacherController from "./controllers/HireTeacherController";
 import * as hireCampusManagerController from "./controllers/HireCampusManagerController";
 import * as campusManagerCalendarController from "./controllers/CampusManagerCalendarController";
+import * as teacherCalendarController from "./controllers/TeacherCalendarController";
 
 /**
  * Create Express server.
@@ -91,7 +92,9 @@ app.delete("/deletePlayerTeacher", playerTeacherController.deletePlayerTeacher);
 app.get("/getAllTeachersActivitiesCalendar", teacherActivitiesCalendarController.getAllTeachersActivitiesCalendar);
 app.get("/getTeacherActivityCalendarById", teacherActivitiesCalendarController.getTeacherActivityCalendarById);
 app.get("/getTeacherActivitiesCalendarByTeacherId", teacherActivitiesCalendarController.getTeacherActivitiesCalendarByTeacherId);
+app.get("/getActivityByTeacherIdByDayByPeriod", teacherActivitiesCalendarController.getActivitiesByTeacherIdAndByDayByPeriod);
 app.post("/saveTeacherActivity", teacherActivitiesCalendarController.saveTeacherActivity);
+app.post("/saveMultipleActivitiesTeacher", teacherActivitiesCalendarController.saveMultipleActivitiesTeacher);
 app.post("/updateTeacherActivityCalendar", teacherActivitiesCalendarController.updateTeacherActivityCalendar);
 app.delete("/deleteTeacherAcitvityCalendar", teacherActivitiesCalendarController.deleteTeacherAcitvityCalendar);
 
@@ -106,7 +109,7 @@ app.post("/updatePlayerCampusManager", playerCampusManagerController.updatePlaye
 app.delete("/deletePlayerCampusManager", playerCampusManagerController.deletePlayerCampusManager);
 
 /**
- * Campus ManagerActivities Calendar routes.
+ * Campus Manager Activities Calendar routes.
  */
 app.get("/getAllCampusManagersActivitiesCalendar", campusManagerActivitiesCalendarController.getAllCampusManagersActivitiesCalendar);
 app.get("/getCampusManagerActivityCalendarById", campusManagerActivitiesCalendarController.getCampusManagerActivityCalendarById);
@@ -151,6 +154,11 @@ app.post("/hireCampusManager", hireCampusManagerController.hireCampusManager);
  * Campus manager calendar route.
  */
 app.post("/addActivitiesInCampusManagerCalendar", campusManagerCalendarController.addActivitiesInCampusManagerCalendar);
+
+/**
+ * Teacher calendar route.
+ */
+app.post("/addActivitiesInTeacherCalendar", teacherCalendarController.addActivitiesInTeacherCalendar);
 
 /**
  * Start Express server.

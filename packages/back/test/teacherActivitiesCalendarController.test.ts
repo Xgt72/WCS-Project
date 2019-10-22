@@ -4,7 +4,7 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
-import { Mutator } from "../src/entities/Mutator";
+
 let connection: Connection = null;
 let teacherActivityCalendarId: number = null;
 
@@ -34,6 +34,46 @@ describe('Teacher Calendar', () => {
             expect(response.body.morning).toEqual(false);
             expect(response.body.afternoon).toEqual(true);
             expect(response.body.day).toEqual(1);
+
+            done();
+        }
+    );
+
+    test(
+        "should save two activities in campus manager calendar",
+        async (done) => {
+            const activityOne = new TeacherActivitiesCalendar(1, 1, true, false, 1);
+            const activityTwo = new TeacherActivitiesCalendar(1, 1, false, true, 1);
+
+            const response = await post(
+                "/saveMultipleActivitiesTeacher",
+                { teacher_id: 1, activities: [activityOne, activityTwo] }
+            );
+
+            expect(response.status).toEqual(200);
+            expect(parseInt(response.body.length)).toEqual(2);
+
+            done();
+        }
+    );
+
+    test(
+        "should return a morning activity",
+        async (done) => {
+            const response = await get("/getActivityByTeacherIdByDayByPeriod", { teacher_id: 1, day: 1, period: "morning" });
+            expect(response.status).toEqual(200);
+            expect(response.body.morning).toEqual(true);
+
+            done();
+        }
+    );
+
+    test(
+        "should return an afternoon activity",
+        async (done) => {
+            const response = await get("/getActivityByTeacherIdByDayByPeriod", { teacher_id: 1, day: 1, period: "afternoon" });
+            expect(response.status).toEqual(200);
+            expect(response.body.afternoon).toEqual(true);
 
             done();
         }
