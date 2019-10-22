@@ -8,7 +8,7 @@ import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerAc
 let connection: Connection = null;
 let campusManagerActivityCalendarId: number = null;
 
-describe('Teacher Calendar', () => {
+describe('Campus Manager Calendar', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
@@ -34,6 +34,7 @@ describe('Teacher Calendar', () => {
             expect(response.body.morning).toEqual(false);
             expect(response.body.afternoon).toEqual(true);
             expect(response.body.day).toEqual(2);
+            
             done();
         }
     );

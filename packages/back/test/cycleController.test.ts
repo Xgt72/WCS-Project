@@ -60,8 +60,8 @@ describe('doCycle', () => {
         async (done) => {
             let response = await get("/doCycle", { player_id: testerId });
             expect(response.status).toEqual(200);
-            expect(parseInt(response.body[0].value)).toEqual(62);
-            expect(parseInt(response.body[1].value)).toEqual(3750);
+            expect(parseInt(response.body[0].value)).toEqual(64);
+            expect(parseInt(response.body[1].value)).toEqual(3370);
             done();
         }
     );

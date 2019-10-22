@@ -4,16 +4,16 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 import { Player } from "../src/entities/Player";
-import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
+import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
 import { Indicator } from "../src/entities/Indicator";
 import { activitiesTemplate } from "../src/models/Templates";
 
 let connection: Connection = null;
 let playerId: number = 0;
-let campusManagerId: number = 0;
+let teacherId: number = 0;
 let budgetId: number = 0;
 
-describe('Campus manager calendar', () => {
+describe('Teacher calendar', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
@@ -33,9 +33,8 @@ describe('Campus manager calendar', () => {
         budgetId = response.body.id;
 
         // hire one campus manager for the player
-        response = await post("/hireCampusManager", { player_id: playerId, campusManagerName: "Link" });
-        campusManagerId = response.body.campusManager.id;
-        console.log("Campus manager ID: ", campusManagerId);
+        response = await post("/hireTeacher", { player_id: playerId, teacherName: "Zelda" });
+        teacherId = response.body.teacher.id;
 
         // create activities template
         response = await post("/saveAllActivities", activitiesTemplate);
@@ -50,18 +49,18 @@ describe('Campus manager calendar', () => {
     });
 
     test(
-        "should add activities to the campus manager calendar",
+        "should add activities to the teacher calendar",
         async (done) => {
             let activities = [
-                new CampusManagerActivitiesCalendar(campusManagerId, 1, true, false, 1),
-                new CampusManagerActivitiesCalendar(campusManagerId, 2, false, true, 1),
-                new CampusManagerActivitiesCalendar(campusManagerId, 3, true, false, 2)
+                new TeacherActivitiesCalendar(teacherId, 1, true, false, 1),
+                new TeacherActivitiesCalendar(teacherId, 2, false, true, 1),
+                new TeacherActivitiesCalendar(teacherId, 3, true, false, 2)
             ];
 
             let response = await post(
-                "/addActivitiesInCampusManagerCalendar",
+                "/addActivitiesInTeacherCalendar",
                 {
-                    campus_manager_id: campusManagerId,
+                    teacher_id: teacherId,
                     activities: activities
                 }
             );
@@ -72,18 +71,18 @@ describe('Campus manager calendar', () => {
     );
 
     test(
-        "shoul update activities in the campus manager calendar",
+        "should update activities in the teacher calendar",
         async (done) => {
             let activities = [
-                new CampusManagerActivitiesCalendar(campusManagerId, 1, false, true, 1),
-                new CampusManagerActivitiesCalendar(campusManagerId, 2, true, false, 1),
-                new CampusManagerActivitiesCalendar(campusManagerId, 3, false, true, 2)
+                new TeacherActivitiesCalendar(teacherId, 1, false, true, 1),
+                new TeacherActivitiesCalendar(teacherId, 2, true, false, 1),
+                new TeacherActivitiesCalendar(teacherId, 3, false, true, 2)
             ];
 
             let response = await post(
-                "/addActivitiesInCampusManagerCalendar",
+                "/addActivitiesInTeacherCalendar",
                 {
-                    campus_manager_id: campusManagerId,
+                    teacher_id: teacherId,
                     activities: activities
                 }
             );

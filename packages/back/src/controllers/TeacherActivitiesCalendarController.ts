@@ -35,10 +35,40 @@ export let getTeacherActivitiesCalendarByTeacherId = async (req: Request, res: R
     }
 }
 
+export let getActivitiesByTeacherIdAndByDayByPeriod = async (req: Request, res: Response) => {
+    try {
+        let activities: TeacherActivitiesCalendar = undefined;
+        if (req.body.period == "morning") {
+            activities = await teacherActivitiesCalendarRepo.getActivityByTeacherIdByDayByMorning(req.body.teacher_id, req.body.day);
+        } else if (req.body.period == "afternoon") {
+            activities = await teacherActivitiesCalendarRepo.getActivityByTeacherIdByDayByAfternoon(req.body.teacher_id, req.body.day);
+        }
+        res.send(activities);
+    }
+    catch (e) {
+        res.status(501).json(e);
+    }
+}
+
 export let saveTeacherActivity = async (req: Request, res: Response) => {
     try {
         let teachersActivitiesCalendar = new TeacherActivitiesCalendar(req.body.teacher_id, req.body.activity_id, req.body.morning, req.body.afternoon, req.body.day);
         let result = await teacherActivitiesCalendarRepo.saveTeacherActivity(teachersActivitiesCalendar);
+        res.send(result);
+    }
+    catch (e) {
+        res.status(501).json(e);
+    }
+}
+
+export let saveMultipleActivitiesTeacher = async (req: Request, res: Response) => {
+    try {
+        let activities: TeacherActivitiesCalendar[] = [];
+        req.body.activities.forEach((activity: any) => {
+            activities.push(new TeacherActivitiesCalendar(req.body.teacher_id, activity.activity_id, activity.morning, activity.afternoon, activity.day));
+        });
+
+        let result = await teacherActivitiesCalendarRepo.saveMultipleActivitiesTeacher(activities);
         res.send(result);
     }
     catch (e) {
