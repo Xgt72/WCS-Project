@@ -11,7 +11,8 @@ import { activitiesTemplate } from "../src/models/Templates";
 let connection: Connection = null;
 let playerId: number = 0;
 let teacherId: number = 0;
-let budgetId: number = 0;
+let reputation: Indicator = null;
+let budget: Indicator = null;
 
 describe('Teacher calendar', () => {
 
@@ -22,17 +23,17 @@ describe('Teacher calendar', () => {
         let player = new Player("Sharky");
         let response = await post("/savePlayer", player);
         playerId = response.body.id;
-        console.log("Player ID: ", playerId);
 
         // creation of 2 indicators
         let reputationIndicator = new Indicator("reputation", playerId, 30);
         response = await post("/saveIndicator", reputationIndicator);
+        reputation = response.body;
 
         let budgetIndicator = new Indicator("budget", playerId, 5000);
         response = await post("/saveIndicator", budgetIndicator);
-        budgetId = response.body.id;
+        budget = response.body;
 
-        // hire one campus manager for the player
+        // hire one teacher for the player
         response = await post("/hireTeacher", { player_id: playerId, teacherName: "Zelda" });
         teacherId = response.body.teacher.id;
 
@@ -51,7 +52,7 @@ describe('Teacher calendar', () => {
     test(
         "should add activities to the teacher calendar",
         async (done) => {
-            let activities = [
+            let activitiesCalendar = [
                 new TeacherActivitiesCalendar(teacherId, 1, true, false, 1),
                 new TeacherActivitiesCalendar(teacherId, 2, false, true, 1),
                 new TeacherActivitiesCalendar(teacherId, 3, true, false, 2)
@@ -61,33 +62,12 @@ describe('Teacher calendar', () => {
                 "/addActivitiesInTeacherCalendar",
                 {
                     teacher_id: teacherId,
-                    activities: activities
+                    activities: activitiesCalendar
                 }
             );
             expect(response.status).toEqual(200);
-
-            done();
-        }
-    );
-
-    test(
-        "should update activities in the teacher calendar",
-        async (done) => {
-            let activities = [
-                new TeacherActivitiesCalendar(teacherId, 1, false, true, 1),
-                new TeacherActivitiesCalendar(teacherId, 2, true, false, 1),
-                new TeacherActivitiesCalendar(teacherId, 3, false, true, 2)
-            ];
-
-            let response = await post(
-                "/addActivitiesInTeacherCalendar",
-                {
-                    teacher_id: teacherId,
-                    activities: activities
-                }
-            );
-            expect(response.status).toEqual(200);
-
+            expect(parseInt(response.body.length)).toEqual(3);
+            
             done();
         }
     );

@@ -11,7 +11,8 @@ import { activitiesTemplate } from "../src/models/Templates";
 let connection: Connection = null;
 let playerId: number = 0;
 let campusManagerId: number = 0;
-let budgetId: number = 0;
+let reputation: Indicator = null;
+let budget: number = 0;
 
 describe('Campus manager calendar', () => {
 
@@ -22,20 +23,19 @@ describe('Campus manager calendar', () => {
         let player = new Player("Sharky");
         let response = await post("/savePlayer", player);
         playerId = response.body.id;
-        console.log("Player ID: ", playerId);
 
         // creation of 2 indicators
         let reputationIndicator = new Indicator("reputation", playerId, 30);
         response = await post("/saveIndicator", reputationIndicator);
+        reputation = response.body;
 
         let budgetIndicator = new Indicator("budget", playerId, 5000);
         response = await post("/saveIndicator", budgetIndicator);
-        budgetId = response.body.id;
+        budget = response.body.id;
 
         // hire one campus manager for the player
         response = await post("/hireCampusManager", { player_id: playerId, campusManagerName: "Link" });
         campusManagerId = response.body.campusManager.id;
-        console.log("Campus manager ID: ", campusManagerId);
 
         // create activities template
         response = await post("/saveAllActivities", activitiesTemplate);
@@ -52,7 +52,7 @@ describe('Campus manager calendar', () => {
     test(
         "should add activities to the campus manager calendar",
         async (done) => {
-            let activities = [
+            let activitiesCalendar = [
                 new CampusManagerActivitiesCalendar(campusManagerId, 1, true, false, 1),
                 new CampusManagerActivitiesCalendar(campusManagerId, 2, false, true, 1),
                 new CampusManagerActivitiesCalendar(campusManagerId, 3, true, false, 2)
@@ -62,32 +62,11 @@ describe('Campus manager calendar', () => {
                 "/addActivitiesInCampusManagerCalendar",
                 {
                     campus_manager_id: campusManagerId,
-                    activities: activities
+                    activities: activitiesCalendar
                 }
             );
             expect(response.status).toEqual(200);
-
-            done();
-        }
-    );
-
-    test(
-        "shoul update activities in the campus manager calendar",
-        async (done) => {
-            let activities = [
-                new CampusManagerActivitiesCalendar(campusManagerId, 1, false, true, 1),
-                new CampusManagerActivitiesCalendar(campusManagerId, 2, true, false, 1),
-                new CampusManagerActivitiesCalendar(campusManagerId, 3, false, true, 2)
-            ];
-
-            let response = await post(
-                "/addActivitiesInCampusManagerCalendar",
-                {
-                    campus_manager_id: campusManagerId,
-                    activities: activities
-                }
-            );
-            expect(response.status).toEqual(200);
+            expect(parseInt(response.body.length)).toEqual(3);
 
             done();
         }
