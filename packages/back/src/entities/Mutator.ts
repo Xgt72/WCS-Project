@@ -16,7 +16,7 @@ export class Mutator {
     @Column()
     indicator_id: number;
 
-    @Column()
+    @Column("float")
     value: number;
 
 
