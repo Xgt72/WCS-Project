@@ -53,14 +53,14 @@ export let saveAllActivities = async (req: Request, res: Response) => {
     try {
         let activities: Activity[] = req.body;
     
-        activities.map((activity: Activity) => {
-            if (activity.mutators != null) {
-                activity.mutators.map(async (mutator: Mutator) => {
-                    mutator = await mutatorRepository.saveMutator(mutator);
-                });
+        for (let i = 0; i < activities.length; i++) {
+            if (activities[i].mutators != null) {
+                for (let j = 0; j < activities[i].mutators.length; j++) {
+                    activities[i].mutators[j] = await mutatorRepository.saveMutator(activities[i].mutators[j]);
+                }
             }
-        });
-
+        }
+        
         let result = await activityRepo.saveAllActivities(activities);
         res.send(result);
     }
