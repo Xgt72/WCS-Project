@@ -44,7 +44,7 @@ export class Mutator {
 
     static cloneList(mutators: Mutator[]): Mutator[] {
         let results: Mutator[] = [];
-        mutators.map(mut => {results.push(Mutator.clone(mut));});
+        mutators.map(mut => { results.push(Mutator.clone(mut)); });
         return results;
     }
 
@@ -52,7 +52,9 @@ export class Mutator {
         let results: Mutator[] = [];
         let reputationIndicatorId: number = -1;
         let budgetIndicatorId: number = -1;
-        // console.log("indicators in mutator: ", indicators);
+        let studentsNumberId: number = -1;
+        let forecastSalesTurnoverId: number = -1;
+
         indicators.map(
             indicator => {
                 switch (indicator.name) {
@@ -62,6 +64,11 @@ export class Mutator {
                     case "budget":
                         budgetIndicatorId = indicator.id;
                         break;
+                    case "students number":
+                        studentsNumberId = indicator.id;
+                        break;
+                    case "forecast sales turnover":
+                        forecastSalesTurnoverId = indicator.id;
                     default:
                         break;
                 }
@@ -74,6 +81,12 @@ export class Mutator {
             }
             else if (mutatorType.search("Budget") != -1) {
                 mut.indicator_id = budgetIndicatorId;
+            }
+            else if (mutatorType.search("StudentsNumber") != -1) {
+                mut.indicator_id = studentsNumberId;
+            }
+            else if (mutatorType.search("ForecastSalesTurnover") != -1) {
+                mut.indicator_id = forecastSalesTurnoverId;
             }
             results.push(Mutator.clone(mut));
         });
