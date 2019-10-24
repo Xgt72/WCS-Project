@@ -6,7 +6,7 @@ import { app, server } from "../src/app";
 import { Player } from "../src/entities/Player";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
 import { Indicator } from "../src/entities/Indicator";
-import { activitiesTemplate } from "../src/models/Templates";
+import { teacherActivitiesTemplates } from "../src/models/Templates";
 
 let connection: Connection = null;
 let playerId: number = 0;
@@ -38,7 +38,7 @@ describe('Teacher calendar', () => {
         teacherId = response.body.teacher.id;
 
         // create activities template
-        response = await post("/saveAllActivities", activitiesTemplate);
+        response = await post("/saveAllActivities", teacherActivitiesTemplates);
 
         done();
     });
