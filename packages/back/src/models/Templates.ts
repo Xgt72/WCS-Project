@@ -22,10 +22,22 @@ classroomTemplate.mutators = [
     new Mutator("decBudget", 2, -100)
 ];
 
-export let parkingTemplate: PlayerBuilding = new PlayerBuilding(0, "parking", 300, true);
+export let parkingTemplate: PlayerBuilding = new PlayerBuilding(0, "parking", 200, true);
 parkingTemplate.mutators = [
     new Mutator("incReputation", 1, 2),
+    new Mutator("decBudget", 2, -20)
+];
+
+export let cafeteriaTemplate: PlayerBuilding = new PlayerBuilding(0, "cafeteria", 350, true);
+cafeteriaTemplate.mutators = [
+    new Mutator("incReputation", 1, 4),
     new Mutator("decBudget", 2, -50)
+];
+
+export let dormsTemplate: PlayerBuilding = new PlayerBuilding(0, "dorms", 250, true);
+dormsTemplate.mutators = [
+    new Mutator("incReputation", 1, 3),
+    new Mutator("decBudget", 2, -40)
 ];
 
 let activityOne = new Activity("Wild Breakfast", 100, "FFB399");
