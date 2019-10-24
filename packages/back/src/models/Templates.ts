@@ -3,6 +3,14 @@ import { Mutator } from "../entities/Mutator";
 import { PlayerBuilding } from "../entities/PlayerBuilding";
 import { PlayerCampusManager } from "../entities/PlayerCampusManager";
 import { Activity } from "../entities/Activity";
+import { Indicator } from "../entities/Indicator";
+
+export let indicatorsTemplates: Indicator[] = [
+    new Indicator("reputation", 0, 30),
+    new Indicator("budget", 0, 5000),
+    new Indicator("students number", 0, 0),
+    new Indicator("forecast sales turnover", 0, 0)
+];
 
 export let teacherTemplate: PlayerTeacher = new PlayerTeacher(0, "Junior Trainer", 200);
 teacherTemplate.mutators = [
