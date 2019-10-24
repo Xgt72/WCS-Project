@@ -7,7 +7,7 @@ import { Player } from "../src/entities/Player";
 import { Indicator } from "../src/entities/Indicator";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
-import { classroomTemplate, parkingTemplate, activitiesTemplate } from "../src/models/Templates";
+import { classroomTemplate, parkingTemplate, campusManagerActivitiesTemplates, teacherActivitiesTemplates } from "../src/models/Templates";
 
 let connection: Connection = null;
 let testerId: number = 0;
@@ -51,13 +51,14 @@ describe('doCycle', () => {
         campusManagerId = response.body.campusManager.id;
 
         // create activities template
-        response = await post("/saveAllActivities", activitiesTemplate);
+        response = await post("/saveAllActivities", campusManagerActivitiesTemplates);
+        response = await post("/saveAllActivities", teacherActivitiesTemplates);
 
         // add activities into the teacher calendar
         let teacherActivities = [
-            new TeacherActivitiesCalendar(teacherId, 1, true, false, 1),
-            new TeacherActivitiesCalendar(teacherId, 2, false, true, 2),
-            new TeacherActivitiesCalendar(teacherId, 3, true, false, 2)
+            new TeacherActivitiesCalendar(teacherId, 8, true, false, 1),
+            new TeacherActivitiesCalendar(teacherId, 9, false, true, 2),
+            new TeacherActivitiesCalendar(teacherId, 10, true, false, 2)
         ];
         response = await post(
             "/addActivitiesInTeacherCalendar",
@@ -95,8 +96,8 @@ describe('doCycle', () => {
         async (done) => {
             let response = await get("/doCycle", { player_id: testerId });
             expect(response.status).toEqual(200);
-            expect(parseFloat((response.body[0].value).toFixed(2))).toEqual(65.24);
-            expect(parseInt(response.body[1].value)).toEqual(3180);
+            expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(66.6);
+            expect(parseInt(response.body[1].value)).toEqual(3165);
             done();
         }
     );

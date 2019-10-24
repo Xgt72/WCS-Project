@@ -40,24 +40,92 @@ dormsTemplate.mutators = [
     new Mutator("decBudget", 2, -40)
 ];
 
-let activityOne = new Activity("Wild Breakfast", 100, "FFB399");
-activityOne.mutators = [
+let campusManagerActivityOne: Activity = new Activity("Wild Breakfast", 100, "69c7b5");
+campusManagerActivityOne.mutators = [
     new Mutator("incReputation", 1, 0.1),
     new Mutator("decBudget", 2, -10)
 ];
-let activityTwo = new Activity("Organise RNCP", 200, "FFE205");
-activityTwo.mutators = [
-    new Mutator("incReputation", 1, 0.02),
+
+let campusManagerActivityTwo: Activity = new Activity("Organise RNCP", 200, "3b5998");
+campusManagerActivityTwo.mutators = [
+    new Mutator("incReputation", 1, 0.2),
     new Mutator("decBudget", 2, -5)
 ];
-let activityThree = new Activity("Buy Publicities", 350, "75FF05");
-activityThree.mutators = [
+
+let campusManagerActivityThree: Activity = new Activity("Buy Publicities", 350, "bf49a0");
+campusManagerActivityThree.mutators = [
     new Mutator("incReputation", 1, 0.5),
     new Mutator("decBudget", 2, -80)
 ];
 
-export let activitiesTemplate: Activity[] = [
-    activityOne,
-    activityTwo,
-    activityThree
+let campusManagerActivityFour: Activity = new Activity("Wild Aperitif", 100, "cf0921");
+campusManagerActivityThree.mutators = [
+    new Mutator("incReputation", 1, 0.4),
+    new Mutator("decBudget", 2, -50)
+];
+
+let campusManagerActivityFive: Activity = new Activity("Networking", 50, "ff6c33");
+campusManagerActivityThree.mutators = [
+    new Mutator("incReputation", 1, 0.5),
+    new Mutator("decBudget", 2, -80)
+];
+
+let campusManagerActivitySix: Activity = new Activity("Organize a Trad Fair", 450, "55c671");
+campusManagerActivityThree.mutators = [
+    new Mutator("incReputation", 1, 0.6),
+    new Mutator("decBudget", 2, -80)
+];
+
+let campusManagerActivitySeven: Activity = new Activity("Internal Management", 100, "ff83da");
+campusManagerActivityThree.mutators = [
+    new Mutator("incReputation", 1, 0.5),
+    new Mutator("decBudget", 2, -80)
+];
+
+export let campusManagerActivitiesTemplates: Activity[] = [
+    campusManagerActivityOne,
+    campusManagerActivityTwo,
+    campusManagerActivityThree,
+    campusManagerActivityFour,
+    campusManagerActivityFive,
+    campusManagerActivitySix,
+    campusManagerActivitySeven
+];
+
+let teacherActivityOne: Activity = new Activity("Weekly Meeting", 100, "69c7b5");
+teacherActivityOne.mutators = [
+    new Mutator("incReputation", 1, 0.6),
+    new Mutator("decBudget", 2, -80)
+];
+
+let teacherActivityTwo: Activity = new Activity("Prepare a Course", 100, "3b5998");
+teacherActivityTwo.mutators = [
+    new Mutator("incReputation", 1, 0.6),
+    new Mutator("decBudget", 2, -80)
+];
+
+let teacherActivityThree: Activity = new Activity("Give a Course", 100, "bf49a0");
+teacherActivityThree.mutators = [
+    new Mutator("incReputation", 1, 0.6),
+    new Mutator("decBudget", 2, -80)
+];
+
+let teacherActivityFour: Activity = new Activity("Correction of a Wild Circus Candidate", 100, "cf0921");
+teacherActivityFour.mutators = [
+    new Mutator("incReputation", 1, 0.6),
+    new Mutator("decBudget", 2, -80)
+];
+
+let teacherActivityFive: Activity = new Activity("Workshop or Live Coding", 100, "ff6c33");
+teacherActivityFive.mutators = [
+    new Mutator("incReputation", 1, 0.6),
+    new Mutator("decBudget", 2, -80)
+];
+
+export let teacherActivitiesTemplates: Activity[] = [
+    teacherActivityOne,
+    teacherActivityTwo,
+    teacherActivityThree,
+    teacherActivityFour,
+    teacherActivityFive
 ];
