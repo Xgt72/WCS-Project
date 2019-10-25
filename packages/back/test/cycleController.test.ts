@@ -7,7 +7,7 @@ import { Player } from "../src/entities/Player";
 import { Indicator } from "../src/entities/Indicator";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
-import { classroomTemplate, parkingTemplate, campusManagerActivitiesTemplates, teacherActivitiesTemplates } from "../src/models/Templates";
+import { classroomTemplate, parkingTemplate, campusManagerActivitiesTemplates, teacherActivitiesTemplates, indicatorsTemplates } from "../src/models/Templates";
 
 let connection: Connection = null;
 let testerId: number = 0;
@@ -21,18 +21,19 @@ describe('doCycle', () => {
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
 
-        // create a Tester player
-        let player = new Player("Tester");
-        let response = await post("/savePlayer", player);
-        testerId = response.body.id;
+        // create the indicators templates
+        let response = await post("/saveAllIndicators", indicatorsTemplates);
 
-        // create reputation and budget indicators for the player Tester
-        let reputationIndicator = new Indicator("reputation", testerId, 50);
-        response = await post("/saveIndicator", reputationIndicator);
+        // create the player
+        response = await post("/createPlayer", { player_name: "Sharky" });
+        testerId = response.body.player.id;
+
+        // get reputation indicator of the player
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: "reputation" });
         reputationId = response.body.id;
 
-        let budgetIndicator = new Indicator("budget", testerId, 5000);
-        response = await post("/saveIndicator", budgetIndicator);
+        // get budget indicator of the player
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: "budget" });
         budgetId = response.body.id;
 
         // create 2 building templates
@@ -70,9 +71,17 @@ describe('doCycle', () => {
 
         // add activities into the campus manager calendar
         let campusManagerActivities = [
-            new CampusManagerActivitiesCalendar(campusManagerId, 1, true, false, 1),
-            new CampusManagerActivitiesCalendar(campusManagerId, 2, false, true, 1),
-            new CampusManagerActivitiesCalendar(campusManagerId, 3, true, false, 2)
+            new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 1),
+            new CampusManagerActivitiesCalendar(campusManagerId, 5, false, true, 1),
+            new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 2),
+            new CampusManagerActivitiesCalendar(campusManagerId, 3, false, true, 2),
+            new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 3),
+            new CampusManagerActivitiesCalendar(campusManagerId, 6, false, true, 3),
+            new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 4),
+            new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 4),
+            new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5),
+            new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5)
+
         ];
         response = await post(
             "/addActivitiesInCampusManagerCalendar",
@@ -96,8 +105,41 @@ describe('doCycle', () => {
         async (done) => {
             let response = await get("/doCycle", { player_id: testerId });
             expect(response.status).toEqual(200);
-            expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(66.6);
-            expect(parseInt(response.body[1].value)).toEqual(3165);
+            expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(46.9);
+            expect(parseInt(response.body[1].value)).toEqual(2700);
+            done();
+        }
+    );
+
+    test(
+        "should do 20 cycles",
+        async (done) => {
+            let campusManagerActivities = [
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 1),
+                new CampusManagerActivitiesCalendar(campusManagerId, 5, false, true, 1),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 2),
+                new CampusManagerActivitiesCalendar(campusManagerId, 3, false, true, 2),
+                new CampusManagerActivitiesCalendar(campusManagerId, 1, true, false, 3),
+                new CampusManagerActivitiesCalendar(campusManagerId, 6, false, true, 3),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 4),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 4),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5)
+    
+            ];
+            let response = await post(
+                "/addActivitiesInCampusManagerCalendar",
+                {
+                    campus_manager_id: campusManagerId,
+                    activities: campusManagerActivities
+                }
+            );
+
+            response = await get("/doCycle", { player_id: testerId });
+            expect(response.status).toEqual(200);
+            expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(62.1);
+            expect(parseInt(response.body[1].value)).toEqual(1810);
+            // expect(response.body).toEqual("coucou");
             done();
         }
     );
