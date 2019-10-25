@@ -6,7 +6,7 @@ import { app, server } from "../src/app";
 import { Player } from "../src/entities/Player";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
 import { Indicator } from "../src/entities/Indicator";
-import { activitiesTemplate } from "../src/models/Templates";
+import { campusManagerActivitiesTemplates } from "../src/models/Templates";
 
 let connection: Connection = null;
 let playerId: number = 0;
@@ -38,7 +38,7 @@ describe('Campus manager calendar', () => {
         campusManagerId = response.body.campusManager.id;
 
         // create activities template
-        response = await post("/saveAllActivities", activitiesTemplate);
+        response = await post("/saveAllActivities", campusManagerActivitiesTemplates);
 
         done();
     });

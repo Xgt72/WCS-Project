@@ -33,6 +33,16 @@ export let getIndicatorById = async (req: Request, res: Response) => {
     }
 }
 
+export let getAllIndicatorsByPlayerIdAndName = async (req: Request, res: Response) => {
+    try {
+        let indicator = await indicatorRepo.getAllIndicatorsByPlayerIdAndName(req.body.player_id, req.body.indicator_name);
+        res.send(indicator);
+    }
+    catch (e) {
+        res.status(501).json(e);
+    }
+}
+
 export let saveIndicator = async (req: Request, res: Response) => {
     try {
         let indicator = new Indicator(req.body.name, req.body.player_id, req.body.value);

@@ -47,7 +47,7 @@ describe('buy a building', () => {
             let response = await post("/buyBuilding", { player_id: playerId, building_template_id: 2 });
             
             expect(response.status).toEqual(200);
-            expect(response.body.budget.value).toEqual(4700);
+            expect(response.body.budget.value).toEqual(4800);
             expect(response.body.building.player_id).toEqual(playerId);
             
             done();

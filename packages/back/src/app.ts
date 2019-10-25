@@ -22,6 +22,7 @@ import * as hireTeacherController from "./controllers/HireTeacherController";
 import * as hireCampusManagerController from "./controllers/HireCampusManagerController";
 import * as campusManagerCalendarController from "./controllers/CampusManagerCalendarController";
 import * as teacherCalendarController from "./controllers/TeacherCalendarController";
+import * as createPlayerController from "./controllers/CreatePlayerController";
 
 /**
  * Create Express server.
@@ -42,6 +43,7 @@ app.set("port", process.env.PORT || 5000);
 app.get("/getAllIndicators", indicatorController.getAllIndicators);
 app.get("/getIndicatorsByPlayerId", indicatorController.getIndicatorsByPlayerId);
 app.get("/getIndicatorById", indicatorController.getIndicatorById);
+app.get("/getAllIndicatorsByPlayerIdAndName", indicatorController.getAllIndicatorsByPlayerIdAndName);
 app.post("/saveIndicator", indicatorController.saveIndicator);
 app.post("/saveAllIndicators", indicatorController.saveAllIndicators);
 app.post("/updateIndicator", indicatorController.updateIndicator);
@@ -134,6 +136,11 @@ app.delete("/deleteActivity", activityController.deleteActivity);
  * Cycle route.
  */
 app.get("/doCycle", cycleController.doCycle);
+
+/**
+ * Create a player route.
+ */
+app.post("/createPlayer", createPlayerController.createPlayer);
 
 /**
  * Buy a building route.

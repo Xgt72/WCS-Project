@@ -82,6 +82,19 @@ describe('Indicator', () => {
     );
 
     test(
+        "should return indicator by player ID and indicator name",
+        async (done) => {
+            let response = await get("/getAllIndicatorsByPlayerIdAndName", {player_id: 5, indicator_name: "wilder"});
+            expect(response.status).toEqual(200);
+            expect(response.body.name).toEqual("wilder");
+            expect(response.body.player_id).toEqual(5);
+            expect(response.body.value).toEqual(1000);
+            
+            done();
+        }
+    )
+
+    test(
         "should update one indicator",
         async (done) => {
             const ind = new Indicator("wilderTest", 3, 1000);
