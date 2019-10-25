@@ -11,7 +11,7 @@ export class Indicator {
     @Column()
     player_id: number;
 
-    @Column()
+    @Column("float")
     value: number;
 
     constructor(name: string, player_id: number, value: number) {

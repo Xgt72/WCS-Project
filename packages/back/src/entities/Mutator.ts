@@ -53,6 +53,7 @@ export class Mutator {
         let reputationIndicatorId: number = -1;
         let budgetIndicatorId: number = -1;
         let studentsNumberId: number = -1;
+        let futureStudentsNumberId: number = -1;
         let forecastSalesTurnoverId: number = -1;
 
         indicators.map(
@@ -66,6 +67,9 @@ export class Mutator {
                         break;
                     case "students number":
                         studentsNumberId = indicator.id;
+                        break;
+                    case "future students number":
+                        futureStudentsNumberId = indicator.id;
                         break;
                     case "forecast sales turnover":
                         forecastSalesTurnoverId = indicator.id;
@@ -84,6 +88,9 @@ export class Mutator {
             }
             else if (mutatorType.search("StudentsNumber") != -1) {
                 mut.indicator_id = studentsNumberId;
+            }
+            else if (mutatorType.search("FutureStudents") != -1) {
+                mut.indicator_id = futureStudentsNumberId;
             }
             else if (mutatorType.search("ForecastSalesTurnover") != -1) {
                 mut.indicator_id = forecastSalesTurnoverId;

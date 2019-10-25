@@ -17,7 +17,8 @@ export let createPlayer = async (req: Request, res: Response) => {
         let reputation = await indicatorRepo.getIndicatorById(1);
         let budget = await indicatorRepo.getIndicatorById(2);
         let studentsNumber = await indicatorRepo.getIndicatorById(3);
-        let forecastSalesTurnover = await indicatorRepo.getIndicatorById(4);
+        let futureStudentsNumber = await indicatorRepo.getIndicatorById(4);
+        let forecastSalesTurnover = await indicatorRepo.getIndicatorById(5);
 
         // create all the indicators of this new player
         reputation.id = null;
@@ -29,6 +30,9 @@ export let createPlayer = async (req: Request, res: Response) => {
         studentsNumber.id = null;
         studentsNumber.player_id = playerId;
 
+        futureStudentsNumber.id = null;
+        futureStudentsNumber.player_id = playerId;
+
         forecastSalesTurnover.id = null;
         forecastSalesTurnover.player_id = playerId;
 
@@ -37,6 +41,7 @@ export let createPlayer = async (req: Request, res: Response) => {
                 reputation,
                 budget,
                 studentsNumber,
+                futureStudentsNumber,
                 forecastSalesTurnover
             ]
         );

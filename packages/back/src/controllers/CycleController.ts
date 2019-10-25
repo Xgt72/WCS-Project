@@ -28,9 +28,11 @@ export let doCycle = async (req: Request, res: Response) => {
     try {
         // get all indicators of the player
         let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(req.body.player_id);
+        // console.log("1-indicators: ", indicators);
 
         // get all the buildings of the player
         let buildings = await buildingRepo.getOnePlayerBuildings(req.body.player_id);
+        // console.log("2-buildings: ", buildings, buildings[0].mutators, buildings[1].mutators);
 
         // update all the indicators of the player from buildings mutators
         buildings.map(
@@ -52,9 +54,11 @@ export let doCycle = async (req: Request, res: Response) => {
                 );
             }
         );
+        // console.log("3-indicators: ", indicators);
 
         // get all the teachers of the player
         let teachers = await teacherRepo.getOnePlayerTeachers(req.body.player_id);
+        // console.log("4-teachers: ", teachers, teachers[0].mutators);
 
         // update all the indicators of the player from teacher mutators
         teachers.map(
@@ -72,10 +76,12 @@ export let doCycle = async (req: Request, res: Response) => {
                 );
             }
         );
+        // console.log("5-indicators: ", indicators);
 
         // get all the campus managers of the player
         let campusManagers = await campusManagerRepo.getOnePlayerCampusManagers(req.body.player_id);
-        
+        // console.log("6-campus manager: ", campusManagers, campusManagers[0].mutators);
+
         // update all the indicators of the player from campus manager mutators
         campusManagers.map(
             (currentCampusManager: PlayerCampusManager) => {
@@ -92,6 +98,7 @@ export let doCycle = async (req: Request, res: Response) => {
                 );
             }
         );
+        // console.log("7-indicators: ", indicators);
 
         // get all the teachers activities calendar of the player
         let allTeachersActivities = [];
@@ -99,7 +106,14 @@ export let doCycle = async (req: Request, res: Response) => {
         for (let i = 0; i < teachers.length; i++) {
             let teacherActivities = await teacherActivitiesRepo.getTeacherActivitiesCalendarByTeacherId(teachers[i].id);
             allTeachersActivities.push(teacherActivities);
-        }   
+        }
+
+        // // for test
+        // for (let i = 0; i < allTeachersActivities[0].length; i++) {
+        //     let activtyTest = await activityRepo.getActivityById(allTeachersActivities[0][i].activity_id);
+        //     console.log("8-teacher activities: ", allTeachersActivities[0][i], activtyTest.mutators);
+
+        // }
 
         // update all the indicators of the player from teachers activities calendar mutators
         for (let i = 0; i < allTeachersActivities.length; i++) {
@@ -123,6 +137,7 @@ export let doCycle = async (req: Request, res: Response) => {
                 );
             }
         }
+        // console.log("9-indicators: ", indicators);
 
         // delete the player teachers calendars and all the activities
         for (let i = 0; i < teachers.length; i++) {
@@ -142,17 +157,24 @@ export let doCycle = async (req: Request, res: Response) => {
         for (let i = 0; i < campusManagers.length; i++) {
             let campusManagerActivities = await campusManagerActivitiesRepo.getCampusManagerActivitiesCalendarByCampusManagerId(campusManagers[i].id);
             allCampusManagersActivities.push(campusManagerActivities);
-        }   
-        
+        }
+
+        // // for test
+        // for (let i = 0; i < allCampusManagersActivities[0].length; i++) {
+        //     let activtyTest = await activityRepo.getActivityById(allCampusManagersActivities[0][i].activity_id);
+        //     console.log("10-campus manager activities: ", allCampusManagersActivities[0][i], activtyTest.mutators);
+
+        // }
+
         // update all the indicators of the player from campus managers activities calendar mutators
         for (let i = 0; i < allCampusManagersActivities.length; i++) {
             let currentCampusManagerCalendar: CampusManagerActivitiesCalendar[] = allCampusManagersActivities[i];
 
             for (let j = 0; j < currentCampusManagerCalendar.length; j++) {
                 let currentPeriod: CampusManagerActivitiesCalendar = currentCampusManagerCalendar[j];
-                
-                let currentActivity: Activity = await activityRepo.getActivityById(currentPeriod.activity_id);
 
+                let currentActivity: Activity = await activityRepo.getActivityById(currentPeriod.activity_id);
+                // console.log("11-activity: ", currentActivity);
                 currentActivity.mutators.map(
                     (currentMutator: Mutator) => {
                         indicators.map(
@@ -166,6 +188,7 @@ export let doCycle = async (req: Request, res: Response) => {
                 );
             }
         }
+        console.log("12-indicators: ", indicators);
 
         // delete the player campus managers calendars and all the activities
         for (let i = 0; i < campusManagers.length; i++) {
@@ -178,7 +201,7 @@ export let doCycle = async (req: Request, res: Response) => {
                 let response = await campusManagerActivitiesRepo.deleteCampusManagerActivity(calendar[k]);
             }
         }
-        
+
         // save all the new values of the indicators
         // console.log("Indicators: ", indicators);
         await indicatorRepo.saveAllIndicators(indicators);

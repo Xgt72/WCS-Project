@@ -30,7 +30,7 @@ describe('Create a new player', () => {
             let response = await post("/createPlayer", { player_name: "Sharky" });
             expect(response.status).toEqual(200);
             expect(response.body.player.playerName).toEqual("Sharky");
-            expect(parseInt(response.body.indicators.length)).toEqual(4);
+            expect(parseInt(response.body.indicators.length)).toEqual(5);
 
             done();
         }
