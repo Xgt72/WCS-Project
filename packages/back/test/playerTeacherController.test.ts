@@ -5,6 +5,8 @@ import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
+import { REPUTATION, BUDGET } from "../src/constants";
+
 let connection: Connection = null;
 let lastId = 1;
 
@@ -27,8 +29,8 @@ describe('Player Teacher', () => {
         async (done) => {
             const pTeacher = new PlayerTeacher(1, "Nicolas", 900);
             pTeacher.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
 
             const response = await post("/savePlayerTeacher", pTeacher);
@@ -54,8 +56,8 @@ describe('Player Teacher', () => {
         async (done) => {
             let pTeacher = new PlayerTeacher(2, "Victor", 900);
             pTeacher.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
 
             let response = await post("/savePlayerTeacher", pTeacher);
@@ -72,8 +74,8 @@ describe('Player Teacher', () => {
         async (done) => {
             let pTeacher = new PlayerTeacher(1, "Xavier", 550);
             pTeacher.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
 
             let response = await post("/savePlayerTeacher", pTeacher);

@@ -3,11 +3,11 @@ import request from 'supertest';
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
-import { Player } from "../src/entities/Player";
-import { Indicator } from "../src/entities/Indicator";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
 import { classroomTemplate, parkingTemplate, campusManagerActivitiesTemplates, teacherActivitiesTemplates, indicatorsTemplates } from "../src/models/Templates";
+import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+
 
 let connection: Connection = null;
 let testerId: number = 0;
@@ -29,11 +29,11 @@ describe('doCycle', () => {
         testerId = response.body.player.id;
 
         // get reputation indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: "reputation" });
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: REPUTATION });
         reputationId = response.body.id;
 
         // get budget indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: "budget" });
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: BUDGET });
         budgetId = response.body.id;
 
         // create 2 building templates
@@ -139,7 +139,6 @@ describe('doCycle', () => {
             expect(response.status).toEqual(200);
             expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(62.1);
             expect(parseInt(response.body[1].value)).toEqual(1810);
-            // expect(response.body).toEqual("coucou");
             done();
         }
     );

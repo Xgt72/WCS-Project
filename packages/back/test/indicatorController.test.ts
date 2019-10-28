@@ -4,6 +4,9 @@ import { Indicator } from "../src/entities/Indicator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
+import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+
+
 let connection: Connection = null;
 
 
@@ -36,8 +39,8 @@ describe('Indicator', () => {
     test(
         "should save two indicators",
         async (done) => {
-            const indOne = new Indicator("reputation", 4, 1000);
-            const indTwo = new Indicator("budget", 5, 20);
+            const indOne = new Indicator(REPUTATION, 4, 1000);
+            const indTwo = new Indicator(BUDGET, 5, 20);
             const response = await post("/saveAllIndicators", [indOne, indTwo]);
             expect(response.status).toBe(200);
             expect(parseInt(response.body.length)).toEqual(2);

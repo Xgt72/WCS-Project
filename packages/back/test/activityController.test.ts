@@ -5,6 +5,8 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 import { Mutator } from "../src/entities/Mutator";
+import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+
 
 let connection: Connection = null;
 
@@ -26,8 +28,8 @@ describe('Activity', () => {
         async (done) => {
             const activity = new Activity("Wild Breakfast", 100, "FFB399");
             activity.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
 
             const response = await post("/saveActivity", activity);
@@ -44,8 +46,8 @@ describe('Activity', () => {
         async (done) => {
             const activity = new Activity("Wild Breakfast", 100, "FFB399");
             activity.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
 
             const response = await post("/saveAllActivities", [activity, activity, activity, activity]);
@@ -70,8 +72,8 @@ describe('Activity', () => {
         async (done) => {
             let activity = new Activity("Organise RNCP", 200, "FFE205");
             activity.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
 
             let response = await post("/saveActivity", activity);

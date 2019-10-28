@@ -6,6 +6,8 @@ import { app, server } from "../src/app";
 import { Player } from "../src/entities/Player";
 import { Indicator } from "../src/entities/Indicator";
 import { classroomTemplate, parkingTemplate } from "../src/models/Templates";
+import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+
 
 let connection: Connection = null;
 let playerId: number = 0;
@@ -20,10 +22,10 @@ describe('buy a building', () => {
         let response = await post("/savePlayer", player);
         playerId = response.body.id;
 
-        let reputationIndicator = new Indicator("reputation", playerId, 30);
+        let reputationIndicator = new Indicator(REPUTATION, playerId, 30);
         response = await post("/saveIndicator", reputationIndicator);
 
-        let budgetIndicator = new Indicator("budget", playerId, 5000);
+        let budgetIndicator = new Indicator(BUDGET, playerId, 5000);
         response = await post("/saveIndicator", budgetIndicator);
         budgetId = response.body.id;
 
