@@ -5,6 +5,9 @@ import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
+import { REPUTATION, BUDGET } from "../src/constants";
+
+
 let connection: Connection = null;
 
 
@@ -26,8 +29,8 @@ describe('Player Building', () => {
         async (done) => {
             const pBuilding = new PlayerBuilding(1, "classroom", 1000);
             pBuilding.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 1, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 1, -100)
             ];
             const response = await post("/savePlayerBuilding", pBuilding);
             expect(response.status).toBe(200);
@@ -43,8 +46,8 @@ describe('Player Building', () => {
         async (done) => {
             const buildingOne = new PlayerBuilding(1, "classroom", 1000, true);
             buildingOne.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 1, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 1, -100)
             ];
             let response = await post("/savePlayerBuilding", buildingOne);
             expect(response.status).toBe(200);
@@ -55,8 +58,8 @@ describe('Player Building', () => {
 
             const buidlingTwo = new PlayerBuilding(1, "parking", 500, true);
             buidlingTwo.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 1, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 1, -100)
             ];
             response = await post("/savePlayerBuilding", buidlingTwo);
             expect(response.status).toBe(200);
@@ -82,8 +85,8 @@ describe('Player Building', () => {
         async (done) => {
             let pBuilding = new PlayerBuilding(2, "cafeteria", 500);
             pBuilding.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 1, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 1, -100)
             ];
             let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
@@ -99,8 +102,8 @@ describe('Player Building', () => {
         async (done) => {
             let pBuilding = new PlayerBuilding(2, "classroom", 1000);
             pBuilding.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
             let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
@@ -126,8 +129,8 @@ describe('Player Building', () => {
         async (done) => {
             const pBuilding = new PlayerBuilding(2, "flatsharing", 580);
             pBuilding.mutators = [
-                new Mutator("incReputation", 1, 5),
-                new Mutator("decBudget", 2, -100)
+                new Mutator("inc" + REPUTATION, 1, 5),
+                new Mutator("dec" + BUDGET, 2, -100)
             ];
             let response = await post("/updatePlayerBuilding", { id: 1, ...pBuilding });
             expect(response.status).toEqual(200);

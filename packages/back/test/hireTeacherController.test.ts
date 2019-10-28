@@ -4,6 +4,8 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 import { indicatorsTemplates } from "../src/models/Templates";
+import { REPUTATION, BUDGET } from "../src/constants";
+
 
 let connection: Connection = null;
 let playerId: number = 0;
@@ -23,10 +25,10 @@ describe('Hire a teacher', () => {
 
 
         // get reputation indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: "reputation" });
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: REPUTATION });
 
         // get budget indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: "budget" });
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: BUDGET });
         budgetIndicatorId = response.body.id;
 
         done();
