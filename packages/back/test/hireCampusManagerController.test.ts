@@ -6,6 +6,8 @@ import { app, server } from "../src/app";
 import { Indicator } from "../src/entities/Indicator";
 import { Player } from "../src/entities/Player";
 import { indicatorsTemplates } from "../src/models/Templates";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+
 
 
 let connection: Connection = null;
@@ -25,10 +27,10 @@ describe('Hire a campus manager', () => {
         playerId = response.body.player.id;
 
         // get reputation indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: "reputation" });
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: REPUTATION });
 
         // get budget indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: "budget" });
+        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: BUDGET });
         budgetIndicatorId = response.body.id;
 
         done();

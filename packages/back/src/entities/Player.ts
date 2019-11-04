@@ -9,7 +9,11 @@ export class Player {
     @Column({length: 100})
     playerName: string;
 
+    @Column()
+    cyclesNumber: number;
+
     constructor(playerName: string) {
         this.playerName = playerName;
+        this.cyclesNumber = 0;
     }
 }

@@ -7,6 +7,8 @@ import { Player } from "../src/entities/Player";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
 import { Indicator } from "../src/entities/Indicator";
 import { campusManagerActivitiesTemplates } from "../src/models/Templates";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+
 
 let connection: Connection = null;
 let playerId: number = 0;
@@ -25,11 +27,11 @@ describe('Campus manager calendar', () => {
         playerId = response.body.id;
 
         // creation of 2 indicators
-        let reputationIndicator = new Indicator("reputation", playerId, 30);
+        let reputationIndicator = new Indicator(REPUTATION, playerId, 30);
         response = await post("/saveIndicator", reputationIndicator);
         reputation = response.body;
 
-        let budgetIndicator = new Indicator("budget", playerId, 5000);
+        let budgetIndicator = new Indicator(BUDGET, playerId, 5000);
         response = await post("/saveIndicator", budgetIndicator);
         budget = response.body.id;
 

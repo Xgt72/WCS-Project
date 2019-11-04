@@ -4,6 +4,8 @@ import { Indicator } from "./Indicator";
 import { PlayerTeacher } from "./PlayerTeacher";
 import { PlayerCampusManager } from "./PlayerCampusManager";
 import { Activity } from "./Activity";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../constants";
+
 
 @Entity("mutator")
 export class Mutator {
@@ -59,19 +61,19 @@ export class Mutator {
         indicators.map(
             indicator => {
                 switch (indicator.name) {
-                    case "reputation":
+                    case REPUTATION:
                         reputationIndicatorId = indicator.id;
                         break;
-                    case "budget":
+                    case BUDGET:
                         budgetIndicatorId = indicator.id;
                         break;
-                    case "students number":
+                    case ACTUAL_STUDENTS_NUMBER:
                         studentsNumberId = indicator.id;
                         break;
-                    case "future students number":
+                    case FUTURE_STUDENTS_NUMBER:
                         futureStudentsNumberId = indicator.id;
                         break;
-                    case "forecast sales turnover":
+                    case FORECAST_SALES_TURNOVER:
                         forecastSalesTurnoverId = indicator.id;
                     default:
                         break;
@@ -80,19 +82,19 @@ export class Mutator {
         );
         mutators.map(mut => {
             let mutatorType = mut.name;
-            if (mutatorType.search("Reputation") != -1) {
+            if (mutatorType.search(REPUTATION) != -1) {
                 mut.indicator_id = reputationIndicatorId;
             }
-            else if (mutatorType.search("Budget") != -1) {
+            else if (mutatorType.search(BUDGET) != -1) {
                 mut.indicator_id = budgetIndicatorId;
             }
-            else if (mutatorType.search("StudentsNumber") != -1) {
+            else if (mutatorType.search(ACTUAL_STUDENTS_NUMBER) != -1) {
                 mut.indicator_id = studentsNumberId;
             }
-            else if (mutatorType.search("FutureStudents") != -1) {
+            else if (mutatorType.search(FUTURE_STUDENTS_NUMBER) != -1) {
                 mut.indicator_id = futureStudentsNumberId;
             }
-            else if (mutatorType.search("ForecastSalesTurnover") != -1) {
+            else if (mutatorType.search(FORECAST_SALES_TURNOVER) != -1) {
                 mut.indicator_id = forecastSalesTurnoverId;
             }
             results.push(Mutator.clone(mut));
