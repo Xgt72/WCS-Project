@@ -4,7 +4,7 @@ import { Indicator } from "./Indicator";
 import { PlayerTeacher } from "./PlayerTeacher";
 import { PlayerCampusManager } from "./PlayerCampusManager";
 import { Activity } from "./Activity";
-import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../constants";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../constants";
 
 
 @Entity("mutator")
@@ -67,7 +67,7 @@ export class Mutator {
                     case BUDGET:
                         budgetIndicatorId = indicator.id;
                         break;
-                    case STUDENTS_NUMBER:
+                    case ACTUAL_STUDENTS_NUMBER:
                         studentsNumberId = indicator.id;
                         break;
                     case FUTURE_STUDENTS_NUMBER:
@@ -88,7 +88,7 @@ export class Mutator {
             else if (mutatorType.search(BUDGET) != -1) {
                 mut.indicator_id = budgetIndicatorId;
             }
-            else if (mutatorType.search(STUDENTS_NUMBER) != -1) {
+            else if (mutatorType.search(ACTUAL_STUDENTS_NUMBER) != -1) {
                 mut.indicator_id = studentsNumberId;
             }
             else if (mutatorType.search(FUTURE_STUDENTS_NUMBER) != -1) {

@@ -14,6 +14,8 @@ import { CampusManagerActivitiesCalendar } from "../entities/CampusManagerActivi
 import { ActivityRepository } from "../repositories/ActivityRepository";
 import { TeacherActivitiesCalendarRepository } from "../repositories/TeacherActivitiesCalendarRepository";
 import { TeacherActivitiesCalendar } from "../entities/TeacherActivitiesCalendar";
+import { PlayerRepository } from "../repositories/PlayerRepository";
+import { CYCLES_PER_FORMATION } from "../constants/index";
 
 let indicatorRepo = new IndicatorRepository();
 let buildingRepo = new PlayerBuildingsRepository();
@@ -22,6 +24,7 @@ let teacherActivitiesRepo = new TeacherActivitiesCalendarRepository();
 let campusManagerRepo = new PlayerCampusManagerRepository();
 let campusManagerActivitiesRepo = new CampusManagerActivitiesCalendarRepository();
 let activityRepo = new ActivityRepository();
+let playerRepo = new PlayerRepository();
 
 
 export let doCycle = async (req: Request, res: Response) => {
@@ -29,6 +32,9 @@ export let doCycle = async (req: Request, res: Response) => {
         // get all indicators of the player
         let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(req.body.player_id);
         // console.log("1-indicators: ", indicators);
+
+        // save the number of future students
+        const futureStudents = indicators[3].value;
 
         // get all the buildings of the player
         let buildings = await buildingRepo.getOnePlayerBuildings(req.body.player_id);
@@ -188,7 +194,7 @@ export let doCycle = async (req: Request, res: Response) => {
                 );
             }
         }
-        console.log("12-indicators: ", indicators);
+        // console.log("12-indicators: ", indicators);
 
         // delete the player campus managers calendars and all the activities
         for (let i = 0; i < campusManagers.length; i++) {
@@ -202,8 +208,23 @@ export let doCycle = async (req: Request, res: Response) => {
             }
         }
 
+        /*
+        update the cycles number of the player, limit to 20,
+        when the player did 20 cycles, update the value of actual_students_number indicator to be equal to future_students_number indicator,
+        reset the value of future_students_number indicator.
+         */
+        let player = await playerRepo.getPlayerById(req.body.player_id);
+        if (player.cyclesNumber < CYCLES_PER_FORMATION) {
+            player.cyclesNumber++;
+        } else if (player.cyclesNumber >= CYCLES_PER_FORMATION) {
+            player.cyclesNumber = 1;
+            indicators[2].value = Number(futureStudents.toFixed(0));
+            indicators[3].value -= futureStudents;
+        }
+
+        let response = await playerRepo.savePlayer(player);
+
         // save all the new values of the indicators
-        // console.log("Indicators: ", indicators);
         await indicatorRepo.saveAllIndicators(indicators);
 
         res.send(indicators);

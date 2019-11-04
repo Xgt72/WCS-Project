@@ -4,12 +4,12 @@ import { PlayerBuilding } from "../entities/PlayerBuilding";
 import { PlayerCampusManager } from "../entities/PlayerCampusManager";
 import { Activity } from "../entities/Activity";
 import { Indicator } from "../entities/Indicator";
-import { REPUTATION, BUDGET, FUTURE_STUDENTS_NUMBER, STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../constants";
+import { REPUTATION, BUDGET, FUTURE_STUDENTS_NUMBER, ACTUAL_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../constants";
 
 export let indicatorsTemplates: Indicator[] = [
     new Indicator(REPUTATION, 0, 30),
     new Indicator(BUDGET, 0, 5000),
-    new Indicator(STUDENTS_NUMBER, 0, 0),
+    new Indicator(ACTUAL_STUDENTS_NUMBER, 0, 0),
     new Indicator(FUTURE_STUDENTS_NUMBER, 0, 0),
     new Indicator(FORECAST_SALES_TURNOVER, 0, 0)
 ];

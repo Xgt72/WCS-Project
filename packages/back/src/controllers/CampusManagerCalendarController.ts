@@ -6,7 +6,8 @@ import { IndicatorRepository } from "../repositories/IndicatorRepository";
 import { PlayerCampusManagerRepository } from "../repositories/PlayerCampusManagerRepository";
 import { ActivityRepository } from "../repositories/ActivityRepository";
 import { MutatorRepository } from "../repositories/MutatorRepository";
-import { AdvancedConsoleLogger } from "typeorm";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../constants";
+
 
 let campusManagerCalendarRepo = new CampusManagerActivitiesCalendarRepository();
 let indicatorRepo = new IndicatorRepository();
@@ -37,7 +38,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                 case "Wild Breakfast":
                     activity.mutators.map(
                         (mutator: Mutator) => {
-                            if (mutator.name == "incFutureStudents") {
+                            if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {
                                 // get random number between 5 and 10, get 75% of this number, get 20% of this number, get 70% of this number
                                 let transformation: number = Number(((Math.floor(Math.random() * 5) + 5) * 0.75 * 0.20 * 0.7).toFixed(2));
                                 mutator.value = transformation;
@@ -49,7 +50,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                 case "Organise RNCP":
                     activity.mutators.map(
                         (mutator: Mutator) => {
-                            if (mutator.name == "incFutureStudents") {
+                            if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {
                                 // get random number between 10 and 30, get 80% of this number, get 20% of this number, get 70% of this number
                                 let transformation: number = Number(((Math.floor(Math.random() * 20) + 10) * 0.8 * 0.20 * 0.7).toFixed(2));
                                 mutator.value = transformation;
@@ -61,7 +62,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                 case "Buy Publicities":
                     activity.mutators.map(
                         (mutator: Mutator) => {
-                            if (mutator.name == "incFutureStudents") {
+                            if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {
                                 // get random number between 10 and 25, get 10% of this number, get 20% of this number, get 70% of this number
                                 let transformation: number = Number(((Math.floor(Math.random() * 15) + 10) * 0.1 * 0.20 * 0.7).toFixed(2));
                                 mutator.value = transformation;
@@ -73,7 +74,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                 case "Wild Aperitif":
                     activity.mutators.map(
                         (mutator: Mutator) => {
-                            if (mutator.name == "incFutureStudents") {
+                            if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {
                                 // get random number between 5 and 10, get 50% of this number, get 20% of this number, get 70% of this number
                                 let transformation: number = Number(((Math.floor(Math.random() * 5) + 5) * 0.5 * 0.20 * 0.7).toFixed(2));
                                 mutator.value = transformation;
@@ -85,7 +86,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                 case "Networking":
                     activity.mutators.map(
                         (mutator: Mutator) => {
-                            if (mutator.name == "incFutureStudents") {
+                            if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {
                                 // get random number between 10 and 25, get 10% of this number, get 20% of this number, get 70% of this number
                                 let transformation: number = Number(((Math.floor(Math.random() * 15) + 10) * 0.1 * 0.20 * 0.7).toFixed(2));
                                 mutator.value = transformation;
@@ -97,7 +98,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                 case "Organize a Trade Fair":
                     activity.mutators.map(
                         (mutator: Mutator) => {
-                            if (mutator.name == "incFutureStudents") {
+                            if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {
                                 // get random number between 25 and 50, get 10% of this number, get 20% of this number, get 70% of this number
                                 let transformation: number = Number(((Math.floor(Math.random() * 25) + 25) * 0.1 * 0.20 * 0.7).toFixed(2));
                                 mutator.value = transformation;
