@@ -6,7 +6,7 @@ import { app, server } from "../src/app";
 import { Player } from "../src/entities/Player";
 import { Indicator } from "../src/entities/Indicator";
 import { classroomTemplate, parkingTemplate } from "../src/models/Templates";
-import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
 
 
 let connection: Connection = null;

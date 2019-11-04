@@ -6,7 +6,7 @@ import { app, server } from "../src/app";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
 import { classroomTemplate, parkingTemplate, campusManagerActivitiesTemplates, teacherActivitiesTemplates, indicatorsTemplates } from "../src/models/Templates";
-import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
 
 
 let connection: Connection = null;
@@ -107,12 +107,17 @@ describe('doCycle', () => {
             expect(response.status).toEqual(200);
             expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(46.9);
             expect(parseInt(response.body[1].value)).toEqual(2700);
+
+            response = await get("/getPlayerById", { player_id: testerId });
+            expect(response.status).toEqual(200);
+            expect(response.body.cyclesNumber).toEqual(1);
+
             done();
         }
     );
 
     test(
-        "should do 20 cycles",
+        "should do 10 cycles",
         async (done) => {
             let campusManagerActivities = [
                 new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 1),
@@ -125,9 +130,61 @@ describe('doCycle', () => {
                 new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 4),
                 new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5),
                 new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5)
-    
+
             ];
-            let response = await post(
+            for (let i = 0; i < 10; i++) {
+                let response = await post(
+                    "/addActivitiesInCampusManagerCalendar",
+                    {
+                        campus_manager_id: campusManagerId,
+                        activities: campusManagerActivities
+                    }
+                );
+
+                response = await get("/doCycle", { player_id: testerId });
+            }
+
+            let response = await get("/getPlayerById", { player_id: testerId });
+            expect(response.status).toEqual(200);
+            expect(response.body.cyclesNumber).toEqual(11);
+
+            done();
+        }
+    );
+
+    test(
+        "should do 10 more cycles",
+        async (done) => {
+            let campusManagerActivities = [
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 1),
+                new CampusManagerActivitiesCalendar(campusManagerId, 5, false, true, 1),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, true, false, 2),
+                new CampusManagerActivitiesCalendar(campusManagerId, 3, false, true, 2),
+                new CampusManagerActivitiesCalendar(campusManagerId, 1, true, false, 3),
+                new CampusManagerActivitiesCalendar(campusManagerId, 6, false, true, 3),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 4),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 4),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5),
+                new CampusManagerActivitiesCalendar(campusManagerId, 7, false, true, 5)
+
+            ];
+            for (let i = 0; i < 9; i++) {
+                let response = await post(
+                    "/addActivitiesInCampusManagerCalendar",
+                    {
+                        campus_manager_id: campusManagerId,
+                        activities: campusManagerActivities
+                    }
+                );
+
+                response = await get("/doCycle", { player_id: testerId });
+            }
+
+            let response = await get("/getPlayerById", { player_id: testerId });
+            expect(response.status).toEqual(200);
+            expect(response.body.cyclesNumber).toEqual(20);
+
+            response = await post(
                 "/addActivitiesInCampusManagerCalendar",
                 {
                     campus_manager_id: campusManagerId,
@@ -137,8 +194,14 @@ describe('doCycle', () => {
 
             response = await get("/doCycle", { player_id: testerId });
             expect(response.status).toEqual(200);
-            expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(62.1);
-            expect(parseInt(response.body[1].value)).toEqual(1810);
+            expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(350.9);
+            expect(parseInt(response.body[1].value)).toEqual(-15100);
+            expect(response.body[2].value).toBeGreaterThan(0);
+            expect(response.body[3].value).toBeGreaterThan(0);
+            
+            response = await get("/getPlayerById", { player_id: testerId });
+            expect(response.body.cyclesNumber).toEqual(1);
+
             done();
         }
     );

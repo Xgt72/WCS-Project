@@ -7,7 +7,7 @@ import { Player } from "../src/entities/Player";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
 import { Indicator } from "../src/entities/Indicator";
 import { teacherActivitiesTemplates } from "../src/models/Templates";
-import { REPUTATION, BUDGET, STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
+import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
 
 
 let connection: Connection = null;
