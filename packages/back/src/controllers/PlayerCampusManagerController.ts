@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { PlayerCampusManager } from "../entities/PlayerCampusManager";
 import { PlayerCampusManagerRepository } from "../repositories/PlayerCampusManagerRepository";
 import { MutatorRepository } from "../repositories/MutatorRepository";
-import bodyParser = require("body-parser");
 
 let playerCampusManagerRepo = new PlayerCampusManagerRepository();
 let mutatorRepository = new MutatorRepository();
@@ -19,7 +18,7 @@ export let getAllPlayersCampusManagers = async (req: Request, res: Response) => 
 
  export let getOnePlayerCampusManagers = async (req: Request, res: Response) => {
      try {
-         let playerCampusManagers = await playerCampusManagerRepo.getOnePlayerCampusManagers(req.body.player_id);
+         let playerCampusManagers = await playerCampusManagerRepo.getOnePlayerCampusManagers(parseInt(req.params.id));
          res.send(playerCampusManagers);
      }
      catch(e) {
@@ -29,7 +28,7 @@ export let getAllPlayersCampusManagers = async (req: Request, res: Response) => 
 
  export let getPlayerCampusManagerById = async (req: Request, res: Response) => {
      try {
-        let playerCampusManager = await playerCampusManagerRepo.getPlayerCampusManagerById(req.body.id);
+        let playerCampusManager = await playerCampusManagerRepo.getPlayerCampusManagerById(parseInt(req.params.id));
      res.send(playerCampusManager); 
      }
      catch(e) {
@@ -60,7 +59,7 @@ export let getAllPlayersCampusManagers = async (req: Request, res: Response) => 
 
  export let deletePlayerCampusManager = async (req: Request, res: Response) => {
      try {
-         let playerCampusManager = await playerCampusManagerRepo.getPlayerCampusManagerById(req.body.id);
+         let playerCampusManager = await playerCampusManagerRepo.getPlayerCampusManagerById(parseInt(req.params.id));
          let result = await playerCampusManagerRepo.deletePlayerCampusManager(playerCampusManager);
          res.send(result);
      }

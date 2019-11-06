@@ -18,7 +18,7 @@ export let getAllPlayersTeachers = async (req: Request, res: Response) => {
 
 export let getOnePlayerTeachers = async (req: Request, res: Response) => {
     try {
-        let playerTeachers = await playerTeacherRepo.getOnePlayerTeachers(req.body.player_id);
+        let playerTeachers = await playerTeacherRepo.getOnePlayerTeachers(parseInt(req.params.id));
         res.send(playerTeachers);
     }
     catch (e) {
@@ -28,7 +28,7 @@ export let getOnePlayerTeachers = async (req: Request, res: Response) => {
 
 export let getPlayerTeacherById = async (req: Request, res: Response) => {
     try {
-        let playerTeacher = await playerTeacherRepo.getPlayerTeacherById(req.body.id);
+        let playerTeacher = await playerTeacherRepo.getPlayerTeacherById(parseInt(req.params.id));
         res.send(playerTeacher);
     }
     catch (e) {
@@ -59,7 +59,7 @@ export let savePlayerTeacher = async (req: Request, res: Response) => {
 
 export let deletePlayerTeacher = async (req: Request, res: Response) => {
     try {
-        let playerTeacher = await playerTeacherRepo.getPlayerTeacherById(req.body.id);
+        let playerTeacher = await playerTeacherRepo.getPlayerTeacherById(parseInt(req.params.id));
         let result = await playerTeacherRepo.deletePlayerTeacher(playerTeacher);
         res.send(result);
     }

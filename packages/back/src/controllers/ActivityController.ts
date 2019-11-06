@@ -20,7 +20,7 @@ export let getAllActivities = async (req: Request, res: Response) => {
 
 export let getActivityById = async (req: Request, res: Response) => {
     try {
-        let activity = await activityRepo.getActivityById(req.body.id);
+        let activity = await activityRepo.getActivityById(parseInt(req.params.id));
         res.send(activity);
     }
     catch(e) {
@@ -71,7 +71,7 @@ export let saveAllActivities = async (req: Request, res: Response) => {
 
 export let deleteActivity = async (req: Request, res: Response) => {
     try {
-        let activity = await activityRepo.getActivityById(req.body.id);
+        let activity = await activityRepo.getActivityById(parseInt(req.params.id));
         let result = await activityRepo.deleteActivity(activity);
         res.send(result);
     }

@@ -45,7 +45,7 @@ describe('Player Teacher', () => {
     test(
         "should return at least one player teacher",
         async (done) => {
-            const response = await get("/getAllPlayersTeachers", {});
+            const response = await get("/getAllPlayersTeachers");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -62,7 +62,7 @@ describe('Player Teacher', () => {
 
             let response = await post("/savePlayerTeacher", pTeacher);
             pTeacher = response.body;
-            response = await get("/getPlayerTeacherById", { id: pTeacher.id });
+            response = await get("/getPlayerTeacherById/" + pTeacher.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(pTeacher);
             done();
@@ -81,7 +81,7 @@ describe('Player Teacher', () => {
             let response = await post("/savePlayerTeacher", pTeacher);
             pTeacher = response.body;
             lastId = pTeacher.id;
-            response = await get("/getOnePlayerTeachers", { player_id: pTeacher.player_id });
+            response = await get("/getOnePlayerTeachers/" + pTeacher.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -106,16 +106,15 @@ describe('Player Teacher', () => {
     test(
         "should delete one player teacher",
         async (done) => {
-            let response = await deletePlayerTeacher("/deletePlayerTeacher", { id: lastId });
+            let response = await deletePlayerTeacher("/deletePlayerTeacher/" + lastId);
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -129,9 +128,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deletePlayerTeacher(url: string, body: any) {
+export function deletePlayerTeacher(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

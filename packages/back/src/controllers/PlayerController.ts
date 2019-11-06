@@ -15,7 +15,7 @@ export let getAllPlayers = async (req: Request, res: Response) => {
 
 export let getPlayerById = async (req: Request, res: Response) => {
     try {
-        let player = await playerRepo.getPlayerById(req.body.id);
+        let player = await playerRepo.getPlayerById(parseInt(req.params.id));
         res.send(player);
     }
     catch(e) {
@@ -50,7 +50,7 @@ export let updatePlayer = async (req: Request, res: Response) => {
 
 export let deletePlayer = async (req: Request, res: Response) => {
     try {
-        let player = await playerRepo.getPlayerById(req.body.id);
+        let player = await playerRepo.getPlayerById(parseInt(req.params.id));
         let result = await playerRepo.deletePlayer(player);
         res.send(result);
     }
