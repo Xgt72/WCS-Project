@@ -29,11 +29,11 @@ describe('doCycle', () => {
         testerId = response.body.player.id;
 
         // get reputation indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: REPUTATION });
+        response = await get("/getAllIndicatorsByPlayerIdAndName/" + testerId + "/" + REPUTATION);
         reputationId = response.body.id;
 
         // get budget indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: testerId, indicator_name: BUDGET });
+        response = await get("/getAllIndicatorsByPlayerIdAndName/" + testerId + "/" + BUDGET);
         budgetId = response.body.id;
 
         // create 2 building templates
@@ -103,12 +103,12 @@ describe('doCycle', () => {
     test(
         "should do a cycle",
         async (done) => {
-            let response = await get("/doCycle", { player_id: testerId });
+            let response = await get("/doCycle/" + testerId);
             expect(response.status).toEqual(200);
             expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(46.9);
             expect(parseInt(response.body[1].value)).toEqual(2700);
 
-            response = await get("/getPlayerById", { player_id: testerId });
+            response = await get("/getPlayerById/" + testerId);
             expect(response.status).toEqual(200);
             expect(response.body.cyclesNumber).toEqual(1);
 
@@ -141,10 +141,10 @@ describe('doCycle', () => {
                     }
                 );
 
-                response = await get("/doCycle", { player_id: testerId });
+                response = await get("/doCycle/" + testerId);
             }
 
-            let response = await get("/getPlayerById", { player_id: testerId });
+            let response = await get("/getPlayerById/" + testerId);
             expect(response.status).toEqual(200);
             expect(response.body.cyclesNumber).toEqual(11);
 
@@ -177,10 +177,10 @@ describe('doCycle', () => {
                     }
                 );
 
-                response = await get("/doCycle", { player_id: testerId });
+                response = await get("/doCycle/" + testerId);
             }
 
-            let response = await get("/getPlayerById", { player_id: testerId });
+            let response = await get("/getPlayerById/" + testerId);
             expect(response.status).toEqual(200);
             expect(response.body.cyclesNumber).toEqual(20);
 
@@ -192,14 +192,14 @@ describe('doCycle', () => {
                 }
             );
 
-            response = await get("/doCycle", { player_id: testerId });
+            response = await get("/doCycle/" + testerId);
             expect(response.status).toEqual(200);
             expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(350.9);
             expect(parseInt(response.body[1].value)).toEqual(-15100);
             expect(response.body[2].value).toBeGreaterThan(0);
             expect(response.body[3].value).toBeGreaterThan(0);
             
-            response = await get("/getPlayerById", { player_id: testerId });
+            response = await get("/getPlayerById/" + testerId);
             expect(response.body.cyclesNumber).toEqual(1);
 
             done();
@@ -207,9 +207,8 @@ describe('doCycle', () => {
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

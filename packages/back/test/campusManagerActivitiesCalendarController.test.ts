@@ -60,7 +60,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return a morning activity",
         async (done) => {
-            const response = await get("/getActivityByCampusManagerIdByDayByPeriod", { campus_manager_id: 1, day: 1, period: "morning" });
+            const response = await get("/getActivityByCampusManagerIdByDayByPeriod/1/1/morning");
             expect(response.status).toEqual(200);
             expect(response.body.morning).toEqual(true);
 
@@ -71,7 +71,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return an afternoon activity",
         async (done) => {
-            const response = await get("/getActivityByCampusManagerIdByDayByPeriod", { campus_manager_id: 1, day: 1, period: "afternoon" });
+            const response = await get("/getActivityByCampusManagerIdByDayByPeriod/1/1/afternoon");
             expect(response.status).toEqual(200);
             expect(response.body.afternoon).toEqual(true);
 
@@ -82,7 +82,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return at least one campus manager activity calendar",
         async (done) => {
-            let response = await get("/getAllCampusManagersActivitiesCalendar", {});
+            let response = await get("/getAllCampusManagersActivitiesCalendar");
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -92,7 +92,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return campus manager activity calendar by ID",
         async (done) => {
-            let response = await get("/getCampusManagerActivityCalendarById", { id: campusManagerActivityCalendarId });
+            let response = await get("/getCampusManagerActivityCalendarById/" + campusManagerActivityCalendarId);
             expect(response.status).toEqual(200);
             expect(response.body.id).toEqual(campusManagerActivityCalendarId);
             done();
@@ -102,7 +102,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return campus manager activities calendar by campus manager ID",
         async (done) => {
-            let response = await get("/getCampusManagerActivitiesCalendarByCampusManagerId", { campusManagerId: 1 });
+            let response = await get("/getCampusManagerActivitiesCalendarByCampusManagerId/1");
             expect(response.status).toEqual(200);
             done();
         }
@@ -124,16 +124,15 @@ describe('Campus Manager Calendar', () => {
     test(
         "should delete one campus manager activity calendar",
         async (done) => {
-            let response = await deleteCampusManagerActivity("/deleteCampusManagerAcitvityCalendar", { id: 1 });
+            let response = await deleteCampusManagerActivity("/deleteCampusManagerAcitvityCalendar/1");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -147,9 +146,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deleteCampusManagerActivity(url: string, body: any) {
+export function deleteCampusManagerActivity(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

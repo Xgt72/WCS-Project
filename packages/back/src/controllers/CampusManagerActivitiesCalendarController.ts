@@ -17,7 +17,7 @@ export let getAllCampusManagersActivitiesCalendar = async (req: Request, res: Re
 
 export let getCampusManagerActivityCalendarById = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivityCalendarById(req.body.id);
+        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivityCalendarById(parseInt(req.params.id));
         res.send(campusManagerActivityCalendar);
     }
     catch (e) {
@@ -27,7 +27,7 @@ export let getCampusManagerActivityCalendarById = async (req: Request, res: Resp
 
 export let getCampusManagerActivitiesCalendarByCampusManagerId = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivitiesCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivitiesCalendarByCampusManagerId(req.body.campusManagerId);
+        let campusManagerActivitiesCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivitiesCalendarByCampusManagerId(parseInt(req.params.id));
         res.send(campusManagerActivitiesCalendar);
     }
     catch (e) {
@@ -38,10 +38,10 @@ export let getCampusManagerActivitiesCalendarByCampusManagerId = async (req: Req
 export let getActivitiesByCampusManagerIdAndByDayByPeriod = async (req: Request, res: Response) => {
     try {
         let activities: CampusManagerActivitiesCalendar = undefined;
-        if (req.body.period == "morning") {
-            activities = await campusManagerActivitiesCalendarRepo.getActivityByCampusManagerIdByDayByMorning(req.body.campus_manager_id, req.body.day);
-        } else if (req.body.period == "afternoon") {
-            activities = await campusManagerActivitiesCalendarRepo.getActivityByCampusManagerIdByDayByAfternoon(req.body.campus_manager_id, req.body.day);
+        if (req.params.period == "morning") {
+            activities = await campusManagerActivitiesCalendarRepo.getActivityByCampusManagerIdByDayByMorning(parseInt(req.params.id), parseInt(req.params.day));
+        } else if (req.params.period == "afternoon") {
+            activities = await campusManagerActivitiesCalendarRepo.getActivityByCampusManagerIdByDayByAfternoon(parseInt(req.params.id), parseInt(req.params.day));
         }
         res.send(activities);
     }
@@ -104,7 +104,7 @@ export let updateCampusManagerActivityCalendar = async (req: Request, res: Respo
 
 export let deleteCampusManagerAcitvityCalendar = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivityCalendarById(req.body.id);
+        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivityCalendarById(parseInt(req.params.id));
         let response = await campusManagerActivitiesCalendarRepo.deleteCampusManagerActivity(campusManagerActivityCalendar);
         res.send(response);
     }

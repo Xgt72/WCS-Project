@@ -3,8 +3,6 @@ import request from "supertest";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
-import { Indicator } from "../src/entities/Indicator";
-import { Player } from "../src/entities/Player";
 import { indicatorsTemplates } from "../src/models/Templates";
 import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
 
@@ -27,10 +25,10 @@ describe('Hire a campus manager', () => {
         playerId = response.body.player.id;
 
         // get reputation indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: REPUTATION });
+        response = await get("/getAllIndicatorsByPlayerIdAndName/" + playerId + "/" + REPUTATION);
 
         // get budget indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: BUDGET });
+        response = await get("/getAllIndicatorsByPlayerIdAndName/" + playerId + "/" + BUDGET);
         budgetIndicatorId = response.body.id;
 
         done();
@@ -76,9 +74,8 @@ describe('Hire a campus manager', () => {
         });
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

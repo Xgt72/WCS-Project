@@ -17,7 +17,7 @@ export let getAllPlayersBuildings = async (req: Request, res: Response) => {
 
 export let getOnePlayerBuildings = async (req: Request, res: Response) => {
     try {
-        let playerBuildings = await playerBuildingsRepo.getOnePlayerBuildings(req.body.player_id);
+        let playerBuildings = await playerBuildingsRepo.getOnePlayerBuildings(parseInt(req.params.id));
         res.send(playerBuildings);
     }
     catch (e) {
@@ -27,7 +27,7 @@ export let getOnePlayerBuildings = async (req: Request, res: Response) => {
 
 export let getPlayerBuildingById = async (req: Request, res: Response) => {
     try {
-        let playerBuilding = await playerBuildingsRepo.getPlayerBuildingById(req.body.id);
+        let playerBuilding = await playerBuildingsRepo.getPlayerBuildingById(parseInt(req.params.id));
         res.send(playerBuilding);
     }
     catch (e) {
@@ -68,7 +68,7 @@ export let savePlayerBuilding = async (req: Request, res: Response) => {
 
 export let deletePlayerBuilding = async (req: Request, res: Response) => {
     try {
-        let playerBuilding = await playerBuildingsRepo.getPlayerBuildingById(req.body.id);
+        let playerBuilding = await playerBuildingsRepo.getPlayerBuildingById(parseInt(req.params.id));
         let result = await playerBuildingsRepo.deletePlayerBuilding(playerBuilding);
         res.send(result);
     }

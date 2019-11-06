@@ -15,7 +15,7 @@ export let getAllIndicators = async (req: Request, res: Response) => {
 
 export let getIndicatorsByPlayerId = async (req: Request, res: Response) => {
     try {
-        let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(req.body.player_id);
+        let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(parseInt(req.params.id));
         res.send(indicators);
     }
     catch(e) {
@@ -25,7 +25,7 @@ export let getIndicatorsByPlayerId = async (req: Request, res: Response) => {
 
 export let getIndicatorById = async (req: Request, res: Response) => {
     try {
-        let indicator = await indicatorRepo.getIndicatorById(req.body.id);
+        let indicator = await indicatorRepo.getIndicatorById(parseInt(req.params.id));
         res.send(indicator);
     }
     catch(e) {
@@ -35,7 +35,7 @@ export let getIndicatorById = async (req: Request, res: Response) => {
 
 export let getAllIndicatorsByPlayerIdAndName = async (req: Request, res: Response) => {
     try {
-        let indicator = await indicatorRepo.getAllIndicatorsByPlayerIdAndName(req.body.player_id, req.body.indicator_name);
+        let indicator = await indicatorRepo.getAllIndicatorsByPlayerIdAndName(parseInt(req.params.id), req.params.name);
         res.send(indicator);
     }
     catch (e) {
@@ -67,7 +67,7 @@ export let saveAllIndicators = async (req: Request, res: Response) => {
 
 export let deleteIndicator = async (req: Request, res: Response) => {
     try {
-        let indicator = await indicatorRepo.getIndicatorById(req.body.id);
+        let indicator = await indicatorRepo.getIndicatorById(parseInt(req.params.id));
         let result = await indicatorRepo.deleteIndicator(indicator);
         res.send(result);
     }

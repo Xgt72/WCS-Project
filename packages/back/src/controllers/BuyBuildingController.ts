@@ -4,6 +4,7 @@ import { PlayerBuilding } from "../entities/PlayerBuilding";
 import { Mutator } from "../entities/Mutator";
 import { IndicatorRepository } from "../repositories/IndicatorRepository";
 import { MutatorRepository } from "../repositories/MutatorRepository";
+import { BUDGET } from "../constants/index";
 
 let buildingRepo = new PlayerBuildingsRepository();
 let indicatorRepo = new IndicatorRepository();
@@ -15,8 +16,7 @@ export let buyBuilding = async (req: Request, res: Response) => {
         let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(req.body.player_id);
 
         // get budget indicator of the player
-        let budgetIndicator = await indicatorRepo.getAllIndicatorsByPlayerIdAndName(req.body.player_id, "budget");
-
+        let budgetIndicator = await indicatorRepo.getAllIndicatorsByPlayerIdAndName(req.body.player_id, BUDGET);
 
         // get the building template
         let currentTemplate = await buildingRepo.getBuildingTemplateById(req.body.building_template_id);

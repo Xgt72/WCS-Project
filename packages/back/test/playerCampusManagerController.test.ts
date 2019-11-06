@@ -46,7 +46,7 @@ describe('Player Campus Manager', () => {
     test(
         "should return at least one player campus manager",
         async (done) => {
-            const response = await get("/getAllPlayersCampusManagers", {});
+            const response = await get("/getAllPlayersCampusManagers");
             expect(response.status).toBe(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -64,7 +64,7 @@ describe('Player Campus Manager', () => {
 
             let response = await post("/savePlayerCampusManager", pCampusManager);
             pCampusManager = response.body;
-            response = await get("/getPlayerCampusManagerById", { id: pCampusManager.id });
+            response = await get("/getPlayerCampusManagerById/" + pCampusManager.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(pCampusManager);
             done();
@@ -83,7 +83,7 @@ describe('Player Campus Manager', () => {
             let response = await post("/savePlayerCampusManager", pCampusManager);
             pCampusManager = response.body;
             lastId = pCampusManager.id;
-            response = await get("/getOnePlayerCampusManagers", { player_id: pCampusManager.player_id });
+            response = await get("/getOnePlayerCampusManagers/" + pCampusManager.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -108,16 +108,15 @@ describe('Player Campus Manager', () => {
     test(
         "should delete one player campus manager",
         async (done) => {
-            let response = await deletePlayerCampusManager("/deletePlayerCampusManager", { id: lastId });
+            let response = await deletePlayerCampusManager("/deletePlayerCampusManager/" + lastId);
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -131,9 +130,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deletePlayerCampusManager(url: string, body: any) {
+export function deletePlayerCampusManager(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

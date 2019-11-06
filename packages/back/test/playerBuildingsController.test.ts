@@ -74,7 +74,7 @@ describe('Player Building', () => {
     test(
         "should return at least one player building",
         async (done) => {
-            const response = await get("/getAllPlayersBuildings", {});
+            const response = await get("/getAllPlayersBuildings");
             expect(parseInt(response.body.length)).toBeGreaterThan(2);
             done();
         }
@@ -90,7 +90,7 @@ describe('Player Building', () => {
             ];
             let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
-            response = await get("/getPlayerBuildingById", { id: pBuilding.id });
+            response = await get("/getPlayerBuildingById/" + pBuilding.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(pBuilding);
             done();
@@ -107,7 +107,7 @@ describe('Player Building', () => {
             ];
             let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
-            response = await get("/getOnePlayerBuildings", { player_id: pBuilding.player_id });
+            response = await get("/getOnePlayerBuildings/" + pBuilding.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toEqual(2);
             done();
@@ -117,7 +117,7 @@ describe('Player Building', () => {
     test(
         "should return all building templates",
         async (done) => {
-            let response = await get("/getAllBuildingTemplates", {});
+            let response = await get("/getAllBuildingTemplates");
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(1);
             done();
@@ -145,16 +145,15 @@ describe('Player Building', () => {
     test(
         "should delete one player building",
         async (done) => {
-            let response = await deletePlayerBuilding("/deletePlayerBuilding", { id: 2 });
+            let response = await deletePlayerBuilding("/deletePlayerBuilding/2");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -168,9 +167,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deletePlayerBuilding(url: string, body: any) {
+export function deletePlayerBuilding(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
