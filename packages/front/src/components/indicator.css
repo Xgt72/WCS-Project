@@ -1,0 +1,7 @@
+.playerIndicator {
+    padding: 0.5rem 1rem;
+    color: green;
+    border: 2px solid black;
+    box-shadow: 5px 5px 5px grey;
+    border-radius: 5px;
+}
