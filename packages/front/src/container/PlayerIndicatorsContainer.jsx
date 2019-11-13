@@ -41,8 +41,8 @@ class PlayerIndicatorsComponent extends Component {
   render() {
     return (
       <Container>
+        <h2 className="text-center">{this.state.player_name}</h2>
         <Row>
-          <Col sm="6" xl="2"><h2>{this.state.player_name}</h2></Col>
           {this.props.playerIndicators.map(
             (indicator) => (
               <Col sm="6" xl="3" key={indicator.id}>

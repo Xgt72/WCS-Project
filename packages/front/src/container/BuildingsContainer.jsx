@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   Container, Row, Col, Button,
 } from 'reactstrap';
-import { addBuilding, updateIndicators } from '../redux/actions/actions';
+import { addBuilding, updateIndicators, initBuildings } from '../redux/actions/actions';
 import PlayerIndicatorsContainer from './PlayerIndicatorsContainer';
 
 
@@ -122,27 +122,32 @@ class BuildingsComponent extends Component {
       );
   }
 
+  componentWillUnmount() {
+    const { initBuildings } = this.props;
+    initBuildings();
+  }
+
   render() {
     return (
       <>
         <Container>
           <PlayerIndicatorsContainer />
-          <Row>
-            <Col sm="6" xl="3">
+          <Row className="justify-content-around">
+            <Col className="text-center" sm="6" xl="3">
               <Button onClick={() => this.buyBuilding(1)}>Buy a Classroom</Button>
             </Col>
-            <Col sm="6" xl="3">
+            <Col className="text-center" xl="3">
               <Button onClick={() => this.buyBuilding(2)}>Buy a Parking</Button>
             </Col>
-            <Col sm="6" xl="3">
+            <Col className="text-center" xl="3">
               <Button onClick={() => this.buyBuilding(3)}>Buy a Cafeteria</Button>
             </Col>
-            <Col sm="6" xl="3">
+            <Col className="text-center" sm="6" xl="3">
               <Button onClick={() => this.buyBuilding(4)}>Buy a Dorms</Button>
             </Col>
           </Row>
           <Row>
-            {this.props.playerBuildings.map((building) => <Col sm="6" xl="3" key={building.id}><p>{building.name}</p></Col>)}
+            {this.props.playerBuildings.map((building) => <Col className="m-3" sm="6" xl="3" key={building.id}><p>{building.name}</p></Col>)}
           </Row>
         </Container>
       </>
@@ -158,6 +163,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   addBuilding,
   updateIndicators,
+  initBuildings,
 };
 
 const BuildingsContainer = connect(mapStateToProps, mapDispatchToProps)(BuildingsComponent);
@@ -167,6 +173,7 @@ BuildingsComponent.propTypes = {
   playerBuildings: PropTypes.array.isRequired,
   addBuilding: PropTypes.func.isRequired,
   updateIndicators: PropTypes.func.isRequired,
+  initBuildings: PropTypes.func.isRequired,
 };
 
 export default BuildingsContainer;

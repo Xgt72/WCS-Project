@@ -1,0 +1,10 @@
+.genericButton {
+    background-color: rgb(244, 113, 115) !important;
+    font-size: 1.5rem !important;
+}
+
+.genericButton:hover {
+    background-color: white !important;
+    color: rgb(244, 113, 115) !important;
+    box-shadow: 3px 3px 3px grey, -3px 3px 3px grey;
+}

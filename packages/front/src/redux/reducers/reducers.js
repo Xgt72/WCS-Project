@@ -1,4 +1,4 @@
-import { ADD_BUILDING, UPDATE_INDICATORS } from '../actions/actions';
+import { ADD_BUILDING, UPDATE_INDICATORS, INIT_BUILDINGS } from '../actions/actions';
 
 const initialState = {
   playerId: 1,
@@ -13,6 +13,11 @@ function rootReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_BUILDING:
       updatedState.playerBuildings = [...updatedState.playerBuildings, action.building];
+      return updatedState;
+
+    case INIT_BUILDINGS:
+      console.log("Init buildings");
+      updatedState.playerBuildings = [];
       return updatedState;
 
     case UPDATE_INDICATORS:
