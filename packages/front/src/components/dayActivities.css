@@ -1,0 +1,59 @@
+.day {
+    border: 1px solid rgb(244, 113, 115);
+    border-radius: 5px;
+}
+
+h3 {
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px black;
+    background-color: rgb(244, 113, 115);
+    padding: 0.5rem;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0 !important;
+}
+
+li {
+    width: 80%;
+    height: 3rem;
+    font-size: 1.5rem;
+    text-align: end;
+}
+
+.addActivity {
+    font-size: 2rem;
+    background-color: rgba(244, 113, 115, 0.3);
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.addActivity p {
+    text-align: center;
+    color: grey;
+}
+
+.addActivity:hover {
+    box-shadow: 5px 5px 5px grey, -5px 5px 5px grey;
+    background-color: rgb(244, 113, 115);
+}
+
+.addActivity:hover p {
+    color: white;
+}
+
+.morning {
+    height: 12rem;
+}
+
+.middle {
+    height: 3rem;
+}
+
+.afternoon {
+    height: 15rem;
+}

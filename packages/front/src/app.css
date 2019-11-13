@@ -1,5 +1,10 @@
+h1, h2, h3 {
+    font-family: 'Varela Round', sans-serif;
+}
+
 .genericButton {
     background-color: rgb(244, 113, 115) !important;
+    font-family: 'Varela Round', sans-serif;
     font-size: 1.5rem !important;
 }
 
