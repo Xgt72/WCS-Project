@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from "react-router-dom";
 import {
-    Container, Row, Col, Button, ButtonGroup
+    Container, Row, Col, Button
 } from 'reactstrap';
 
 class PlayerMenuComponent extends Component {
@@ -38,8 +38,6 @@ class PlayerMenuComponent extends Component {
             }
         }
     }
-
-    test = () => { console.log("Test") };
 
     render() {
         return (

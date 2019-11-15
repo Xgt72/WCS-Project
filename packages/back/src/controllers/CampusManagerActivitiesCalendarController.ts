@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { CampusManagerActivitiesCalendar } from "../entities/CampusManagerActivitiesCalendar";
 import { CampusManagerActivitiesCalendarRepository } from "../repositories/CampusManagerActivitiesCalendarRepository";
-import { request } from "http";
 
 let campusManagerActivitiesCalendarRepo = new CampusManagerActivitiesCalendarRepository();
 
 export let getAllCampusManagersActivitiesCalendar = async (req: Request, res: Response) => {
     try {
-        let campusManagersActivitiesCalendar = await campusManagerActivitiesCalendarRepo.getAllCampusManagersActivitiesCalendar();
+        let campusManagersActivitiesCalendar = await campusManagerActivitiesCalendarRepo
+            .getAllCampusManagersActivitiesCalendar();
         res.send(campusManagersActivitiesCalendar);
     }
     catch (e) {
@@ -17,7 +17,8 @@ export let getAllCampusManagersActivitiesCalendar = async (req: Request, res: Re
 
 export let getCampusManagerActivityCalendarById = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivityCalendarById(parseInt(req.params.id));
+        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo
+            .getCampusManagerActivityCalendarById(parseInt(req.params.id));
         res.send(campusManagerActivityCalendar);
     }
     catch (e) {
@@ -27,7 +28,8 @@ export let getCampusManagerActivityCalendarById = async (req: Request, res: Resp
 
 export let getCampusManagerActivitiesCalendarByCampusManagerId = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivitiesCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivitiesCalendarByCampusManagerId(parseInt(req.params.id));
+        let campusManagerActivitiesCalendar = await campusManagerActivitiesCalendarRepo
+            .getCampusManagerActivitiesCalendarByCampusManagerId(parseInt(req.params.id));
         res.send(campusManagerActivitiesCalendar);
     }
     catch (e) {
@@ -39,9 +41,11 @@ export let getActivitiesByCampusManagerIdAndByDayByPeriod = async (req: Request,
     try {
         let activities: CampusManagerActivitiesCalendar = undefined;
         if (req.params.period == "morning") {
-            activities = await campusManagerActivitiesCalendarRepo.getActivityByCampusManagerIdByDayByMorning(parseInt(req.params.id), parseInt(req.params.day));
+            activities = await campusManagerActivitiesCalendarRepo
+                .getActivityByCampusManagerIdByDayByMorning(parseInt(req.params.id), parseInt(req.params.day));
         } else if (req.params.period == "afternoon") {
-            activities = await campusManagerActivitiesCalendarRepo.getActivityByCampusManagerIdByDayByAfternoon(parseInt(req.params.id), parseInt(req.params.day));
+            activities = await campusManagerActivitiesCalendarRepo
+                .getActivityByCampusManagerIdByDayByAfternoon(parseInt(req.params.id), parseInt(req.params.day));
         }
         res.send(activities);
     }
@@ -52,8 +56,15 @@ export let getActivitiesByCampusManagerIdAndByDayByPeriod = async (req: Request,
 
 export let saveCampusManagerActivity = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivitiesCalendar = new CampusManagerActivitiesCalendar(req.body.campus_manager_id, req.body.activity_id, req.body.morning, req.body.afternoon, req.body.day);
-        let result = await campusManagerActivitiesCalendarRepo.saveCampusManagerActivity(campusManagerActivitiesCalendar);
+        let campusManagerActivitiesCalendar = new CampusManagerActivitiesCalendar(
+            req.body.campus_manager_id,
+            req.body.activity_id,
+            req.body.morning,
+            req.body.afternoon,
+            req.body.day
+        );
+        let result = await campusManagerActivitiesCalendarRepo
+            .saveCampusManagerActivity(campusManagerActivitiesCalendar);
         res.send(result);
     }
     catch (e) {
@@ -65,10 +76,17 @@ export let saveMultipleActivitiesCampusManager = async (req: Request, res: Respo
     try {
         let activities: CampusManagerActivitiesCalendar[] = [];
         req.body.activities.forEach((activity: any) => {
-            activities.push(new CampusManagerActivitiesCalendar(req.body.campus_manager_id, activity.activity_id, activity.morning, activity.afternoon, activity.day));
+            activities.push(new CampusManagerActivitiesCalendar(
+                req.body.campus_manager_id,
+                activity.activity_id,
+                activity.morning,
+                activity.afternoon,
+                activity.day
+            ));
         });
 
-        let result = await campusManagerActivitiesCalendarRepo.saveMultipleActivitiesCampusManager(activities);
+        let result = await campusManagerActivitiesCalendarRepo
+            .saveMultipleActivitiesCampusManager(activities);
         res.send(result);
     }
     catch (e) {
@@ -78,7 +96,8 @@ export let saveMultipleActivitiesCampusManager = async (req: Request, res: Respo
 
 export let updateCampusManagerActivityCalendar = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivityToUpdate = await campusManagerActivitiesCalendarRepo.getCampusManagerActivityCalendarById(req.body.id);
+        let campusManagerActivityToUpdate = await campusManagerActivitiesCalendarRepo
+            .getCampusManagerActivityCalendarById(req.body.id);
         if (req.body.teacher_id != null) {
             campusManagerActivityToUpdate.campus_manager_id = req.body.teacher_id;
         }
@@ -94,7 +113,8 @@ export let updateCampusManagerActivityCalendar = async (req: Request, res: Respo
         if (req.body.day != null) {
             campusManagerActivityToUpdate.day = req.body.day;
         }
-        let response = await campusManagerActivitiesCalendarRepo.saveCampusManagerActivity(campusManagerActivityToUpdate);
+        let response = await campusManagerActivitiesCalendarRepo
+            .saveCampusManagerActivity(campusManagerActivityToUpdate);
         res.send(response);
     }
     catch (e) {
@@ -104,8 +124,10 @@ export let updateCampusManagerActivityCalendar = async (req: Request, res: Respo
 
 export let deleteCampusManagerAcitvityCalendar = async (req: Request, res: Response) => {
     try {
-        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo.getCampusManagerActivityCalendarById(parseInt(req.params.id));
-        let response = await campusManagerActivitiesCalendarRepo.deleteCampusManagerActivity(campusManagerActivityCalendar);
+        let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo
+            .getCampusManagerActivityCalendarById(parseInt(req.params.id));
+        let response = await campusManagerActivitiesCalendarRepo
+            .deleteCampusManagerActivity(campusManagerActivityCalendar);
         res.send(response);
     }
     catch (e) {
