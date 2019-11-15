@@ -1,14 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from "react-router-dom";
 import {
     Container, Row, Col
 } from 'reactstrap';
+import { displayChooseActivities } from '../redux/actions/actions';
 import DayActivities from "../components/DayActivities";
 import DayHours from "../components/DayHours";
+import ChooseActivityContainer from '../components/ChooseActivity';
 
 class CampusManagersComponent extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            chooseActivityDisplay: {
+                opacity: "0",
+                zIndex: "-100",
+            },
+            periodSelected: undefined,
+
+        };
+    }
 
     componentDidMount() {
         let activities = document.getElementsByClassName("addActivity");
@@ -18,10 +30,30 @@ class CampusManagersComponent extends Component {
     }
 
     chooseActivity = (e) => {
-        console.log(e.target);
+        if (e.target.classList.length > 0) {
+            this.setState({
+                periodSelected: e.target
+            });
+        } else {
+            this.setState({
+                periodSelected: e.target.offsetParent
+            });
+        }
+        this.props.displayChooseActivities(true);
+        this.setState({
+            chooseActivityDisplay: {
+                opacity: "1",
+                zIndex: "100",
+            }
+        });
+
     }
 
     render() {
+        const { opacity, zIndex, } = this.state.chooseActivityDisplay;
+        let { activitiesTemplate, chooseActivitiesIsDisplay } = this.props;
+        let tpl = activitiesTemplate.slice(0,7);
+
         return (
             <>
                 <Container>
@@ -32,7 +64,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Monday" />
+                                    <DayActivities dayName="Monday" action={this.chooseActivity} />
                                 </Col>
                             </Row>
                         </Col>
@@ -42,7 +74,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Tuesday" />
+                                    <DayActivities dayName="Tuesday" action={this.chooseActivity} />
                                 </Col>
                             </Row>
                         </Col>
@@ -52,7 +84,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Wednesday" />
+                                    <DayActivities dayName="Wednesday" action={this.chooseActivity} />
                                 </Col>
                             </Row>
                         </Col>
@@ -62,7 +94,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Thuesday" />
+                                    <DayActivities dayName="Thuesday" action={this.chooseActivity} />
                                 </Col>
                             </Row>
                         </Col>
@@ -72,34 +104,41 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Friday" />
+                                    <DayActivities dayName="Friday" action={this.chooseActivity} />
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
                 </Container>
+                {chooseActivitiesIsDisplay &&
+                    <ChooseActivityContainer
+                        opacity={opacity}
+                        zIndex={zIndex}
+                        activitiesTemplate={tpl}
+                        periodSelected={this.state.periodSelected}
+                    />
+                }
             </>
         );
     }
 }
 
-// const mapStateToProps = (state) => ({
-//     playerId: state.playerId,
-//     playerBuildings: state.playerBuildings,
-//   });
+const mapStateToProps = (state) => ({
+    playerId: state.playerId,
+    activitiesTemplate: [...state.activitiesTemplate],
+    chooseActivitiesIsDisplay: state.chooseActivitiesIsDisplay,
+});
 
-//   const mapDispatchToProps = {
-//     addBuilding,
-//     updateIndicators,
-//   };
+const mapDispatchToProps = {
+    displayChooseActivities,
+};
 
-//   const BuildingsContainer = connect(mapStateToProps, mapDispatchToProps)(BuildingsComponent);
+const CampusManagersContainer = connect(mapStateToProps, mapDispatchToProps)(CampusManagersComponent);
 
-//   BuildingsComponent.propTypes = {
-//     playerId: PropTypes.number.isRequired,
-//     playerBuildings: PropTypes.array.isRequired,
-//     addBuilding: PropTypes.func.isRequired,
-//     updateIndicators: PropTypes.func.isRequired,
-//   };
+CampusManagersComponent.propTypes = {
+    playerId: PropTypes.number.isRequired,
+    activitiesTemplate: PropTypes.array.isRequired,
+    displayChooseActivities: PropTypes.func.isRequired,
+};
 
-export default CampusManagersComponent;
+export default CampusManagersContainer;

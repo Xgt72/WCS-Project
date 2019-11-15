@@ -117,14 +117,38 @@ app.delete("/deletePlayerCampusManager/:id", playerCampusManagerController.delet
 /**
  * Campus Manager Activities Calendar routes.
  */
-app.get("/getAllCampusManagersActivitiesCalendar", campusManagerActivitiesCalendarController.getAllCampusManagersActivitiesCalendar);
-app.get("/getCampusManagerActivityCalendarById/:id", campusManagerActivitiesCalendarController.getCampusManagerActivityCalendarById);
-app.get("/getCampusManagerActivitiesCalendarByCampusManagerId/:id", campusManagerActivitiesCalendarController.getCampusManagerActivitiesCalendarByCampusManagerId);
-app.get("/getActivityByCampusManagerIdByDayByPeriod/:id/:day/:period", campusManagerActivitiesCalendarController.getActivitiesByCampusManagerIdAndByDayByPeriod);
-app.post("/saveCampusManagerActivity", campusManagerActivitiesCalendarController.saveCampusManagerActivity);
-app.post("/saveMultipleActivitiesCampusManager", campusManagerActivitiesCalendarController.saveMultipleActivitiesCampusManager);
-app.post("/updateCampusManagerActivityCalendar", campusManagerActivitiesCalendarController.updateCampusManagerActivityCalendar);
-app.delete("/deleteCampusManagerAcitvityCalendar/:id", campusManagerActivitiesCalendarController.deleteCampusManagerAcitvityCalendar);
+app.get(
+    "/getAllCampusManagersActivitiesCalendar",
+    campusManagerActivitiesCalendarController.getAllCampusManagersActivitiesCalendar
+    );
+app.get(
+    "/getCampusManagerActivityCalendarById/:id",
+    campusManagerActivitiesCalendarController.getCampusManagerActivityCalendarById
+    );
+app.get(
+    "/getCampusManagerActivitiesCalendarByCampusManagerId/:id",
+    campusManagerActivitiesCalendarController.getCampusManagerActivitiesCalendarByCampusManagerId
+    );
+app.get(
+    "/getActivityByCampusManagerIdByDayByPeriod/:id/:day/:period",
+    campusManagerActivitiesCalendarController.getActivitiesByCampusManagerIdAndByDayByPeriod
+    );
+app.post(
+    "/saveCampusManagerActivity",
+    campusManagerActivitiesCalendarController.saveCampusManagerActivity
+    );
+app.post(
+    "/saveMultipleActivitiesCampusManager",
+    campusManagerActivitiesCalendarController.saveMultipleActivitiesCampusManager
+    );
+app.post(
+    "/updateCampusManagerActivityCalendar",
+    campusManagerActivitiesCalendarController.updateCampusManagerActivityCalendar
+    );
+app.delete(
+    "/deleteCampusManagerAcitvityCalendar/:id",
+    campusManagerActivitiesCalendarController.deleteCampusManagerAcitvityCalendar
+    );
 
 /**
  * Activity routes.

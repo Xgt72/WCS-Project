@@ -5,9 +5,6 @@ import {
 import "./dayHours.css";
 
 class DayHours extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

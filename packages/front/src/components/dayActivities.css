@@ -40,6 +40,7 @@ li {
 .addActivity:hover {
     box-shadow: 5px 5px 5px grey, -5px 5px 5px grey;
     background-color: rgb(244, 113, 115);
+    cursor: pointer;
 }
 
 .addActivity:hover p {

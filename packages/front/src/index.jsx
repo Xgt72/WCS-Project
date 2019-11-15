@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import store from './redux/store/store';
-import App from './App';
+import AppContainer from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <App />
+      <AppContainer />
     </Router>
   </Provider>,
   document.getElementById('root'),
