@@ -60,7 +60,7 @@ describe('Teacher Calendar', () => {
     test(
         "should return a morning activity",
         async (done) => {
-            const response = await get("/getActivityByTeacherIdByDayByPeriod", { teacher_id: 1, day: 1, period: "morning" });
+            const response = await get("/getActivityByTeacherIdByDayByPeriod/1/1/morning");
             expect(response.status).toEqual(200);
             expect(response.body.morning).toEqual(true);
 
@@ -71,7 +71,7 @@ describe('Teacher Calendar', () => {
     test(
         "should return an afternoon activity",
         async (done) => {
-            const response = await get("/getActivityByTeacherIdByDayByPeriod", { teacher_id: 1, day: 1, period: "afternoon" });
+            const response = await get("/getActivityByTeacherIdByDayByPeriod/1/1/afternoon");
             expect(response.status).toEqual(200);
             expect(response.body.afternoon).toEqual(true);
 
@@ -82,7 +82,7 @@ describe('Teacher Calendar', () => {
     test(
         "should return at least one teacher activity calendar",
         async (done) => {
-            let response = await get("/getAllTeachersActivitiesCalendar", {});
+            let response = await get("/getAllTeachersActivitiesCalendar");
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -92,7 +92,7 @@ describe('Teacher Calendar', () => {
     test(
         "should return teacher activity calendar by ID",
         async (done) => {
-            let response = await get("/getTeacherActivityCalendarById", {id: teacherActivityCalendarId});
+            let response = await get("/getTeacherActivityCalendarById/" + teacherActivityCalendarId);
             expect(response.status).toEqual(200);
             expect(response.body.id).toEqual(teacherActivityCalendarId);
             done();
@@ -102,7 +102,7 @@ describe('Teacher Calendar', () => {
     test(
         "should return teacher activities calendar by teacher ID",
         async (done) => {
-            let response = await get("/getTeacherActivitiesCalendarByTeacherId", {teacherId: 1});
+            let response = await get("/getTeacherActivitiesCalendarByTeacherId/1");
             expect(response.status).toEqual(200);
             done();
         }
@@ -124,16 +124,15 @@ describe('Teacher Calendar', () => {
     test(
         "should delete one teacher activity calendar",
         async (done) => {
-            let response = await deleteTeacherActivity("/deleteTeacherAcitvityCalendar", {id: 1});
+            let response = await deleteTeacherActivity("/deleteTeacherAcitvityCalendar/1");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -147,9 +146,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deleteTeacherActivity(url: string, body: any) {
+export function deleteTeacherActivity(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

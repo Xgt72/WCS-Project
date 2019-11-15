@@ -1,0 +1,15 @@
+ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0 !important;
+}
+
+li {
+    height: 3.5rem;
+    font-size: 1.5rem;
+    text-align: end;
+}
+
+.hours {
+    margin-top: 1.5rem;
+}

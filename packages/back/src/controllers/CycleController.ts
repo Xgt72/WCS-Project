@@ -30,14 +30,14 @@ let playerRepo = new PlayerRepository();
 export let doCycle = async (req: Request, res: Response) => {
     try {
         // get all indicators of the player
-        let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(req.body.player_id);
+        let indicators = await indicatorRepo.getAllIndicatorsByPlayerId(parseInt(req.params.player_id));
         // console.log("1-indicators: ", indicators);
 
         // save the number of future students
         const futureStudents = indicators[3].value;
 
         // get all the buildings of the player
-        let buildings = await buildingRepo.getOnePlayerBuildings(req.body.player_id);
+        let buildings = await buildingRepo.getOnePlayerBuildings(parseInt(req.params.player_id));
         // console.log("2-buildings: ", buildings, buildings[0].mutators, buildings[1].mutators);
 
         // update all the indicators of the player from buildings mutators
@@ -63,7 +63,7 @@ export let doCycle = async (req: Request, res: Response) => {
         // console.log("3-indicators: ", indicators);
 
         // get all the teachers of the player
-        let teachers = await teacherRepo.getOnePlayerTeachers(req.body.player_id);
+        let teachers = await teacherRepo.getOnePlayerTeachers(parseInt(req.params.player_id));
         // console.log("4-teachers: ", teachers, teachers[0].mutators);
 
         // update all the indicators of the player from teacher mutators
@@ -85,7 +85,7 @@ export let doCycle = async (req: Request, res: Response) => {
         // console.log("5-indicators: ", indicators);
 
         // get all the campus managers of the player
-        let campusManagers = await campusManagerRepo.getOnePlayerCampusManagers(req.body.player_id);
+        let campusManagers = await campusManagerRepo.getOnePlayerCampusManagers(parseInt(req.params.player_id));
         // console.log("6-campus manager: ", campusManagers, campusManagers[0].mutators);
 
         // update all the indicators of the player from campus manager mutators
@@ -213,7 +213,7 @@ export let doCycle = async (req: Request, res: Response) => {
         when the player did 20 cycles, update the value of actual_students_number indicator to be equal to future_students_number indicator,
         reset the value of future_students_number indicator.
          */
-        let player = await playerRepo.getPlayerById(req.body.player_id);
+        let player = await playerRepo.getPlayerById(parseInt(req.params.player_id));
         if (player.cyclesNumber < CYCLES_PER_FORMATION) {
             player.cyclesNumber++;
         } else if (player.cyclesNumber >= CYCLES_PER_FORMATION) {

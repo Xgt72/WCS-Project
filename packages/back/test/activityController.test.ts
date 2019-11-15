@@ -61,7 +61,7 @@ describe('Activity', () => {
     test(
         "should return at least one activity",
         async (done) => {
-            const response = await get("/getAllActivities", {});
+            const response = await get("/getAllActivities");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -78,7 +78,7 @@ describe('Activity', () => {
 
             let response = await post("/saveActivity", activity);
             activity = response.body;
-            response = await get("/getActivityById", { id: activity.id });
+            response = await get("/getActivityById/" + activity.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(activity);
             done();
@@ -102,16 +102,15 @@ describe('Activity', () => {
     test(
         "should delete one activity",
         async (done) => {
-            let response = await deleteActivity("/deleteActivity", { id: 1 });
+            let response = await deleteActivity("/deleteActivity/1");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -125,9 +124,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deleteActivity(url: string, body: any) {
+export function deleteActivity(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

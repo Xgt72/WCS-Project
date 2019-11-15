@@ -34,7 +34,7 @@ describe('Player', () => {
     test(
         "should return at least one player",
         async (done) => {
-            const response = await get("/getAllPlayers", {});
+            const response = await get("/getAllPlayers");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -46,7 +46,7 @@ describe('Player', () => {
             let player = new Player("ObiWan");
             let response = await post("/savePlayer", player);
             player = response.body;
-            response = await get("/getPlayerById", { id: player.id });
+            response = await get("/getPlayerById/" + player.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(player);
             done();
@@ -67,16 +67,15 @@ describe('Player', () => {
     test(
         "should delete one indicator",
         async (done) => {
-            let response = await deletePlayer("/deletePlayer", { id: 2 });
+            let response = await deletePlayer("/deletePlayer/2");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -90,9 +89,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deletePlayer(url: string, body: any) {
+export function deletePlayer(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

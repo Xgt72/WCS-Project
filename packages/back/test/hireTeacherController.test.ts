@@ -25,10 +25,10 @@ describe('Hire a teacher', () => {
 
 
         // get reputation indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: REPUTATION });
+        response = await get("/getAllIndicatorsByPlayerIdAndName/" + playerId + "/" + REPUTATION);
 
         // get budget indicator of the player
-        response = await get("/getAllIndicatorsByPlayerIdAndName", { player_id: playerId, indicator_name: BUDGET });
+        response = await get("/getAllIndicatorsByPlayerIdAndName/" + playerId + "/" + BUDGET);
         budgetIndicatorId = response.body.id;
 
         done();
@@ -72,9 +72,8 @@ describe('Hire a teacher', () => {
         });
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

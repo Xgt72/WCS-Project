@@ -17,7 +17,7 @@ export let getAllTeachersActivitiesCalendar = async (req: Request, res: Response
 
 export let getTeacherActivityCalendarById = async (req: Request, res: Response) => {
     try {
-        let teacherActivityCalendar = await teacherActivitiesCalendarRepo.getTeacherActivityCalendarById(req.body.id);
+        let teacherActivityCalendar = await teacherActivitiesCalendarRepo.getTeacherActivityCalendarById(parseInt(req.params.id));
         res.send(teacherActivityCalendar);
     }
     catch (e) {
@@ -27,7 +27,7 @@ export let getTeacherActivityCalendarById = async (req: Request, res: Response) 
 
 export let getTeacherActivitiesCalendarByTeacherId = async (req: Request, res: Response) => {
     try {
-        let teacherActivitiesCalendar = await teacherActivitiesCalendarRepo.getTeacherActivitiesCalendarByTeacherId(req.body.teacherId);
+        let teacherActivitiesCalendar = await teacherActivitiesCalendarRepo.getTeacherActivitiesCalendarByTeacherId(parseInt(req.params.id));
         res.send(teacherActivitiesCalendar);
     }
     catch (e) {
@@ -38,10 +38,10 @@ export let getTeacherActivitiesCalendarByTeacherId = async (req: Request, res: R
 export let getActivitiesByTeacherIdAndByDayByPeriod = async (req: Request, res: Response) => {
     try {
         let activities: TeacherActivitiesCalendar = undefined;
-        if (req.body.period == "morning") {
-            activities = await teacherActivitiesCalendarRepo.getActivityByTeacherIdByDayByMorning(req.body.teacher_id, req.body.day);
-        } else if (req.body.period == "afternoon") {
-            activities = await teacherActivitiesCalendarRepo.getActivityByTeacherIdByDayByAfternoon(req.body.teacher_id, req.body.day);
+        if (req.params.period == "morning") {
+            activities = await teacherActivitiesCalendarRepo.getActivityByTeacherIdByDayByMorning(parseInt(req.params.id), parseInt(req.params.day));
+        } else if (req.params.period == "afternoon") {
+            activities = await teacherActivitiesCalendarRepo.getActivityByTeacherIdByDayByAfternoon(parseInt(req.params.id), parseInt(req.params.day));
         }
         res.send(activities);
     }
@@ -104,7 +104,7 @@ export let updateTeacherActivityCalendar = async (req: Request, res: Response) =
 
 export let deleteTeacherAcitvityCalendar = async (req: Request, res: Response) => {
     try {
-        let teacherActivityCalendar = await teacherActivitiesCalendarRepo.getTeacherActivityCalendarById(req.body.id);
+        let teacherActivityCalendar = await teacherActivitiesCalendarRepo.getTeacherActivityCalendarById(parseInt(req.params.id));
         let response = await teacherActivitiesCalendarRepo.deleteTeacherActivity(teacherActivityCalendar);
         res.send(response);
     }

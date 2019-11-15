@@ -36,7 +36,7 @@ describe('Mutator', () => {
     test(
         "should return at least one mutator",
         async (done) => {
-            const response = await get("/getAllMutators", {});
+            const response = await get("/getAllMutators");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -48,7 +48,7 @@ describe('Mutator', () => {
             let mut =  new Mutator("substract", 3, 500);
             let response = await post("/saveMutator",mut);
             mut = response.body;
-            response = await get("/getMutatorsById", {id: mut.id});
+            response = await get("/getMutatorsById/" + mut.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(mut);
             done();
@@ -69,16 +69,15 @@ describe('Mutator', () => {
     test(
         "should delete one mutator",
         async (done) => {
-            let response = await deleteMutator("/deleteMutator", {id: 2});
+            let response = await deleteMutator("/deleteMutator/2");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -92,9 +91,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deleteMutator(url: string, body: any) {
+export function deleteMutator(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;

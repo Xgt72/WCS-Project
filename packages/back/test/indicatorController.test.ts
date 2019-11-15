@@ -52,7 +52,7 @@ describe('Indicator', () => {
     test(
         "should return at least one indicator",
         async (done) => {
-            const response = await get("/getAllIndicators", {});
+            const response = await get("/getAllIndicators");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -64,7 +64,7 @@ describe('Indicator', () => {
             let ind = new Indicator("wilder", 4, 1000);
             let response = await post("/saveIndicator", ind);
             ind = response.body;
-            response = await get("/getIndicatorById", { id: ind.id });
+            response = await get("/getIndicatorById/" + ind.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(ind);
             done();
@@ -77,7 +77,7 @@ describe('Indicator', () => {
             let ind = new Indicator("wilder", 5, 1000);
             let response = await post("/saveIndicator", ind);
             ind = response.body;
-            response = await get("/getIndicatorsByPlayerId", { player_id: ind.player_id });
+            response = await get("/getIndicatorsByPlayerId/" + ind.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -87,7 +87,7 @@ describe('Indicator', () => {
     test(
         "should return indicator by player ID and indicator name",
         async (done) => {
-            let response = await get("/getAllIndicatorsByPlayerIdAndName", {player_id: 5, indicator_name: "wilder"});
+            let response = await get("/getAllIndicatorsByPlayerIdAndName/5/wilder");
             expect(response.status).toEqual(200);
             expect(response.body.name).toEqual("wilder");
             expect(response.body.player_id).toEqual(5);
@@ -111,16 +111,15 @@ describe('Indicator', () => {
     test(
         "should delete one indicator",
         async (done) => {
-            let response = await deleteIndicator("/deleteIndicator", { id: 2 });
+            let response = await deleteIndicator("/deleteIndicator/2");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
 
-export function get(url: string, body: any) {
+export function get(url: string) {
     const httpRequest = request(app).get(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
@@ -134,9 +133,8 @@ export function post(url: string, body: any) {
     return httpRequest;
 }
 
-export function deleteIndicator(url: string, body: any) {
+export function deleteIndicator(url: string) {
     const httpRequest = request(app).delete(url);
-    httpRequest.send(body);
     httpRequest.set('Accept', 'application/json');
     httpRequest.set('Origin', 'http://localhost:5000');
     return httpRequest;
