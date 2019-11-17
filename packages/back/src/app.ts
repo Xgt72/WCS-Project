@@ -146,8 +146,8 @@ app.post(
     campusManagerActivitiesCalendarController.updateCampusManagerActivityCalendar
     );
 app.delete(
-    "/deleteCampusManagerAcitvityCalendar/:id",
-    campusManagerActivitiesCalendarController.deleteCampusManagerAcitvityCalendar
+    "/deleteCampusManagerActivityCalendar/:id",
+    campusManagerActivitiesCalendarController.deleteCampusManagerActivityCalendar
     );
 
 /**

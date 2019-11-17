@@ -3,9 +3,10 @@ import {
   UPDATE_INDICATORS,
   INIT_BUILDINGS,
   INIT_ACTIVITIES_TEMPLATE,
-  UPDATE_ACTIVITY_SELECTED,
   DISPLAY_CHOOSE_ACTIVITIES,
-  ADD_ACTIVITIES_FOR_A_DAY_IN_CMC
+  ADD_ACTIVITY_IN_CMC,
+  REMOVE_ACTIVITY_IN_CMC,
+  CAMPUS_MANAGER_ID_CALENDAR
 } from '../actions/actions';
 
 const initialState = {
@@ -17,13 +18,18 @@ const initialState = {
   chooseActivitiesIsDisplay: false,
   activitiesTemplate: [],
   activitySelected: -1,
-  campusManagerCalendar: [],
+  campusManagerCalendar: {
+    campusManagerId: 1,
+    calendar: [],
+  },
 };
 
 function rootReducer(state = initialState, action) {
 
 
   let updatedState = { ...state };
+  let previousCalendar = [...updatedState.campusManagerCalendar.calendar];
+
   switch (action.type) {
     case ADD_BUILDING:
       updatedState.playerBuildings = [...updatedState.playerBuildings, action.building];
@@ -41,18 +47,57 @@ function rootReducer(state = initialState, action) {
       updatedState.activitiesTemplate = action.activities;
       return updatedState;
 
-    case UPDATE_ACTIVITY_SELECTED:
-      updatedState.activitySelected = action.activityId;
-      return updatedState;
-
     case DISPLAY_CHOOSE_ACTIVITIES:
       updatedState.chooseActivitiesIsDisplay = action.value;
       return updatedState;
 
-    case ADD_ACTIVITIES_FOR_A_DAY_IN_CMC:
-      let activitiesDay = action.activities.morning.day;
-      updatedState.campusManagerCalendar = [...updatedState.campusManagerCalendar];
-      updatedState.campusManagerCalendar[activitiesDay - 1] = action.activities;
+    case ADD_ACTIVITY_IN_CMC:
+      updatedState.campusManagerCalendar = { ...state.campusManagerCalendar };
+      
+      let updatedCalendar = [];
+      let toAdd = true;
+
+      if (previousCalendar.length > 0) {
+        updatedCalendar = previousCalendar.map(activity => {
+          if (activity.day === action.activity.day && activity.morning === action.activity.morning) {
+            activity = action.activity;
+            toAdd = false;
+          }
+          return activity;
+        });
+      }
+
+      if (toAdd) {
+        updatedCalendar = [...previousCalendar, action.activity];
+      }
+
+      updatedState.campusManagerCalendar.calendar = updatedCalendar;
+      return updatedState;
+
+    case REMOVE_ACTIVITY_IN_CMC:
+      updatedState.campusManagerCalendar = { ...state.campusManagerCalendar };
+
+      previousCalendar = [...updatedState.campusManagerCalendar.calendar];
+      let indexToRemove = null;
+
+      previousCalendar.map((activity, index) => {
+        if (activity.day === action.activity.day && activity.morning === action.activity.morning) {
+          indexToRemove = index;
+        }
+        return activity;
+      });
+
+      if (indexToRemove != null) {
+        previousCalendar.splice(indexToRemove, 1);
+      }
+
+      updatedState.campusManagerCalendar.calendar = previousCalendar;
+      return updatedState;
+
+
+    case CAMPUS_MANAGER_ID_CALENDAR:
+      updatedState.campusManagerCalendar = { ...state.campusManagerCalendar };
+      updatedState.campusManagerCalendar.campusManagerId = action.campusManagerId;
       return updatedState;
 
     default:

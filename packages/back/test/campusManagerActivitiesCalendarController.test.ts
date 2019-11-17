@@ -124,7 +124,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should delete one campus manager activity calendar",
         async (done) => {
-            let response = await deleteCampusManagerActivity("/deleteCampusManagerAcitvityCalendar/1");
+            let response = await deleteCampusManagerActivity("/deleteCampusManagerActivityCalendar/1");
             expect(response.status).toEqual(200);
             done();
         }
