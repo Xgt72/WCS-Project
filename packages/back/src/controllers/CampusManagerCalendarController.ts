@@ -108,7 +108,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                     )
                     break;
             }
-            
+
             let mutators = Mutator.cloneListWithIndicators(activity.mutators, indicators);
             if (mutators.length > 0) {
                 for (let i = 0; i < mutators.length; i++) {
@@ -117,7 +117,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                 activity.mutators = mutators;
             }
             activity = await activityRepo.saveActivity(activity);
-            
+
             updatedActivities[i].activity_id = activity.id;
         }
         // console.log("Activities: ", updatedActivities);

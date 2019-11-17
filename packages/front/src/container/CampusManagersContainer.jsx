@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-    Container, Row, Col
+    Container, Row, Col, Button
 } from 'reactstrap';
 import { displayChooseActivities } from '../redux/actions/actions';
 import DayActivities from "../components/DayActivities";
 import DayHours from "../components/DayHours";
-import ChooseActivityContainer from '../components/ChooseActivity';
+import ChooseActivityContainer from './ChooseActivity';
 
 class CampusManagersComponent extends Component {
     constructor(props) {
@@ -18,27 +18,39 @@ class CampusManagersComponent extends Component {
                 zIndex: "-100",
             },
             periodSelected: undefined,
-
+            updatedCalendar: {
+                monday: {
+                    morning: null,
+                    afternoon: null
+                },
+                tuesday: {
+                    morning: null,
+                    afternoon: null
+                },
+                wednesday: {
+                    morning: null,
+                    afternoon: null
+                },
+                thursday: {
+                    morning: null,
+                    afternoon: null
+                },
+                friday: {
+                    morning: null,
+                    afternoon: null
+                }
+            }
         };
     }
 
     componentDidMount() {
-        let activities = document.getElementsByClassName("addActivity");
-        for (let i = 0; i < activities.length; i++) {
-            activities[i].addEventListener("click", this.chooseActivity);
-        }
+        this.organizeCalendar();
     }
 
     chooseActivity = (e) => {
-        if (e.target.classList.length > 0) {
-            this.setState({
-                periodSelected: e.target
-            });
-        } else {
-            this.setState({
-                periodSelected: e.target.offsetParent
-            });
-        }
+        this.setState({
+            periodSelected: e.currentTarget
+        });
         this.props.displayChooseActivities(true);
         this.setState({
             chooseActivityDisplay: {
@@ -49,10 +61,140 @@ class CampusManagersComponent extends Component {
 
     }
 
+    validatePlanning = () => {
+        const { campusManagerCalendar } = this.props;
+        if (campusManagerCalendar.calendar.length > 0) {
+            fetch(`/getCampusManagerActivitiesCalendarByCampusManagerId/${campusManagerCalendar.campusManagerId}`)
+                .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                    throw new Error(res.statusText);
+                })
+                .then(
+                    (res) => {
+                        if (res.length > 0) {
+                            for (let i = 0; i < res.length; i++) {
+                                fetch(`/deleteCampusManagerActivityCalendar/${res[i].id}`,
+                                    {
+                                        method: 'DELETE',
+                                        headers: new Headers({
+                                            'Content-Type': 'application/json',
+                                        }),
+                                    })
+                                    .then((res) => {
+                                        if (res.ok) {
+                                            return res.json();
+                                        }
+                                        throw new Error(res.statusText);
+                                    })
+                                    .catch(
+                                        (err) => {
+                                            console.log(err.message);
+                                        },
+                                    );
+                            }
+                        }
+                        let calendar = {
+                            campus_manager_id: campusManagerCalendar.campusManagerId,
+                            activities: campusManagerCalendar.calendar
+                        };
+                        fetch("/addActivitiesInCampusManagerCalendar",
+                            {
+                                method: 'POST',
+                                headers: new Headers({
+                                    'Content-Type': 'application/json',
+                                }),
+                                body: JSON.stringify(calendar),
+                            })
+                            .then((res) => {
+                                if (res.ok) {
+                                    return res.json();
+                                }
+                                throw new Error(res.statusText);
+                            })
+                            .then(
+                                (res) => {
+                                    if (typeof res === 'object') {
+                                        alert("schedule saved");
+                                    } else {
+                                        alert(res);
+                                    }
+                                },
+                            )
+                            .catch(
+                                (err) => {
+                                    console.log(err.message);
+                                },
+                            );
+                    },
+                )
+                .catch(
+                    (err) => {
+                        console.log(err.message);
+                    },
+                );
+        } else {
+            alert("your schedule is empty ?");
+        }
+    }
+
+    organizeCalendar = () => {
+        let { activitiesTemplate, campusManagerCalendar } = this.props;
+
+        let updatedCalendar = this.state.updatedCalendar;
+
+        campusManagerCalendar.calendar.map(activity => {
+            let { name, color } = activitiesTemplate[activity.activity_id - 1];
+
+            switch (activity.day) {
+                case 1:
+                    if (activity.morning) {
+                        updatedCalendar.monday.morning = { name: name, color: color };
+                    } else {
+                        updatedCalendar.monday.afternoon = { name: name, color: color };
+                    }
+                    break;
+                case 2:
+                    if (activity.morning) {
+                        updatedCalendar.tuesday.morning = { name: name, color: color };
+                    } else {
+                        updatedCalendar.tuesday.afternoon = { name: name, color: color };
+                    }
+                    break;
+                case 3:
+                    if (activity.morning) {
+                        updatedCalendar.wednesday.morning = { name: name, color: color };
+                    } else {
+                        updatedCalendar.wednesday.afternoon = { name: name, color: color };
+                    }
+                    break;
+                case 4:
+                    if (activity.morning) {
+                        updatedCalendar.thursday.morning = { name: name, color: color };
+                    } else {
+                        updatedCalendar.thursday.afternoon = { name: name, color: color };
+                    }
+                    break;
+                case 5:
+                    if (activity.morning) {
+                        updatedCalendar.friday.morning = { name: name, color: color };
+                    } else {
+                        updatedCalendar.friday.afternoon = { name: name, color: color };
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return activity;
+        });
+        this.setState({ updatedCalendar: updatedCalendar });
+    }
+
     render() {
         const { opacity, zIndex, } = this.state.chooseActivityDisplay;
         let { activitiesTemplate, chooseActivitiesIsDisplay } = this.props;
-        let tpl = activitiesTemplate.slice(0,7);
+        let tpl = activitiesTemplate.slice(0, 7);
 
         return (
             <>
@@ -64,7 +206,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Monday" action={this.chooseActivity} />
+                                    <DayActivities dayName="Monday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.monday} />
                                 </Col>
                             </Row>
                         </Col>
@@ -74,7 +216,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Tuesday" action={this.chooseActivity} />
+                                    <DayActivities dayName="Tuesday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.tuesday} />
                                 </Col>
                             </Row>
                         </Col>
@@ -84,7 +226,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Wednesday" action={this.chooseActivity} />
+                                    <DayActivities dayName="Wednesday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.wednesday} />
                                 </Col>
                             </Row>
                         </Col>
@@ -94,7 +236,7 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Thuesday" action={this.chooseActivity} />
+                                    <DayActivities dayName="Thursday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.thursday} />
                                 </Col>
                             </Row>
                         </Col>
@@ -104,10 +246,19 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Friday" action={this.chooseActivity} />
+                                    <DayActivities dayName="Friday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.friday} />
                                 </Col>
                             </Row>
                         </Col>
+                        <Row className="no-gutters justify-content-around w-100 m-2">
+                            <Button
+                                type="button"
+                                className="genericButton"
+                                onClick={() => { this.validatePlanning() }}
+                            >
+                                Validate this schedule
+                            </Button>
+                        </Row>
                     </Row>
                 </Container>
                 {chooseActivitiesIsDisplay &&
@@ -127,6 +278,7 @@ const mapStateToProps = (state) => ({
     playerId: state.playerId,
     activitiesTemplate: [...state.activitiesTemplate],
     chooseActivitiesIsDisplay: state.chooseActivitiesIsDisplay,
+    campusManagerCalendar: state.campusManagerCalendar,
 });
 
 const mapDispatchToProps = {
@@ -138,6 +290,8 @@ const CampusManagersContainer = connect(mapStateToProps, mapDispatchToProps)(Cam
 CampusManagersComponent.propTypes = {
     playerId: PropTypes.number.isRequired,
     activitiesTemplate: PropTypes.array.isRequired,
+    chooseActivitiesIsDisplay: PropTypes.bool.isRequired,
+    campusManagerCalendar: PropTypes.object.isRequired,
     displayChooseActivities: PropTypes.func.isRequired,
 };
 

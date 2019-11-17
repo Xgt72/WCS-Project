@@ -58,3 +58,9 @@ li {
 .afternoon {
     height: 15rem;
 }
+
+@media screen and (min-width: 991px) {
+    .addActivity {
+        font-size: 1.5rem;
+    }
+}

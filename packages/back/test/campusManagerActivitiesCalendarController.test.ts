@@ -4,6 +4,7 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
+import { campusManagerActivitiesTemplates, teacherActivitiesTemplates } from "../src/models/Templates";
 
 let connection: Connection = null;
 let campusManagerActivityCalendarId: number = null;
@@ -12,6 +13,11 @@ describe('Campus Manager Calendar', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
+
+        // create activities template
+        let response = await post("/saveAllActivities", campusManagerActivitiesTemplates);
+        response = await post("/saveAllActivities", teacherActivitiesTemplates);
+
         done();
     });
 
@@ -124,7 +130,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should delete one campus manager activity calendar",
         async (done) => {
-            let response = await deleteCampusManagerActivity("/deleteCampusManagerAcitvityCalendar/1");
+            let response = await deleteCampusManagerActivity("/deleteCampusManagerActivityCalendar/1");
             expect(response.status).toEqual(200);
             done();
         }
