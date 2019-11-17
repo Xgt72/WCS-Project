@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { TeacherActivitiesCalendar } from "../entities/TeacherActivitiesCalendar";
 import { TeacherActivitiesCalendarRepository } from "../repositories/TeacherActivitiesCalendarRepository";
+import { ActivityRepository } from "../repositories/ActivityRepository";
+
 
 let teacherActivitiesCalendarRepo = new TeacherActivitiesCalendarRepository();
-
+let activityRepo = new ActivityRepository();
 
 export let getAllTeachersActivitiesCalendar = async (req: Request, res: Response) => {
     try {
@@ -104,8 +106,14 @@ export let updateTeacherActivityCalendar = async (req: Request, res: Response) =
 
 export let deleteTeacherAcitvityCalendar = async (req: Request, res: Response) => {
     try {
-        let teacherActivityCalendar = await teacherActivitiesCalendarRepo.getTeacherActivityCalendarById(parseInt(req.params.id));
-        let response = await teacherActivitiesCalendarRepo.deleteTeacherActivity(teacherActivityCalendar);
+        let teacherActivityCalendar = await teacherActivitiesCalendarRepo
+            .getTeacherActivityCalendarById(parseInt(req.params.id));
+        let activityToDelete = await activityRepo
+            .getActivityById(teacherActivityCalendar.activity_id);
+        let activityDeleted = await activityRepo
+            .deleteActivity(activityToDelete);
+        let response = await teacherActivitiesCalendarRepo
+            .deleteTeacherActivity(teacherActivityCalendar);
         res.send(response);
     }
     catch (e) {

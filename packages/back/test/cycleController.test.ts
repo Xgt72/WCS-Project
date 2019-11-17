@@ -106,7 +106,7 @@ describe('doCycle', () => {
             let response = await get("/doCycle/" + testerId);
             expect(response.status).toEqual(200);
             expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(46.9);
-            expect(parseInt(response.body[1].value)).toEqual(2700);
+            expect(parseInt(response.body[1].value)).toEqual(1650);
 
             response = await get("/getPlayerById/" + testerId);
             expect(response.status).toEqual(200);
@@ -195,7 +195,7 @@ describe('doCycle', () => {
             response = await get("/doCycle/" + testerId);
             expect(response.status).toEqual(200);
             expect(parseFloat((response.body[0].value).toFixed(1))).toEqual(350.9);
-            expect(parseInt(response.body[1].value)).toEqual(-15100);
+            expect(parseInt(response.body[1].value)).toEqual(-35350);
             expect(response.body[2].value).toBeGreaterThan(0);
             expect(response.body[3].value).toBeGreaterThan(0);
             
