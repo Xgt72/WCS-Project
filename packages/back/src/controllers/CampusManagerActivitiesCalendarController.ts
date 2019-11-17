@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { CampusManagerActivitiesCalendar } from "../entities/CampusManagerActivitiesCalendar";
 import { CampusManagerActivitiesCalendarRepository } from "../repositories/CampusManagerActivitiesCalendarRepository";
+import { ActivityRepository } from "../repositories/ActivityRepository";
 
 let campusManagerActivitiesCalendarRepo = new CampusManagerActivitiesCalendarRepository();
+let activityRepo = new ActivityRepository();
 
 export let getAllCampusManagersActivitiesCalendar = async (req: Request, res: Response) => {
     try {
@@ -122,10 +124,14 @@ export let updateCampusManagerActivityCalendar = async (req: Request, res: Respo
     }
 }
 
-export let deleteCampusManagerAcitvityCalendar = async (req: Request, res: Response) => {
+export let deleteCampusManagerActivityCalendar = async (req: Request, res: Response) => {
     try {
         let campusManagerActivityCalendar = await campusManagerActivitiesCalendarRepo
             .getCampusManagerActivityCalendarById(parseInt(req.params.id));
+        let activityToDelete = await activityRepo
+            .getActivityById(campusManagerActivityCalendar.activity_id);
+        let activityDeleted = await activityRepo
+            .deleteActivity(activityToDelete);
         let response = await campusManagerActivitiesCalendarRepo
             .deleteCampusManagerActivity(campusManagerActivityCalendar);
         res.send(response);

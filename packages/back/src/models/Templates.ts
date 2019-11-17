@@ -53,7 +53,7 @@ dormsTemplate.mutators = [
 let campusManagerActivityOne: Activity = new Activity("Wild Breakfast", 100, "69c7b5");
 campusManagerActivityOne.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.1),
-    new Mutator("dec" + BUDGET, 2, -80),
+    new Mutator("dec" + BUDGET, 2, -100),
     new Mutator("inc" + FUTURE_STUDENTS_NUMBER, 3, 1)
 ];
 
@@ -67,7 +67,7 @@ campusManagerActivityTwo.mutators = [
 let campusManagerActivityThree: Activity = new Activity("Buy Publicities", 350, "bf49a0");
 campusManagerActivityThree.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.5),
-    new Mutator("dec" + BUDGET, 2, -80),
+    new Mutator("dec" + BUDGET, 2, -350),
     new Mutator("inc" + FUTURE_STUDENTS_NUMBER, 3, 1)
 
 ];
@@ -75,7 +75,7 @@ campusManagerActivityThree.mutators = [
 let campusManagerActivityFour: Activity = new Activity("Wild Aperitif", 100, "cf0921");
 campusManagerActivityFour.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.4),
-    new Mutator("dec" + BUDGET, 2, -80),
+    new Mutator("dec" + BUDGET, 2, -100),
     new Mutator("inc" + FUTURE_STUDENTS_NUMBER, 3, 1)
 
 ];
@@ -90,14 +90,14 @@ campusManagerActivityFive.mutators = [
 let campusManagerActivitySix: Activity = new Activity("Organize a Trade Fair", 450, "55c671");
 campusManagerActivitySix.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.6),
-    new Mutator("dec" + BUDGET, 2, -80),
+    new Mutator("dec" + BUDGET, 2, -450),
     new Mutator("inc" + FUTURE_STUDENTS_NUMBER, 3, 1)
 
 ];
 
 let campusManagerActivitySeven: Activity = new Activity("Internal Management", 100, "ff83da");
 campusManagerActivitySeven.mutators = [
-    new Mutator("dec" + BUDGET, 2, -50)
+    new Mutator("dec" + BUDGET, 2, -100)
 ];
 
 export let campusManagerActivitiesTemplates: Activity[] = [
@@ -113,31 +113,31 @@ export let campusManagerActivitiesTemplates: Activity[] = [
 let teacherActivityOne: Activity = new Activity("Weekly Meeting", 100, "69c7b5");
 teacherActivityOne.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.6),
-    new Mutator("dec" + BUDGET, 2, -80)
+    new Mutator("dec" + BUDGET, 2, -100)
 ];
 
 let teacherActivityTwo: Activity = new Activity("Prepare a Course", 100, "3b5998");
 teacherActivityTwo.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.6),
-    new Mutator("dec" + BUDGET, 2, -80)
+    new Mutator("dec" + BUDGET, 2, -100)
 ];
 
 let teacherActivityThree: Activity = new Activity("Give a Course", 100, "bf49a0");
 teacherActivityThree.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.6),
-    new Mutator("dec" + BUDGET, 2, -80)
+    new Mutator("dec" + BUDGET, 2, -100)
 ];
 
 let teacherActivityFour: Activity = new Activity("Correction of a Wild Circus Candidate", 100, "cf0921");
 teacherActivityFour.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.6),
-    new Mutator("dec" + BUDGET, 2, -80)
+    new Mutator("dec" + BUDGET, 2, -100)
 ];
 
 let teacherActivityFive: Activity = new Activity("Workshop or Live Coding", 100, "ff6c33");
 teacherActivityFive.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.6),
-    new Mutator("dec" + BUDGET, 2, -80)
+    new Mutator("dec" + BUDGET, 2, -100)
 ];
 
 export let teacherActivitiesTemplates: Activity[] = [
