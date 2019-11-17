@@ -4,6 +4,7 @@ import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
 import { app, server } from "../src/app";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
+import { campusManagerActivitiesTemplates, teacherActivitiesTemplates } from "../src/models/Templates";
 
 let connection: Connection = null;
 let teacherActivityCalendarId: number = null;
@@ -12,6 +13,11 @@ describe('Teacher Calendar', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
+
+        // create activities template
+        let response = await post("/saveAllActivities", campusManagerActivitiesTemplates);
+        response = await post("/saveAllActivities", teacherActivitiesTemplates);
+
         done();
     });
 
@@ -112,7 +118,7 @@ describe('Teacher Calendar', () => {
         "should update a teacher activity calendar",
         async (done) => {
             let teacherActivityCalendar = new TeacherActivitiesCalendar(2, 1, true, false, 2);
-            let response = await post("/updateTeacherActivityCalendar", {id: 1, ...teacherActivityCalendar});
+            let response = await post("/updateTeacherActivityCalendar", { id: 1, ...teacherActivityCalendar });
             expect(response.status).toEqual(200);
             expect(response.body.day).toEqual(2);
             expect(response.body.afternoon).toEqual(false);
