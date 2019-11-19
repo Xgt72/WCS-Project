@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { Player } from "../entities/Player";
 import { PlayerRepository } from "../repositories/PlayerRepository";
+import { IndicatorRepository } from "../repositories/IndicatorRepository";
+
 let playerRepo = new PlayerRepository();
+let indicatorRepo = new IndicatorRepository();
 
 export let getAllPlayers = async (req: Request, res: Response) => {
     try {
@@ -51,8 +54,12 @@ export let updatePlayer = async (req: Request, res: Response) => {
 export let deletePlayer = async (req: Request, res: Response) => {
     try {
         let player = await playerRepo.getPlayerById(parseInt(req.params.id));
-        let result = await playerRepo.deletePlayer(player);
-        res.send(result);
+        let indicatorsToDelete = await indicatorRepo.getAllIndicatorsByPlayerId(parseInt(req.params.id));
+        for (let i=0; i < indicatorsToDelete.length; i++) {
+            let result = await indicatorRepo.deleteIndicator(indicatorsToDelete[i]);
+        }
+        let response = await playerRepo.deletePlayer(player);
+        res.send(response);
     }
     catch(e) {
         res.status(501).json(e);
