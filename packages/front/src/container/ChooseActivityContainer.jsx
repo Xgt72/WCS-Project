@@ -106,12 +106,26 @@ class ChooseActivityComponent extends Component {
                             <Row className="no-gutters justify-content-around">
                                 {activitiesTemplate.map(
                                     activity =>
-                                        <Col key={activity.id} id={activity.id} className="selectActivity text-center m-2" xs="5" md="4" lg="3" onClick={this.validateActivity}>
+                                        <Col
+                                            key={activity.id}
+                                            id={activity.id}
+                                            className="selectActivity text-center m-2"
+                                            xs="5"
+                                            md="4"
+                                            lg="3"
+                                            onClick={this.validateActivity}
+                                        >
                                             <h4>{activity.name}</h4>
                                             <p>cost: {activity.value}€</p>
                                         </Col>
                                 )}
-                                <Col className="removeActivity text-center m-2" xs="5" md="4" lg="3" onClick={this.removeActivity}>
+                                <Col
+                                    className="removeActivity text-center m-2"
+                                    xs="5"
+                                    md="4"
+                                    lg="3"
+                                    onClick={this.removeActivity}
+                                >
                                     <h4>Remove activity</h4>
                                 </Col>
                             </Row>

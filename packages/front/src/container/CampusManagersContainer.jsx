@@ -7,7 +7,7 @@ import {
 import { displayChooseActivities } from '../redux/actions/actions';
 import DayActivities from "../components/DayActivities";
 import DayHours from "../components/DayHours";
-import ChooseActivityContainer from './ChooseActivity';
+import ChooseActivityContainer from './ChooseActivityContainer';
 
 class CampusManagersComponent extends Component {
     constructor(props) {
@@ -39,12 +39,29 @@ class CampusManagersComponent extends Component {
                     morning: null,
                     afternoon: null
                 }
-            }
+            },
+            campusManagerName: "",
         };
     }
 
     componentDidMount() {
         this.organizeCalendar();
+        fetch(`/getPlayerCampusManagerById/${this.props.campusManagerCalendar.campusManagerId}`)
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error(res.statusText);
+            })
+            .then(data => {
+                this.setState({campusManagerName: data.name});
+            })
+            .catch(
+                (err) => {
+                    console.log(err.message);
+                },
+            );
+
     }
 
     chooseActivity = (e) => {
@@ -199,6 +216,11 @@ class CampusManagersComponent extends Component {
         return (
             <>
                 <Container>
+                    {this.state.campusManagerName !== "" &&
+                    <Row>
+                        <h2 className="w-100">Schedule of {this.state.campusManagerName}</h2>
+                    </Row>
+                    }
                     <Row className="no-gutters mt-2">
                         <Col className="mx-xs-1 ml-md-4 mr-lg-1 my-2" md="6" lg="3">
                             <Row className="no-gutters">
@@ -206,7 +228,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Monday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.monday} />
+                                    <DayActivities
+                                        dayName="Monday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.monday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -216,7 +242,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Tuesday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.tuesday} />
+                                    <DayActivities
+                                        dayName="Tuesday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.tuesday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -226,7 +256,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Wednesday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.wednesday} />
+                                    <DayActivities
+                                        dayName="Wednesday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.wednesday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -236,7 +270,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Thursday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.thursday} />
+                                    <DayActivities
+                                        dayName="Thursday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.thursday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -246,7 +284,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Friday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.friday} />
+                                    <DayActivities
+                                        dayName="Friday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.friday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
