@@ -133,21 +133,13 @@ class BuildingsComponent extends Component {
         <Container>
           <PlayerIndicatorsContainer />
           <Row className="justify-content-around">
-            <Col className="text-center" sm="6" xl="3">
-              <Button onClick={() => this.buyBuilding(1)}>Buy a Classroom</Button>
-            </Col>
-            <Col className="text-center" xl="3">
-              <Button onClick={() => this.buyBuilding(2)}>Buy a Parking</Button>
-            </Col>
-            <Col className="text-center" xl="3">
-              <Button onClick={() => this.buyBuilding(3)}>Buy a Cafeteria</Button>
-            </Col>
-            <Col className="text-center" sm="6" xl="3">
-              <Button onClick={() => this.buyBuilding(4)}>Buy a Dorms</Button>
-            </Col>
+              <Button className="m-2" onClick={() => this.buyBuilding(1)}>Buy a Classroom</Button>
+              <Button className="m-2" onClick={() => this.buyBuilding(2)}>Buy a Parking</Button>
+              <Button className="m-2" onClick={() => this.buyBuilding(3)}>Buy a Cafeteria</Button>
+              <Button className="m-2" onClick={() => this.buyBuilding(4)}>Buy a Dorms</Button>
           </Row>
-          <Row>
-            {this.props.playerBuildings.map((building) => <Col className="m-3" sm="6" xl="3" key={building.id}><p>{building.name}</p></Col>)}
+          <Row className="justify-content-around">
+            {this.props.playerBuildings.map((building) => <p key={building.id} className="m-2">{building.name}</p>)}
           </Row>
         </Container>
       </>
