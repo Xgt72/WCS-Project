@@ -1,0 +1,15 @@
+.hireCampusManager {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.campusManager:hover {
+    box-shadow: 3px 3px 3px grey, -3px 3px 3px grey;
+}

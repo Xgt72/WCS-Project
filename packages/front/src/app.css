@@ -17,3 +17,7 @@ h2 {
     color: rgb(244, 113, 115) !important;
     box-shadow: 3px 3px 3px grey, -3px 3px 3px grey;
 }
+
+a:hover {
+    text-decoration: none !important;
+}
