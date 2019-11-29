@@ -1,36 +1,33 @@
 import "reflect-metadata";
-import request from "supertest";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { app, server } from "../src/app";
-import { Player } from "../src/entities/Player";
-import { Indicator } from "../src/entities/Indicator";
-import { classroomTemplate, parkingTemplate } from "../src/models/Templates";
-import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
-
+import { server } from "../src/app";
+import { classroomTemplate, parkingTemplate, indicatorsTemplates } from "../src/models/Templates";
+import { postWithToken } from "./requestFunctions";
 
 let connection: Connection = null;
 let playerId: number = 0;
 let budgetId: number = 0;
+let playerToken: string = null;
 
 describe('buy a building', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
+        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
 
-        let player = new Player("Sharky");
-        let response = await post("/savePlayer", player);
-        playerId = response.body.id;
+        // create the indicators templates
+        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates, );
+        // create the player
+        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
+        playerId = response.body.player.id;
+        budgetId = response.body.indicators[1].id;
+        // login the player
+        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
+        playerToken = loginResponse.header['auth-token'];
 
-        let reputationIndicator = new Indicator(REPUTATION, playerId, 30);
-        response = await post("/saveIndicator", reputationIndicator);
-
-        let budgetIndicator = new Indicator(BUDGET, playerId, 5000);
-        response = await post("/saveIndicator", budgetIndicator);
-        budgetId = response.body.id;
-
-        response = await post("/savePlayerBuilding", classroomTemplate);
-        response = await post("/savePlayerBuilding", parkingTemplate);
+        response = await postWithToken("/savePlayerBuilding", classroomTemplate, playerToken);
+        response = await postWithToken("/savePlayerBuilding", parkingTemplate, playerToken);
 
         done();
     });
@@ -46,7 +43,7 @@ describe('buy a building', () => {
     test(
         "should buy a parking by Sharky",
         async (done) => {
-            let response = await post("/buyBuilding", { player_id: playerId, building_template_id: 2 });
+            let response = await postWithToken("/buyBuilding", { player_id: playerId, building_template_id: 2 }, playerToken);
             
             expect(response.status).toEqual(200);
             expect(response.body.budget.value).toEqual(4800);
@@ -61,10 +58,10 @@ describe('buy a building', () => {
     test(
         "should not buy a building for a player because the budget is not enought",
         async (done) => {
-            let updatedIndicator = await post("/updateIndicator", { id: budgetId, value: 100 });
+            let updatedIndicator = await postWithToken("/updateIndicator", { id: budgetId, value: 100 }, playerToken);
             expect(updatedIndicator.status).toEqual(200);
             
-            let response = await post("/buyBuilding", { player_id: playerId, building_template_id: 1 });
+            let response = await postWithToken("/buyBuilding", { player_id: playerId, building_template_id: 1 }, playerToken);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual("You can't buy this building, you don't have the necessary budget.");
 
@@ -75,10 +72,10 @@ describe('buy a building', () => {
         test(
             "should not buy a building for a player because he already have this type of building",
             async (done) => {
-                let updatedIndicator = await post("/updateIndicator", { id: budgetId, value: 2000 });
+                let updatedIndicator = await postWithToken("/updateIndicator", { id: budgetId, value: 2000 }, playerToken);
                 expect(updatedIndicator.status).toEqual(200);
 
-                let response = await post("/buyBuilding", { player_id: playerId, building_template_id: 2 });
+                let response = await postWithToken("/buyBuilding", { player_id: playerId, building_template_id: 2 }, playerToken);
                 expect(response.status).toEqual(200);
                 expect(response.body).toEqual("You already have this building.");
 
@@ -86,11 +83,3 @@ describe('buy a building', () => {
             }
         );
 });
-
-export function post(url: string, body: any) {
-    const httpRequest = request(app).post(url);
-    httpRequest.send(body);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}

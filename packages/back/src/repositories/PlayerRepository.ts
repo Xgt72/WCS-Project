@@ -10,6 +10,14 @@ export class PlayerRepository {
         return getManager().getRepository(Player).findOne(id);
     }
 
+    getPlayerByEmail(email: string) {
+        return getManager()
+            .getRepository(Player)
+            .createQueryBuilder("p")
+            .where("p.email = :email", { email: email })
+            .getOne();
+    }
+
     savePlayer(player: Player) {
         return getManager().getRepository(Player).save(player);
     }

@@ -46,8 +46,16 @@ class CampusManagersScheduleComponent extends Component {
     }
 
     componentDidMount() {
+        const { playerToken } = this.props;
         this.organizeCalendar();
-        fetch(`/getPlayerCampusManagerById/${this.props.campusManagerIdToDisplaySchedule}`)
+        fetch(`/getPlayerCampusManagerById/${this.props.campusManagerIdToDisplaySchedule}`,
+            {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'auth-token': `${playerToken}`,
+                }),
+            })
             .then((res) => {
                 if (res.ok) {
                     return res.json();
@@ -79,13 +87,27 @@ class CampusManagersScheduleComponent extends Component {
     }
 
     validatePlanning = () => {
-        const { campusManagerOneCalendar, campusManagerTwoCalendar, campusManagerIdToDisplaySchedule, campusManagerCalendarIsSaved } = this.props;
+        const {
+            campusManagerOneCalendar,
+            campusManagerTwoCalendar,
+            campusManagerIdToDisplaySchedule,
+            campusManagerCalendarIsSaved,
+            playerToken
+        } = this.props;
+        console.log("1-player token: ", playerToken);
         let updatedCalendar = campusManagerIdToDisplaySchedule === campusManagerOneCalendar.campusManagerId ?
             campusManagerOneCalendar.calendar :
             campusManagerTwoCalendar.calendar;
 
         if (updatedCalendar.length > 0) {
-            fetch(`/getCampusManagerActivitiesCalendarByCampusManagerId/${campusManagerIdToDisplaySchedule}`)
+            fetch(`/getCampusManagerActivitiesCalendarByCampusManagerId/${campusManagerIdToDisplaySchedule}`,
+                {
+                    method: 'GET',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        'auth-token': `${playerToken}`,
+                    }),
+                })
                 .then((res) => {
                     if (res.ok) {
                         return res.json();
@@ -101,6 +123,7 @@ class CampusManagersScheduleComponent extends Component {
                                         method: 'DELETE',
                                         headers: new Headers({
                                             'Content-Type': 'application/json',
+                                            'auth-token': `${playerToken}`,
                                         }),
                                     })
                                     .then((res) => {
@@ -125,6 +148,7 @@ class CampusManagersScheduleComponent extends Component {
                                 method: 'POST',
                                 headers: new Headers({
                                     'Content-Type': 'application/json',
+                                    'auth-token': `${playerToken}`,
                                 }),
                                 body: JSON.stringify(calendar),
                             })
@@ -137,8 +161,10 @@ class CampusManagersScheduleComponent extends Component {
                             .then(
                                 (res) => {
                                     if (typeof res === 'object') {
+                                        console.log("2-player token: ", playerToken);
                                         campusManagerCalendarIsSaved(campusManagerIdToDisplaySchedule);
                                         alert("schedule saved");
+                                        console.log("3-player token: ", playerToken);
                                     } else {
                                         alert(res);
                                     }
@@ -341,6 +367,7 @@ const mapStateToProps = (state) => ({
     campusManagerOneCalendar: state.campusManagerOneCalendar,
     campusManagerTwoCalendar: state.campusManagerTwoCalendar,
     campusManagerIdToDisplaySchedule: state.campusManagerIdToDisplaySchedule,
+    playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
@@ -357,6 +384,7 @@ CampusManagersScheduleComponent.propTypes = {
     campusManagerOneCalendar: PropTypes.object.isRequired,
     campusManagerTwoCalendar: PropTypes.object.isRequired,
     campusManagerIdToDisplaySchedule: PropTypes.number.isRequired,
+    playerToken: PropTypes.string.isRequired,
     displayChooseActivities: PropTypes.func.isRequired,
     campusManagerCalendarIsSaved: PropTypes.func.isRequired,
 };

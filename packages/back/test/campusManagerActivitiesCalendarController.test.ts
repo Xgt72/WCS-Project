@@ -1,22 +1,33 @@
 import "reflect-metadata";
-import request from "supertest";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { app, server } from "../src/app";
+import { server } from "../src/app";
 import { CampusManagerActivitiesCalendar } from "../src/entities/CampusManagerActivitiesCalendar";
-import { campusManagerActivitiesTemplates, teacherActivitiesTemplates } from "../src/models/Templates";
+import { campusManagerActivitiesTemplates, teacherActivitiesTemplates, indicatorsTemplates } from "../src/models/Templates";
+import { getWithToken, postWithToken, deleteWithToken } from "./requestFunctions";
 
 let connection: Connection = null;
 let campusManagerActivityCalendarId: number = null;
+let playerToken: string = null;
 
-describe('Campus Manager Calendar', () => {
+describe('Campus Manager Activities Calendar', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
+        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
 
+        // create the indicators templates
+        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates);
+
+        // create the player
+        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
+
+        // login the player
+        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
+        playerToken = loginResponse.header['auth-token'];
         // create activities template
-        let response = await post("/saveAllActivities", campusManagerActivitiesTemplates);
-        response = await post("/saveAllActivities", teacherActivitiesTemplates);
+        response = await postWithToken("/saveAllActivities", campusManagerActivitiesTemplates, playerToken);
+        response = await postWithToken("/saveAllActivities", teacherActivitiesTemplates, playerToken);
 
         done();
     });
@@ -32,7 +43,7 @@ describe('Campus Manager Calendar', () => {
         async (done) => {
             const campusManagerActivity = new CampusManagerActivitiesCalendar(1, 1, false, true, 2);
 
-            const response = await post("/saveCampusManagerActivity", campusManagerActivity);
+            const response = await postWithToken("/saveCampusManagerActivity", campusManagerActivity, playerToken);
             campusManagerActivityCalendarId = response.body.id;
             expect(response.status).toBe(200);
             expect(response.body.campus_manager_id).toEqual(1);
@@ -40,7 +51,7 @@ describe('Campus Manager Calendar', () => {
             expect(response.body.morning).toEqual(false);
             expect(response.body.afternoon).toEqual(true);
             expect(response.body.day).toEqual(2);
-            
+
             done();
         }
     );
@@ -51,9 +62,10 @@ describe('Campus Manager Calendar', () => {
             const activityOne = new CampusManagerActivitiesCalendar(1, 1, true, false, 1);
             const activityTwo = new CampusManagerActivitiesCalendar(1, 1, false, true, 1);
 
-            const response = await post(
+            const response = await postWithToken(
                 "/saveMultipleActivitiesCampusManager",
-                { campus_manager_id: 1, activities: [activityOne, activityTwo] }
+                { campus_manager_id: 1, activities: [activityOne, activityTwo] },
+                playerToken
             );
 
             expect(response.status).toEqual(200);
@@ -66,7 +78,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return a morning activity",
         async (done) => {
-            const response = await get("/getActivityByCampusManagerIdByDayByPeriod/1/1/morning");
+            const response = await getWithToken("/getActivityByCampusManagerIdByDayByPeriod/1/1/morning", playerToken);
             expect(response.status).toEqual(200);
             expect(response.body.morning).toEqual(true);
 
@@ -77,7 +89,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return an afternoon activity",
         async (done) => {
-            const response = await get("/getActivityByCampusManagerIdByDayByPeriod/1/1/afternoon");
+            const response = await getWithToken("/getActivityByCampusManagerIdByDayByPeriod/1/1/afternoon", playerToken);
             expect(response.status).toEqual(200);
             expect(response.body.afternoon).toEqual(true);
 
@@ -88,7 +100,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return at least one campus manager activity calendar",
         async (done) => {
-            let response = await get("/getAllCampusManagersActivitiesCalendar");
+            let response = await getWithToken("/getAllCampusManagersActivitiesCalendar", playerToken);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -98,7 +110,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return campus manager activity calendar by ID",
         async (done) => {
-            let response = await get("/getCampusManagerActivityCalendarById/" + campusManagerActivityCalendarId);
+            let response = await getWithToken("/getCampusManagerActivityCalendarById/" + campusManagerActivityCalendarId, playerToken);
             expect(response.status).toEqual(200);
             expect(response.body.id).toEqual(campusManagerActivityCalendarId);
             done();
@@ -108,7 +120,7 @@ describe('Campus Manager Calendar', () => {
     test(
         "should return campus manager activities calendar by campus manager ID",
         async (done) => {
-            let response = await get("/getCampusManagerActivitiesCalendarByCampusManagerId/1");
+            let response = await getWithToken("/getCampusManagerActivitiesCalendarByCampusManagerId/1", playerToken);
             expect(response.status).toEqual(200);
             done();
         }
@@ -118,7 +130,11 @@ describe('Campus Manager Calendar', () => {
         "should update a campus manager activity calendar",
         async (done) => {
             let campusManagerActivityCalendar = new CampusManagerActivitiesCalendar(2, 1, true, false, 2);
-            let response = await post("/updateCampusManagerActivityCalendar", { id: 1, ...campusManagerActivityCalendar });
+            let response = await postWithToken(
+                "/updateCampusManagerActivityCalendar",
+                { id: 1, ...campusManagerActivityCalendar },
+                playerToken
+            );
             expect(response.status).toEqual(200);
             expect(response.body.day).toEqual(2);
             expect(response.body.afternoon).toEqual(false);
@@ -130,31 +146,9 @@ describe('Campus Manager Calendar', () => {
     test(
         "should delete one campus manager activity calendar",
         async (done) => {
-            let response = await deleteCampusManagerActivity("/deleteCampusManagerActivityCalendar/1");
+            let response = await deleteWithToken("/deleteCampusManagerActivityCalendar/1", playerToken);
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
-
-export function get(url: string) {
-    const httpRequest = request(app).get(url);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}
-
-export function post(url: string, body: any) {
-    const httpRequest = request(app).post(url);
-    httpRequest.send(body);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}
-
-export function deleteCampusManagerActivity(url: string) {
-    const httpRequest = request(app).delete(url);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}

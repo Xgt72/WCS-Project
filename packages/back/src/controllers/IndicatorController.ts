@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { Indicator } from "../entities/Indicator";
 import { IndicatorRepository } from "../repositories/IndicatorRepository";
+import { MutatorRepository } from "../repositories/MutatorRepository";
+
 let indicatorRepo = new IndicatorRepository();
+let mutatorRepo = new MutatorRepository();
 
 export let getAllIndicators = async (req: Request, res: Response) => {
     try {
@@ -67,6 +70,12 @@ export let saveAllIndicators = async (req: Request, res: Response) => {
 
 export let deleteIndicator = async (req: Request, res: Response) => {
     try {
+        let mutators = await mutatorRepo.getMutatorByIndicatorId(parseInt(req.params.id));
+        if (mutators.length > 0) {
+            for (let i=0; i<mutators.length; i++) {
+                let mutatorDeleted = await mutatorRepo.deleteMutator(mutators[i]);
+            }
+        }
         let indicator = await indicatorRepo.getIndicatorById(parseInt(req.params.id));
         let result = await indicatorRepo.deleteIndicator(indicator);
         res.send(result);

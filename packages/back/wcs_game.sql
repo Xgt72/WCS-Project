@@ -48,8 +48,8 @@ activity`
 VALUES
   (1, 'Wild Breakfast', 100, '69c7b5'),
   (2, 'Organise RNCP', 200, '3b5998'),
-  (3, 'Buy Publicities', 350, 'bf49a0'),
-  (4, 'Wild Aperitif', 100, 'cf0921'),
+  (3, 'Buy Advertising', 350, 'bf49a0'),
+  (4, 'Talk', 100, 'cf0921'),
   (5, 'Networking', 50, 'ff6c33'),
   (6, 'Organize a Trade Fair', 450, '55c671'),
   (7, 'Internal Management', 100, 'ff83da'),

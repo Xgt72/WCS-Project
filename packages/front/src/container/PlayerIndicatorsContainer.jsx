@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
 import { updateIndicators } from '../redux/actions/actions';
@@ -14,11 +15,15 @@ class PlayerIndicatorsComponent extends Component {
   }
 
   componentDidMount() {
+    const { playerId, playerToken } = this.props;
     // get the player name
-    fetch(`/getPlayerById/${this.props.playerId}`,
+    fetch(`/getPlayerById/${playerId}`,
       {
         method: 'GET',
-        headers: new Headers(),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'auth-token': `${playerToken}`,
+        }),
       })
       .then((res) => {
         if (res.ok) {
@@ -39,11 +44,13 @@ class PlayerIndicatorsComponent extends Component {
   }
 
   render() {
+    const {playerIndicators} = this.props;
+    const {player_name} = this.state;
     return (
       <Container>
-        <h2 className="text-center">{this.state.player_name}</h2>
+        <h2 className="text-center">{player_name}</h2>
         <Row>
-          {this.props.playerIndicators.map(
+          {playerIndicators.map(
             (indicator) => (
               <Col sm="6" xl="3" key={indicator.id}>
                 <Indicator name={indicator.name} value={indicator.value} />
@@ -59,6 +66,7 @@ class PlayerIndicatorsComponent extends Component {
 const mapStateToProps = (state) => ({
   playerId: state.playerId,
   playerIndicators: state.playerIndicators,
+  playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
@@ -66,5 +74,12 @@ const mapDispatchToProps = {
 };
 
 const PlayerIndicatorsContainer = connect(mapStateToProps, mapDispatchToProps)(PlayerIndicatorsComponent);
+
+PlayerIndicatorsComponent.propTypes = {
+  playerId: PropTypes.number.isRequired,
+  playerIndicators: PropTypes.array.isRequired,
+  playerToken: PropTypes.string.isRequired,
+  updateIndicators: PropTypes.func.isRequired,
+};
 
 export default PlayerIndicatorsContainer;

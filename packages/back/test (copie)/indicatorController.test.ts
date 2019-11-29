@@ -1,30 +1,19 @@
 import "reflect-metadata";
+import request from 'supertest';
 import { Indicator } from "../src/entities/Indicator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { server } from "../src/app";
-import { indicatorsTemplates } from "../src/models/Templates";
+import { app, server } from "../src/app";
 import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
-import { getWithToken, postWithToken, deleteWithToken } from "./requestFunctions";
+
 
 let connection: Connection = null;
-let playerToken: string = null;
+
 
 describe('Indicator', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
-        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
-
-        // create the indicators templates
-        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates, );
-
-        // create the player
-        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
-
-        // login the player
-        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
-        playerToken = loginResponse.header['auth-token'];
         done();
     });
 
@@ -38,7 +27,7 @@ describe('Indicator', () => {
         "should save one indicator",
         async (done) => {
             const ind = new Indicator("wilder", 4, 1000);
-            const response = await postWithToken("/saveIndicator", ind, playerToken);
+            const response = await post("/saveIndicator", ind);
             expect(response.status).toBe(200);
             expect(response.body.name).toEqual(ind.name);
             expect(response.body.player_id).toEqual(ind.player_id);
@@ -52,7 +41,7 @@ describe('Indicator', () => {
         async (done) => {
             const indOne = new Indicator(REPUTATION, 4, 1000);
             const indTwo = new Indicator(BUDGET, 5, 20);
-            const response = await postWithToken("/saveAllIndicators", [indOne, indTwo], playerToken);
+            const response = await post("/saveAllIndicators", [indOne, indTwo]);
             expect(response.status).toBe(200);
             expect(parseInt(response.body.length)).toEqual(2);
             done();
@@ -63,7 +52,7 @@ describe('Indicator', () => {
     test(
         "should return at least one indicator",
         async (done) => {
-            const response = await getWithToken("/getAllIndicators", playerToken);
+            const response = await get("/getAllIndicators");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -73,9 +62,9 @@ describe('Indicator', () => {
         "should return indicator by ID",
         async (done) => {
             let ind = new Indicator("wilder", 4, 1000);
-            let response = await postWithToken("/saveIndicator", ind, playerToken);
+            let response = await post("/saveIndicator", ind);
             ind = response.body;
-            response = await getWithToken("/getIndicatorById/" + ind.id, playerToken);
+            response = await get("/getIndicatorById/" + ind.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(ind);
             done();
@@ -86,9 +75,9 @@ describe('Indicator', () => {
         "should return player indicators by player ID",
         async (done) => {
             let ind = new Indicator("wilder", 5, 1000);
-            let response = await postWithToken("/saveIndicator", ind, playerToken);
+            let response = await post("/saveIndicator", ind);
             ind = response.body;
-            response = await getWithToken("/getIndicatorsByPlayerId/" + ind.player_id, playerToken);
+            response = await get("/getIndicatorsByPlayerId/" + ind.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -98,7 +87,7 @@ describe('Indicator', () => {
     test(
         "should return indicator by player ID and indicator name",
         async (done) => {
-            let response = await getWithToken("/getAllIndicatorsByPlayerIdAndName/5/wilder", playerToken);
+            let response = await get("/getAllIndicatorsByPlayerIdAndName/5/wilder");
             expect(response.status).toEqual(200);
             expect(response.body.name).toEqual("wilder");
             expect(response.body.player_id).toEqual(5);
@@ -112,7 +101,7 @@ describe('Indicator', () => {
         "should update one indicator",
         async (done) => {
             const ind = new Indicator("wilderTest", 3, 1000);
-            let response = await postWithToken("/updateIndicator", { id: 1, ...ind }, playerToken);
+            let response = await post("/updateIndicator", { id: 1, ...ind });
             expect(response.status).toEqual(200);
             expect(response.body).toEqual({ id: 1, ...ind });
             done();
@@ -122,9 +111,31 @@ describe('Indicator', () => {
     test(
         "should delete one indicator",
         async (done) => {
-            let response = await deleteWithToken("/deleteIndicator/2", playerToken);
+            let response = await deleteIndicator("/deleteIndicator/2");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
+
+export function get(url: string) {
+    const httpRequest = request(app).get(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function post(url: string, body: any) {
+    const httpRequest = request(app).post(url);
+    httpRequest.send(body);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function deleteIndicator(url: string) {
+    const httpRequest = request(app).delete(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}

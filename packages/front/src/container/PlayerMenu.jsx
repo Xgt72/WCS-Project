@@ -8,6 +8,10 @@ import {
 
 class PlayerMenuComponent extends Component {
 
+    login = () => {
+        alert("you're login");
+    }
+
     render() {
         return (
             <>
@@ -39,6 +43,13 @@ class PlayerMenuComponent extends Component {
                                 className="genericButton m-2"
                             >
                                 Trainers
+                            </Button>
+                        </Link>
+                        <Link to="/playerLogin">
+                            <Button
+                                className="genericButton m-2"
+                            >
+                                Login
                             </Button>
                         </Link>
                     </Row>

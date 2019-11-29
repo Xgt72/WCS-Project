@@ -59,7 +59,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                         }
                     )
                     break;
-                case "Buy Publicities":
+                case "Buy Advertising":
                     activity.mutators.map(
                         (mutator: Mutator) => {
                             if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {
@@ -71,7 +71,7 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
                         }
                     )
                     break;
-                case "Wild Aperitif":
+                case "Talk":
                     activity.mutators.map(
                         (mutator: Mutator) => {
                             if (mutator.name == "inc" + FUTURE_STUDENTS_NUMBER) {

@@ -8,7 +8,7 @@ import { Container, Row, Col } from "reactstrap";
 class ChooseActivityComponent extends Component {
 
     validateActivity = (e) => {
-        const { addActivityInCMC, campusManagerIdToDisplaySchedule } = this.props;
+        const { addActivityInCMC, campusManagerIdToDisplaySchedule, playerToken } = this.props;
         let activityId = e.currentTarget.id;
         let activityDay = this.props.periodSelected.offsetParent.childNodes[0].childNodes[0].innerText;
         switch (activityDay) {
@@ -40,7 +40,14 @@ class ChooseActivityComponent extends Component {
             day: activityDay
         };
 
-        fetch(`/getActivityById/${activityId}`)
+        fetch(`/getActivityById/${activityId}`,
+            {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'auth-token': `${playerToken}`,
+                }),
+            })
             .then(res => res.json())
             .then(data => {
                 this.props.periodSelected.innerHTML = `<p>${data.name}</>`;
@@ -139,6 +146,7 @@ class ChooseActivityComponent extends Component {
 
 const mapStateToProps = (state) => ({
     campusManagerIdToDisplaySchedule: state.campusManagerIdToDisplaySchedule,
+    playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
@@ -154,6 +162,7 @@ ChooseActivityComponent.propTypes = {
     addActivityInCMC: PropTypes.func.isRequired,
     removeActivityInCMC: PropTypes.func.isRequired,
     campusManagerIdToDisplaySchedule: PropTypes.number.isRequired,
+    playerToken: PropTypes.string.isRequired,
 };
 
 export default ChooseActivityContainer;

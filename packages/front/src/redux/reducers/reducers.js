@@ -9,11 +9,16 @@ import {
   CAMPUS_MANAGER_ID_CALENDAR_TO_DISPLAY,
   UPDATE_CAMPUS_MANAGERS_OFFICE,
   DISPLAY_HIRE_CAMPUS_MANAGER,
-  CAMPUS_MANAGER_CALENDAR_IS_SAVED
+  CAMPUS_MANAGER_CALENDAR_IS_SAVED,
+  UPDATE_PLAYER_TOKEN,
+  UPDATE_PLAYER_ID,
+  UPDATE_IS_LOGGED
 } from '../actions/actions';
 
 const initialState = {
   playerId: 1,
+  playerToken: null,
+  isLogged: false,
   playerIndicators: [],
   playerBuildings: [],
   chooseActivitiesIsDisplay: false,
@@ -115,6 +120,19 @@ function rootReducer(state = initialState, action) {
         updatedState.campusManagerTwoCalendar = { ...state.campusManagerTwoCalendar };
         updatedState.campusManagerTwoCalendar.isSaved = !updatedState.campusManagerTwoCalendar.isSaved;
       }
+      return updatedState;
+
+    case UPDATE_PLAYER_TOKEN:
+      updatedState.playerToken = action.playerToken;
+      return updatedState;
+    
+    case UPDATE_PLAYER_ID:
+      updatedState.playerId = action.playerId;
+      return updatedState;
+
+    case UPDATE_IS_LOGGED:
+      updatedState.isLogged = !updatedState.isLogged;
+      return updatedState;
 
     default:
       return updatedState;

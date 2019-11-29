@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { Activity } from "../entities/Activity";
 import { ActivityRepository } from "../repositories/ActivityRepository";
 import { MutatorRepository } from "../repositories/MutatorRepository";
-import { Mutator } from "../entities/Mutator";
 
 let activityRepo = new ActivityRepository();
 let mutatorRepository = new MutatorRepository();
