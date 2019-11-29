@@ -14,6 +14,7 @@ import {
     Button,
 } from 'reactstrap';
 import HireCampusManagerContainer from "../container/HireCampusManagerContainer";
+import PlayerIndicatorsContainer from "../container/PlayerIndicatorsContainer";
 
 class CampusManagersOfficeComponent extends Component {
     constructor(props) {
@@ -70,6 +71,7 @@ class CampusManagersOfficeComponent extends Component {
         return (
             <>
                 <Container>
+                    <PlayerIndicatorsContainer />
                     <Row>
                         <h2 className="w-100">Campus Managers Office</h2>
                     </Row>

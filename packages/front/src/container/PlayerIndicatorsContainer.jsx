@@ -44,17 +44,15 @@ class PlayerIndicatorsComponent extends Component {
   }
 
   render() {
-    const {playerIndicators} = this.props;
-    const {player_name} = this.state;
+    const { playerIndicators } = this.props;
+    const { player_name } = this.state;
     return (
       <Container>
         <h2 className="text-center">{player_name}</h2>
-        <Row>
+        <Row className="no-gutters justify-content-around">
           {playerIndicators.map(
             (indicator) => (
-              <Col sm="6" xl="3" key={indicator.id}>
-                <Indicator name={indicator.name} value={indicator.value} />
-              </Col>
+              <Indicator key={indicator.id} name={indicator.name} value={indicator.value} />
             ),
           )}
         </Row>
