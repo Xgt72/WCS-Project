@@ -1,32 +1,20 @@
 import "reflect-metadata";
+import request from 'supertest';
 import { PlayerBuilding } from "../src/entities/PlayerBuilding";
 import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { server } from "../src/app";
+import { app, server } from "../src/app";
 import { REPUTATION, BUDGET } from "../src/constants";
-import { indicatorsTemplates } from "../src/models/Templates";
-import { getWithToken, postWithToken, deleteWithToken } from "./requestFunctions";
+
 
 let connection: Connection = null;
-let playerToken: string = null;
+
 
 describe('Player Building', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
-        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
-
-        // create the indicators templates
-        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates, );
-
-        // create the player
-        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
-
-        // login the player
-        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
-        playerToken = loginResponse.header['auth-token'];
-
         done();
     });
 
@@ -44,7 +32,7 @@ describe('Player Building', () => {
                 new Mutator("inc" + REPUTATION, 1, 5),
                 new Mutator("dec" + BUDGET, 1, -100)
             ];
-            const response = await postWithToken("/savePlayerBuilding", pBuilding, playerToken);
+            const response = await post("/savePlayerBuilding", pBuilding);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(pBuilding.player_id);
             expect(response.body.name).toEqual(pBuilding.name);
@@ -61,7 +49,7 @@ describe('Player Building', () => {
                 new Mutator("inc" + REPUTATION, 1, 5),
                 new Mutator("dec" + BUDGET, 1, -100)
             ];
-            let response = await postWithToken("/savePlayerBuilding", buildingOne, playerToken);
+            let response = await post("/savePlayerBuilding", buildingOne);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(buildingOne.player_id);
             expect(response.body.name).toEqual(buildingOne.name);
@@ -73,7 +61,7 @@ describe('Player Building', () => {
                 new Mutator("inc" + REPUTATION, 1, 5),
                 new Mutator("dec" + BUDGET, 1, -100)
             ];
-            response = await postWithToken("/savePlayerBuilding", buidlingTwo, playerToken);
+            response = await post("/savePlayerBuilding", buidlingTwo);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(buidlingTwo.player_id);
             expect(response.body.name).toEqual(buidlingTwo.name);
@@ -86,7 +74,7 @@ describe('Player Building', () => {
     test(
         "should return at least one player building",
         async (done) => {
-            const response = await getWithToken("/getAllPlayersBuildings", playerToken);
+            const response = await get("/getAllPlayersBuildings");
             expect(parseInt(response.body.length)).toBeGreaterThan(2);
             done();
         }
@@ -100,9 +88,9 @@ describe('Player Building', () => {
                 new Mutator("inc" + REPUTATION, 1, 5),
                 new Mutator("dec" + BUDGET, 1, -100)
             ];
-            let response = await postWithToken("/savePlayerBuilding", pBuilding, playerToken);
+            let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
-            response = await getWithToken("/getPlayerBuildingById/" + pBuilding.id, playerToken);
+            response = await get("/getPlayerBuildingById/" + pBuilding.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(pBuilding);
             done();
@@ -117,9 +105,9 @@ describe('Player Building', () => {
                 new Mutator("inc" + REPUTATION, 1, 5),
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
-            let response = await postWithToken("/savePlayerBuilding", pBuilding, playerToken);
+            let response = await post("/savePlayerBuilding", pBuilding);
             pBuilding = response.body;
-            response = await getWithToken("/getOnePlayerBuildings/" + pBuilding.player_id, playerToken);
+            response = await get("/getOnePlayerBuildings/" + pBuilding.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toEqual(2);
             done();
@@ -129,7 +117,7 @@ describe('Player Building', () => {
     test(
         "should return all building templates",
         async (done) => {
-            let response = await getWithToken("/getAllBuildingTemplates", playerToken);
+            let response = await get("/getAllBuildingTemplates");
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(1);
             done();
@@ -144,7 +132,7 @@ describe('Player Building', () => {
                 new Mutator("inc" + REPUTATION, 1, 5),
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
-            let response = await postWithToken("/updatePlayerBuilding", { id: 1, ...pBuilding }, playerToken);
+            let response = await post("/updatePlayerBuilding", { id: 1, ...pBuilding });
             expect(response.status).toEqual(200);
             expect(response.body.id).toEqual(1);
             expect(response.body.player_id).toEqual(pBuilding.player_id);
@@ -157,9 +145,31 @@ describe('Player Building', () => {
     test(
         "should delete one player building",
         async (done) => {
-            let response = await deleteWithToken("/deletePlayerBuilding/2", playerToken);
+            let response = await deletePlayerBuilding("/deletePlayerBuilding/2");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
+
+export function get(url: string) {
+    const httpRequest = request(app).get(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function post(url: string, body: any) {
+    const httpRequest = request(app).post(url);
+    httpRequest.send(body);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function deletePlayerBuilding(url: string) {
+    const httpRequest = request(app).delete(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}

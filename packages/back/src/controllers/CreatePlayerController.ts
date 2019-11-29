@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
+import { registerValidation } from "../jwtToken/validation";
 import { Player } from "../entities/Player";
 import { PlayerRepository } from "../repositories/PlayerRepository";
 import { IndicatorRepository } from "../repositories/IndicatorRepository";
@@ -9,8 +11,21 @@ let playerId: number = 0;
 
 export let createPlayer = async (req: Request, res: Response) => {
     try {
+        // Validation of the user
+        const validation = registerValidation(req.body);
+        if (validation.error) return res.status(400).send(validation.error.details[0].message);
+        const { player_name, email, password } = req.body;
+
+        // Checking if the user is already in database
+        let player = await playerRepo.getPlayerByEmail(email);
+        if (player) return res.status(400).send("Email already exists");
+
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         // create the new player
-        let player = await playerRepo.savePlayer(new Player(req.body.player_name));
+        player = await playerRepo.savePlayer(new Player(player_name, email, hashedPassword));
         playerId = player.id;
 
         // get all the indicators templates

@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
+import { displayChooseActivities, campusManagerCalendarIsSaved } from '../redux/actions/actions';
 import {
     Container, Row, Col, Button
 } from 'reactstrap';
-import { displayChooseActivities } from '../redux/actions/actions';
 import DayActivities from "../components/DayActivities";
 import DayHours from "../components/DayHours";
-import ChooseActivityContainer from './ChooseActivity';
+import ChooseActivityContainer from './ChooseActivityContainer';
 
-class CampusManagersComponent extends Component {
+class CampusManagersScheduleComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -39,12 +40,37 @@ class CampusManagersComponent extends Component {
                     morning: null,
                     afternoon: null
                 }
-            }
+            },
+            campusManagerName: "",
         };
     }
 
     componentDidMount() {
+        const { playerToken } = this.props;
         this.organizeCalendar();
+        fetch(`/getPlayerCampusManagerById/${this.props.campusManagerIdToDisplaySchedule}`,
+            {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'auth-token': `${playerToken}`,
+                }),
+            })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error(res.statusText);
+            })
+            .then(data => {
+                this.setState({ campusManagerName: data.name });
+            })
+            .catch(
+                (err) => {
+                    console.log(err.message);
+                },
+            );
+
     }
 
     chooseActivity = (e) => {
@@ -58,13 +84,30 @@ class CampusManagersComponent extends Component {
                 zIndex: "100",
             }
         });
-
     }
 
     validatePlanning = () => {
-        const { campusManagerCalendar } = this.props;
-        if (campusManagerCalendar.calendar.length > 0) {
-            fetch(`/getCampusManagerActivitiesCalendarByCampusManagerId/${campusManagerCalendar.campusManagerId}`)
+        const {
+            campusManagerOneCalendar,
+            campusManagerTwoCalendar,
+            campusManagerIdToDisplaySchedule,
+            campusManagerCalendarIsSaved,
+            playerToken
+        } = this.props;
+        console.log("1-player token: ", playerToken);
+        let updatedCalendar = campusManagerIdToDisplaySchedule === campusManagerOneCalendar.campusManagerId ?
+            campusManagerOneCalendar.calendar :
+            campusManagerTwoCalendar.calendar;
+
+        if (updatedCalendar.length > 0) {
+            fetch(`/getCampusManagerActivitiesCalendarByCampusManagerId/${campusManagerIdToDisplaySchedule}`,
+                {
+                    method: 'GET',
+                    headers: new Headers({
+                        'Content-Type': 'application/json',
+                        'auth-token': `${playerToken}`,
+                    }),
+                })
                 .then((res) => {
                     if (res.ok) {
                         return res.json();
@@ -80,6 +123,7 @@ class CampusManagersComponent extends Component {
                                         method: 'DELETE',
                                         headers: new Headers({
                                             'Content-Type': 'application/json',
+                                            'auth-token': `${playerToken}`,
                                         }),
                                     })
                                     .then((res) => {
@@ -96,14 +140,15 @@ class CampusManagersComponent extends Component {
                             }
                         }
                         let calendar = {
-                            campus_manager_id: campusManagerCalendar.campusManagerId,
-                            activities: campusManagerCalendar.calendar
+                            campus_manager_id: campusManagerIdToDisplaySchedule,
+                            activities: updatedCalendar
                         };
                         fetch("/addActivitiesInCampusManagerCalendar",
                             {
                                 method: 'POST',
                                 headers: new Headers({
                                     'Content-Type': 'application/json',
+                                    'auth-token': `${playerToken}`,
                                 }),
                                 body: JSON.stringify(calendar),
                             })
@@ -116,7 +161,10 @@ class CampusManagersComponent extends Component {
                             .then(
                                 (res) => {
                                     if (typeof res === 'object') {
+                                        console.log("2-player token: ", playerToken);
+                                        campusManagerCalendarIsSaved(campusManagerIdToDisplaySchedule);
                                         alert("schedule saved");
+                                        console.log("3-player token: ", playerToken);
                                     } else {
                                         alert(res);
                                     }
@@ -134,17 +182,22 @@ class CampusManagersComponent extends Component {
                         console.log(err.message);
                     },
                 );
-        } else {
-            alert("your schedule is empty ?");
         }
     }
 
     organizeCalendar = () => {
-        let { activitiesTemplate, campusManagerCalendar } = this.props;
+        let { activitiesTemplate, campusManagerOneCalendar, campusManagerTwoCalendar, campusManagerIdToDisplaySchedule } = this.props;
 
         let updatedCalendar = this.state.updatedCalendar;
+        let previousCalendar = [];
 
-        campusManagerCalendar.calendar.map(activity => {
+        if (campusManagerIdToDisplaySchedule === campusManagerOneCalendar.campusManagerId) {
+            previousCalendar = campusManagerOneCalendar.calendar;
+        } else if (campusManagerIdToDisplaySchedule === campusManagerTwoCalendar.campusManagerId) {
+            previousCalendar = campusManagerTwoCalendar.calendar;
+        }
+
+        previousCalendar.map(activity => {
             let { name, color } = activitiesTemplate[activity.activity_id - 1];
 
             switch (activity.day) {
@@ -199,6 +252,11 @@ class CampusManagersComponent extends Component {
         return (
             <>
                 <Container>
+                    {this.state.campusManagerName !== "" &&
+                        <Row>
+                            <h2 className="w-100">Schedule of {this.state.campusManagerName}</h2>
+                        </Row>
+                    }
                     <Row className="no-gutters mt-2">
                         <Col className="mx-xs-1 ml-md-4 mr-lg-1 my-2" md="6" lg="3">
                             <Row className="no-gutters">
@@ -206,7 +264,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Monday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.monday} />
+                                    <DayActivities
+                                        dayName="Monday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.monday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -216,7 +278,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Tuesday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.tuesday} />
+                                    <DayActivities
+                                        dayName="Tuesday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.tuesday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -226,7 +292,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Wednesday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.wednesday} />
+                                    <DayActivities
+                                        dayName="Wednesday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.wednesday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -236,7 +306,11 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Thursday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.thursday} />
+                                    <DayActivities
+                                        dayName="Thursday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.thursday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
@@ -246,18 +320,30 @@ class CampusManagersComponent extends Component {
                                     <DayHours />
                                 </Col>
                                 <Col>
-                                    <DayActivities dayName="Friday" action={this.chooseActivity} dayActivities={this.state.updatedCalendar.friday} />
+                                    <DayActivities
+                                        dayName="Friday"
+                                        action={this.chooseActivity}
+                                        dayActivities={this.state.updatedCalendar.friday}
+                                    />
                                 </Col>
                             </Row>
                         </Col>
                         <Row className="no-gutters justify-content-around w-100 m-2">
                             <Button
                                 type="button"
-                                className="genericButton"
+                                className="genericButton m-2"
                                 onClick={() => { this.validatePlanning() }}
                             >
                                 Validate this schedule
                             </Button>
+                            <Link to="/campusManagersOffice">
+                                <Button
+                                    type="button"
+                                    className="genericButton m-2"
+                                >
+                                    Go back to the Campus Managers Office
+                                </Button>
+                            </Link>
                         </Row>
                     </Row>
                 </Container>
@@ -278,21 +364,29 @@ const mapStateToProps = (state) => ({
     playerId: state.playerId,
     activitiesTemplate: [...state.activitiesTemplate],
     chooseActivitiesIsDisplay: state.chooseActivitiesIsDisplay,
-    campusManagerCalendar: state.campusManagerCalendar,
+    campusManagerOneCalendar: state.campusManagerOneCalendar,
+    campusManagerTwoCalendar: state.campusManagerTwoCalendar,
+    campusManagerIdToDisplaySchedule: state.campusManagerIdToDisplaySchedule,
+    playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
     displayChooseActivities,
+    campusManagerCalendarIsSaved,
 };
 
-const CampusManagersContainer = connect(mapStateToProps, mapDispatchToProps)(CampusManagersComponent);
+const CampusManagersScheduleContainer = connect(mapStateToProps, mapDispatchToProps)(CampusManagersScheduleComponent);
 
-CampusManagersComponent.propTypes = {
+CampusManagersScheduleComponent.propTypes = {
     playerId: PropTypes.number.isRequired,
     activitiesTemplate: PropTypes.array.isRequired,
     chooseActivitiesIsDisplay: PropTypes.bool.isRequired,
-    campusManagerCalendar: PropTypes.object.isRequired,
+    campusManagerOneCalendar: PropTypes.object.isRequired,
+    campusManagerTwoCalendar: PropTypes.object.isRequired,
+    campusManagerIdToDisplaySchedule: PropTypes.number.isRequired,
+    playerToken: PropTypes.string.isRequired,
     displayChooseActivities: PropTypes.func.isRequired,
+    campusManagerCalendarIsSaved: PropTypes.func.isRequired,
 };
 
-export default CampusManagersContainer;
+export default CampusManagersScheduleContainer;

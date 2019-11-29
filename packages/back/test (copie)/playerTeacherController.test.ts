@@ -1,34 +1,20 @@
 import "reflect-metadata";
+import request from 'supertest';
 import { PlayerTeacher } from "../src/entities/PlayerTeacher";
 import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { server } from "../src/app";
+import { app, server } from "../src/app";
 import { REPUTATION, BUDGET } from "../src/constants";
-import { indicatorsTemplates } from "../src/models/Templates";
-import { getWithToken, postWithToken, deleteWithToken } from "./requestFunctions";
 
 let connection: Connection = null;
 let lastId = 1;
-let playerToken: string = null;
 
 describe('Player Teacher', () => {
 
     beforeAll(async (done) => {
         
         connection = await getSingletonConnection("test");
-        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
-
-        // create the indicators templates
-        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates);
-
-        // create the player
-        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
-
-        // login the player
-        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
-        playerToken = loginResponse.header['auth-token'];
-
         done();
     });
 
@@ -47,7 +33,7 @@ describe('Player Teacher', () => {
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
 
-            const response = await postWithToken("/savePlayerTeacher", pTeacher, playerToken);
+            const response = await post("/savePlayerTeacher", pTeacher);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(pTeacher.player_id);
             expect(response.body.name).toEqual(pTeacher.name);
@@ -59,7 +45,7 @@ describe('Player Teacher', () => {
     test(
         "should return at least one player teacher",
         async (done) => {
-            const response = await getWithToken("/getAllPlayersTeachers", playerToken);
+            const response = await get("/getAllPlayersTeachers");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -74,9 +60,9 @@ describe('Player Teacher', () => {
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
 
-            let response = await postWithToken("/savePlayerTeacher", pTeacher, playerToken);
+            let response = await post("/savePlayerTeacher", pTeacher);
             pTeacher = response.body;
-            response = await getWithToken("/getPlayerTeacherById/" + pTeacher.id, playerToken);
+            response = await get("/getPlayerTeacherById/" + pTeacher.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(pTeacher);
             done();
@@ -92,10 +78,10 @@ describe('Player Teacher', () => {
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
 
-            let response = await postWithToken("/savePlayerTeacher", pTeacher, playerToken);
+            let response = await post("/savePlayerTeacher", pTeacher);
             pTeacher = response.body;
             lastId = pTeacher.id;
-            response = await getWithToken("/getOnePlayerTeachers/" + pTeacher.player_id, playerToken);
+            response = await get("/getOnePlayerTeachers/" + pTeacher.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -107,7 +93,7 @@ describe('Player Teacher', () => {
         async (done) => {
             const pTeacher = new PlayerTeacher(4, "Jean", 280);
             
-            let response = await postWithToken("/updatePlayerTeacher", { id: 1, ...pTeacher }, playerToken);
+            let response = await post("/updatePlayerTeacher", { id: 1, ...pTeacher });
             expect(response.status).toEqual(200);
             expect(response.body.id).toEqual(1);
             expect(response.body.player_id).toEqual(pTeacher.player_id);
@@ -120,9 +106,31 @@ describe('Player Teacher', () => {
     test(
         "should delete one player teacher",
         async (done) => {
-            let response = await deleteWithToken("/deletePlayerTeacher/" + lastId, playerToken);
+            let response = await deletePlayerTeacher("/deletePlayerTeacher/" + lastId);
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
+
+export function get(url: string) {
+    const httpRequest = request(app).get(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function post(url: string, body: any) {
+    const httpRequest = request(app).post(url);
+    httpRequest.send(body);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function deletePlayerTeacher(url: string) {
+    const httpRequest = request(app).delete(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}

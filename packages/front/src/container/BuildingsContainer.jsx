@@ -15,12 +15,15 @@ class BuildingsComponent extends Component {
   }
 
   componentDidMount() {
-    const { playerId, addBuilding, updateIndicators } = this.props;
+    const { playerId, addBuilding, updateIndicators, playerToken } = this.props;
 
     fetch(`/getOnePlayerBuildings/${playerId}`,
       {
         method: 'GET',
-        headers: new Headers(),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'auth-token': `${playerToken}`,
+        }),
       })
       .then((res) => {
         if (res.ok) {
@@ -45,7 +48,10 @@ class BuildingsComponent extends Component {
     fetch(`/getIndicatorsByPlayerId/${playerId}`,
       {
         method: 'GET',
-        headers: new Headers(),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'auth-token': `${playerToken}`,
+        }),
       })
       .then((res) => {
         if (res.ok) {
@@ -67,13 +73,14 @@ class BuildingsComponent extends Component {
   }
 
   async buyBuilding(template_id) {
-    const { playerId, addBuilding, updateIndicators } = this.props;
+    const { playerId, addBuilding, updateIndicators, playerToken } = this.props;
     const buildingInfo = { player_id: playerId, building_template_id: template_id };
     await fetch('/buyBuilding',
       {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json',
+          'auth-token': `${playerToken}`,
         }),
         body: JSON.stringify(buildingInfo),
       })
@@ -101,7 +108,10 @@ class BuildingsComponent extends Component {
     await fetch(`/getIndicatorsByPlayerId/${playerId}`,
       {
         method: 'GET',
-        headers: new Headers(),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'auth-token': `${playerToken}`,
+        }),
       })
       .then((res) => {
         if (res.ok) {
@@ -133,21 +143,13 @@ class BuildingsComponent extends Component {
         <Container>
           <PlayerIndicatorsContainer />
           <Row className="justify-content-around">
-            <Col className="text-center" sm="6" xl="3">
-              <Button onClick={() => this.buyBuilding(1)}>Buy a Classroom</Button>
-            </Col>
-            <Col className="text-center" xl="3">
-              <Button onClick={() => this.buyBuilding(2)}>Buy a Parking</Button>
-            </Col>
-            <Col className="text-center" xl="3">
-              <Button onClick={() => this.buyBuilding(3)}>Buy a Cafeteria</Button>
-            </Col>
-            <Col className="text-center" sm="6" xl="3">
-              <Button onClick={() => this.buyBuilding(4)}>Buy a Dorms</Button>
-            </Col>
+            <Button className="genericButton m-2" onClick={() => this.buyBuilding(1)}>Buy a Classroom</Button>
+            <Button className="genericButton m-2" onClick={() => this.buyBuilding(2)}>Buy a Parking</Button>
+            <Button className="genericButton m-2" onClick={() => this.buyBuilding(3)}>Buy a Cafeteria</Button>
+            <Button className="genericButton m-2" onClick={() => this.buyBuilding(4)}>Buy a Dorms</Button>
           </Row>
-          <Row>
-            {this.props.playerBuildings.map((building) => <Col className="m-3" sm="6" xl="3" key={building.id}><p>{building.name}</p></Col>)}
+          <Row className="justify-content-around">
+            {this.props.playerBuildings.map((building) => <p key={building.id} className="m-2">{building.name}</p>)}
           </Row>
         </Container>
       </>
@@ -158,6 +160,7 @@ class BuildingsComponent extends Component {
 const mapStateToProps = (state) => ({
   playerId: state.playerId,
   playerBuildings: state.playerBuildings,
+  playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
@@ -171,6 +174,7 @@ const BuildingsContainer = connect(mapStateToProps, mapDispatchToProps)(Building
 BuildingsComponent.propTypes = {
   playerId: PropTypes.number.isRequired,
   playerBuildings: PropTypes.array.isRequired,
+  playerToken: PropTypes.string.isRequired,
   addBuilding: PropTypes.func.isRequired,
   updateIndicators: PropTypes.func.isRequired,
   initBuildings: PropTypes.func.isRequired,

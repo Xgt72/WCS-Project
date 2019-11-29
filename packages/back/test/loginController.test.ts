@@ -6,16 +6,18 @@ import { indicatorsTemplates } from "../src/models/Templates";
 import { postWithToken } from "./requestFunctions";
 
 let connection: Connection = null;
-let playerToken: string = null;
+let tester;
 
-describe('Create a new player', () => {
+describe('Player Login', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
+        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
 
         // create the indicators templates
-        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates, );
-
+        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates);
+        // create the player
+        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
         done();
     });
 
@@ -26,12 +28,15 @@ describe('Create a new player', () => {
     });
 
     test(
-        "should create a new player with his indicators",
+        "should login the player",
         async (done) => {
-            let response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
-            expect(response.status).toEqual(200);
-            expect(response.body.player.playerName).toEqual("Sharky");
-            expect(parseInt(response.body.indicators.length)).toEqual(5);
+            const response = await postWithToken(
+                "/api/player/login",
+                {
+                    email: "sharky@gmail.fr",
+                    password: "123456"
+                });
+            expect(response.status).toBe(200);
 
             done();
         }

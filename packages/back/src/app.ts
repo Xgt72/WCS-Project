@@ -1,8 +1,8 @@
 import "reflect-metadata";
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import * as bodyParser from "body-parser";
-
+import { verifyToken } from "./jwtToken/verifyToken";
 
 /**
  * Controllers (route handlers).
@@ -24,6 +24,7 @@ import * as hireCampusManagerController from "./controllers/HireCampusManagerCon
 import * as campusManagerCalendarController from "./controllers/CampusManagerCalendarController";
 import * as teacherCalendarController from "./controllers/TeacherCalendarController";
 import * as createPlayerController from "./controllers/CreatePlayerController";
+import * as loginController from "./controllers/loginController";
 
 /**
  * Create Express server.
@@ -33,8 +34,9 @@ export const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-    origin: 'http://localhost:3000'
-  }));
+    origin: 'http://localhost:3000',
+    exposedHeaders: ['auth-token'],
+}));
 
 /**
  * Express configuration.
@@ -44,156 +46,171 @@ app.set("port", process.env.PORT || 5000);
 /**
  * Indicator routes.
  */
-app.get("/getAllIndicators", indicatorController.getAllIndicators);
-app.get("/getIndicatorsByPlayerId/:id", indicatorController.getIndicatorsByPlayerId);
-app.get("/getIndicatorById/:id", indicatorController.getIndicatorById);
+app.get("/getAllIndicators", [verifyToken], indicatorController.getAllIndicators);
+app.get("/getIndicatorsByPlayerId/:id", [verifyToken], indicatorController.getIndicatorsByPlayerId);
+app.get("/getIndicatorById/:id", [verifyToken], indicatorController.getIndicatorById);
 app.get("/getAllIndicatorsByPlayerIdAndName/:id/:name", indicatorController.getAllIndicatorsByPlayerIdAndName);
-app.post("/saveIndicator", indicatorController.saveIndicator);
+app.post("/saveIndicator", [verifyToken], indicatorController.saveIndicator);
+// app.post("/saveAllIndicators", [verifyToken], indicatorController.saveAllIndicators);
 app.post("/saveAllIndicators", indicatorController.saveAllIndicators);
-app.post("/updateIndicator", indicatorController.updateIndicator);
-app.delete("/deleteIndicator/:id", indicatorController.deleteIndicator);
+app.post("/updateIndicator", [verifyToken], indicatorController.updateIndicator);
+app.delete("/deleteIndicator/:id", [verifyToken], indicatorController.deleteIndicator);
 
 /**
  * Mutator routes.
  */
-app.get("/getAllMutators", mutatorController.getAllMutators);
-app.get("/getMutatorsById/:id", mutatorController.getMutatorsById);
-app.post("/saveMutator", mutatorController.saveMutator);
-app.post("/updateMutator", mutatorController.updateMutator);
-app.delete("/deleteMutator/:id", mutatorController.deleteMutator);
+app.get("/getAllMutators", [verifyToken], mutatorController.getAllMutators);
+app.get("/getMutatorsById/:id", [verifyToken], mutatorController.getMutatorsById);
+app.post("/saveMutator", [verifyToken], mutatorController.saveMutator);
+app.post("/updateMutator", [verifyToken], mutatorController.updateMutator);
+app.delete("/deleteMutator/:id", [verifyToken], mutatorController.deleteMutator);
 
 /**
  * Player routes.
  */
-app.get("/getAllPlayers", playerController.getAllPlayers);
-app.get("/getPlayerById/:id", playerController.getPlayerById);
-app.post("/savePlayer", playerController.savePlayer);
-app.post("/updatePlayer", playerController.updatePlayer);
-app.delete("/deletePlayer/:id", playerController.deletePlayer);
+app.get("/getAllPlayers", [verifyToken], playerController.getAllPlayers);
+app.get("/getPlayerById/:id", [verifyToken], playerController.getPlayerById);
+app.post("/getPlayerByEmail", [verifyToken], playerController.getPlayerByEmail);
+app.post("/savePlayer", [verifyToken], playerController.savePlayer);
+app.post("/updatePlayer", [verifyToken], playerController.updatePlayer);
+app.delete("/deletePlayer/:id", [verifyToken], playerController.deletePlayer);
 
 /**
  * PlayerBuildings routes.
  */
-app.get("/getAllPlayersBuildings", playerBuildingsController.getAllPlayersBuildings);
-app.get("/getOnePlayerBuildings/:id", playerBuildingsController.getOnePlayerBuildings);
-app.get("/getPlayerBuildingById/:id", playerBuildingsController.getPlayerBuildingById);
-app.get("/getAllBuildingTemplates", playerBuildingsController.getAllBuildingTemplates);
-app.post("/savePlayerBuilding", playerBuildingsController.savePlayerBuilding);
-app.post("/updatePlayerBuilding", playerBuildingsController.updatePlayerBuilding);
-app.delete("/deletePlayerBuilding/:id", playerBuildingsController.deletePlayerBuilding);
+app.get("/getAllPlayersBuildings", [verifyToken], playerBuildingsController.getAllPlayersBuildings);
+app.get("/getOnePlayerBuildings/:id", [verifyToken], playerBuildingsController.getOnePlayerBuildings);
+app.get("/getPlayerBuildingById/:id", [verifyToken], playerBuildingsController.getPlayerBuildingById);
+app.get("/getAllBuildingTemplates", [verifyToken], playerBuildingsController.getAllBuildingTemplates);
+app.post("/savePlayerBuilding", [verifyToken], playerBuildingsController.savePlayerBuilding);
+app.post("/updatePlayerBuilding", [verifyToken], playerBuildingsController.updatePlayerBuilding);
+app.delete("/deletePlayerBuilding/:id", [verifyToken], playerBuildingsController.deletePlayerBuilding);
 
 /**
  * PlayerTeacher routes.
  */
-app.get("/getAllPlayersTeachers", playerTeacherController.getAllPlayersTeachers);
-app.get("/getOnePlayerTeachers/:id", playerTeacherController.getOnePlayerTeachers);
-app.get("/getPlayerTeacherById/:id", playerTeacherController.getPlayerTeacherById);
-app.post("/savePlayerTeacher", playerTeacherController.savePlayerTeacher);
-app.post("/updatePlayerTeacher", playerTeacherController.updatePlayerTeacher);
-app.delete("/deletePlayerTeacher/:id", playerTeacherController.deletePlayerTeacher);
+app.get("/getAllPlayersTeachers", [verifyToken], playerTeacherController.getAllPlayersTeachers);
+app.get("/getOnePlayerTeachers/:id", [verifyToken], playerTeacherController.getOnePlayerTeachers);
+app.get("/getPlayerTeacherById/:id", [verifyToken], playerTeacherController.getPlayerTeacherById);
+app.post("/savePlayerTeacher", [verifyToken], playerTeacherController.savePlayerTeacher);
+app.post("/updatePlayerTeacher", [verifyToken], playerTeacherController.updatePlayerTeacher);
+app.delete("/deletePlayerTeacher/:id", [verifyToken], playerTeacherController.deletePlayerTeacher);
 
 /**
  * Teacher Activities Calendar routes.
  */
-app.get("/getAllTeachersActivitiesCalendar", teacherActivitiesCalendarController.getAllTeachersActivitiesCalendar);
-app.get("/getTeacherActivityCalendarById/:id", teacherActivitiesCalendarController.getTeacherActivityCalendarById);
-app.get("/getTeacherActivitiesCalendarByTeacherId/:id", teacherActivitiesCalendarController.getTeacherActivitiesCalendarByTeacherId);
-app.get("/getActivityByTeacherIdByDayByPeriod/:id/:day/:period", teacherActivitiesCalendarController.getActivitiesByTeacherIdAndByDayByPeriod);
-app.post("/saveTeacherActivity", teacherActivitiesCalendarController.saveTeacherActivity);
-app.post("/saveMultipleActivitiesTeacher", teacherActivitiesCalendarController.saveMultipleActivitiesTeacher);
-app.post("/updateTeacherActivityCalendar", teacherActivitiesCalendarController.updateTeacherActivityCalendar);
-app.delete("/deleteTeacherAcitvityCalendar/:id", teacherActivitiesCalendarController.deleteTeacherAcitvityCalendar);
+app.get("/getAllTeachersActivitiesCalendar", [verifyToken], teacherActivitiesCalendarController.getAllTeachersActivitiesCalendar);
+app.get("/getTeacherActivityCalendarById/:id", [verifyToken], teacherActivitiesCalendarController.getTeacherActivityCalendarById);
+app.get("/getTeacherActivitiesCalendarByTeacherId/:id", [verifyToken], teacherActivitiesCalendarController.getTeacherActivitiesCalendarByTeacherId);
+app.get("/getActivityByTeacherIdByDayByPeriod/:id/:day/:period", [verifyToken], teacherActivitiesCalendarController.getActivitiesByTeacherIdAndByDayByPeriod);
+app.post("/saveTeacherActivity", [verifyToken], teacherActivitiesCalendarController.saveTeacherActivity);
+app.post("/saveMultipleActivitiesTeacher", [verifyToken], teacherActivitiesCalendarController.saveMultipleActivitiesTeacher);
+app.post("/updateTeacherActivityCalendar", [verifyToken], teacherActivitiesCalendarController.updateTeacherActivityCalendar);
+app.delete("/deleteTeacherAcitvityCalendar/:id", [verifyToken], teacherActivitiesCalendarController.deleteTeacherAcitvityCalendar);
 
 /**
  * Player Campus Manager routes.
  */
-app.get("/getAllPlayersCampusManagers", playerCampusManagerController.getAllPlayersCampusManagers);
-app.get("/getOnePlayerCampusManagers/:id", playerCampusManagerController.getOnePlayerCampusManagers);
-app.get("/getPlayerCampusManagerById/:id", playerCampusManagerController.getPlayerCampusManagerById);
-app.post("/savePlayerCampusManager", playerCampusManagerController.savePlayerCampusManager);
-app.post("/updatePlayerCampusManager", playerCampusManagerController.updatePlayerCampusManager);
-app.delete("/deletePlayerCampusManager/:id", playerCampusManagerController.deletePlayerCampusManager);
+app.get("/getAllPlayersCampusManagers", [verifyToken], playerCampusManagerController.getAllPlayersCampusManagers);
+app.get("/getOnePlayerCampusManagers/:id", [verifyToken], playerCampusManagerController.getOnePlayerCampusManagers);
+app.get("/getPlayerCampusManagerById/:id", [verifyToken], playerCampusManagerController.getPlayerCampusManagerById);
+app.post("/savePlayerCampusManager", [verifyToken], playerCampusManagerController.savePlayerCampusManager);
+app.post("/updatePlayerCampusManager", [verifyToken], playerCampusManagerController.updatePlayerCampusManager);
+app.delete("/deletePlayerCampusManager/:id", [verifyToken], playerCampusManagerController.deletePlayerCampusManager);
 
 /**
  * Campus Manager Activities Calendar routes.
  */
 app.get(
     "/getAllCampusManagersActivitiesCalendar",
+     [verifyToken],
     campusManagerActivitiesCalendarController.getAllCampusManagersActivitiesCalendar
-    );
+);
 app.get(
     "/getCampusManagerActivityCalendarById/:id",
+     [verifyToken],
     campusManagerActivitiesCalendarController.getCampusManagerActivityCalendarById
-    );
+);
 app.get(
     "/getCampusManagerActivitiesCalendarByCampusManagerId/:id",
+     [verifyToken],
     campusManagerActivitiesCalendarController.getCampusManagerActivitiesCalendarByCampusManagerId
-    );
+);
 app.get(
     "/getActivityByCampusManagerIdByDayByPeriod/:id/:day/:period",
+     [verifyToken],
     campusManagerActivitiesCalendarController.getActivitiesByCampusManagerIdAndByDayByPeriod
-    );
+);
 app.post(
     "/saveCampusManagerActivity",
+     [verifyToken],
     campusManagerActivitiesCalendarController.saveCampusManagerActivity
-    );
+);
 app.post(
     "/saveMultipleActivitiesCampusManager",
+     [verifyToken],
     campusManagerActivitiesCalendarController.saveMultipleActivitiesCampusManager
-    );
+);
 app.post(
     "/updateCampusManagerActivityCalendar",
+     [verifyToken],
     campusManagerActivitiesCalendarController.updateCampusManagerActivityCalendar
-    );
+);
 app.delete(
     "/deleteCampusManagerActivityCalendar/:id",
+     [verifyToken],
     campusManagerActivitiesCalendarController.deleteCampusManagerActivityCalendar
-    );
+);
 
 /**
  * Activity routes.
  */
 app.get("/getAllActivities", activityController.getAllActivities);
-app.get("/getActivityById/:id", activityController.getActivityById);
-app.post("/saveActivity", activityController.saveActivity);
-app.post("/saveAllActivities", activityController.saveAllActivities);
-app.post("/updateActivity", activityController.updateActivity);
-app.delete("/deleteActivity/:id", activityController.deleteActivity);
+app.get("/getActivityById/:id", [verifyToken], activityController.getActivityById);
+app.post("/saveActivity", [verifyToken], activityController.saveActivity);
+app.post("/saveAllActivities", [verifyToken], activityController.saveAllActivities);
+app.post("/updateActivity", [verifyToken], activityController.updateActivity);
+app.delete("/deleteActivity/:id", [verifyToken], activityController.deleteActivity);
 
 /**
  * Cycle route.
  */
-app.get("/doCycle/:player_id", cycleController.doCycle);
+app.get("/doCycle/:player_id", [verifyToken], cycleController.doCycle);
 
 /**
  * Create a player route.
  */
-app.post("/createPlayer", createPlayerController.createPlayer);
+app.post("/api/createPlayer", createPlayerController.createPlayer);
 
 /**
  * Buy a building route.
  */
-app.post("/buyBuilding", buyBuildingController.buyBuilding);
+app.post("/buyBuilding", [verifyToken], buyBuildingController.buyBuilding);
 
 /**
  * Hire a teacher route.
  */
-app.post("/hireTeacher", hireTeacherController.hireTeacher);
+app.post("/hireTeacher", [verifyToken], hireTeacherController.hireTeacher);
 
 /**
  * Hire a campus manager route.
  */
-app.post("/hireCampusManager", hireCampusManagerController.hireCampusManager);
+app.post("/hireCampusManager", [verifyToken], hireCampusManagerController.hireCampusManager);
 
 /**
  * Campus manager calendar route.
  */
-app.post("/addActivitiesInCampusManagerCalendar", campusManagerCalendarController.addActivitiesInCampusManagerCalendar);
+app.post("/addActivitiesInCampusManagerCalendar", [verifyToken], campusManagerCalendarController.addActivitiesInCampusManagerCalendar);
 
 /**
  * Teacher calendar route.
  */
-app.post("/addActivitiesInTeacherCalendar", teacherCalendarController.addActivitiesInTeacherCalendar);
+app.post("/addActivitiesInTeacherCalendar", [verifyToken], teacherCalendarController.addActivitiesInTeacherCalendar);
+
+/**
+ * Login route
+ */
+app.post("/api/player/login", loginController.playerLogin);
 
 /**
  * Start Express server.
@@ -202,7 +219,7 @@ export const server = app.listen(app.get("port"), (err: any) => {
     if (err) {
         console.error(`ERROR: ${err.message}`);
     }
-    
+
     console.log(`Listening on port ${app.get("port")}`);
     getSingletonConnection();
 

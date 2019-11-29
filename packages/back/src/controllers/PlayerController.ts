@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { Player } from "../entities/Player";
 import { PlayerRepository } from "../repositories/PlayerRepository";
+import { IndicatorRepository } from "../repositories/IndicatorRepository";
+
 let playerRepo = new PlayerRepository();
+let indicatorRepo = new IndicatorRepository();
 
 export let getAllPlayers = async (req: Request, res: Response) => {
     try {
@@ -23,9 +26,20 @@ export let getPlayerById = async (req: Request, res: Response) => {
     }
 }
 
+export let getPlayerByEmail = async (req: Request, res: Response) => {
+    try {
+        let player = await playerRepo.getPlayerByEmail(req.body.email);
+        res.send(player);
+    }
+    catch(e) {
+        res.status(501).json(e);
+    }
+}
+
 export let savePlayer = async (req: Request, res: Response) => {
     try {
-        let player = new Player(req.body.playerName);
+        const {playerName, email, password} = req.body;
+        let player = new Player(playerName, email, password);
         let response = await playerRepo.savePlayer(player);
         res.send(response);
     }
@@ -36,9 +50,16 @@ export let savePlayer = async (req: Request, res: Response) => {
 
 export let updatePlayer = async (req: Request, res: Response) => {
     try {
-        let player = await playerRepo.getPlayerById(req.body.id);
-        if (req.body.playerName != null) {
-            player.playerName = req.body.playerName;
+        const {id, playerName, email, password} = req.body;
+        let player = await playerRepo.getPlayerById(id);
+        if (playerName != null) {
+            player.playerName = playerName;
+        }
+        if (email != null) {
+            player.email = email;
+        }
+        if (password != null) {
+            player.password = password;
         }
         let result = await playerRepo.savePlayer(player);
         res.send(result);
@@ -51,8 +72,12 @@ export let updatePlayer = async (req: Request, res: Response) => {
 export let deletePlayer = async (req: Request, res: Response) => {
     try {
         let player = await playerRepo.getPlayerById(parseInt(req.params.id));
-        let result = await playerRepo.deletePlayer(player);
-        res.send(result);
+        let indicatorsToDelete = await indicatorRepo.getAllIndicatorsByPlayerId(parseInt(req.params.id));
+        for (let i=0; i < indicatorsToDelete.length; i++) {
+            let result = await indicatorRepo.deleteIndicator(indicatorsToDelete[i]);
+        }
+        let response = await playerRepo.deletePlayer(player);
+        res.send(response);
     }
     catch(e) {
         res.status(501).json(e);

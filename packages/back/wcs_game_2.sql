@@ -37,7 +37,7 @@ CREATE TABLE `activity` (
 
 LOCK TABLES `activity` WRITE;
 /*!40000 ALTER TABLE `activity` DISABLE KEYS */;
-INSERT INTO `activity` VALUES (1,'Wild Breakfast',100,'69c7b5'),(2,'Organise RNCP',200,'3b5998'),(3,'Buy Publicities',350,'bf49a0'),(4,'Wild Aperitif',100,'cf0921'),(5,'Networking',50,'ff6c33'),(6,'Organize a Trade Fair',450,'55c671'),(7,'Internal Management',100,'ff83da'),(8,'Weekly Meeting',100,'69c7b5'),(9,'Prepare a Course',100,'3b5998'),(10,'Give a Course',100,'bf49a0'),(11,'Correction of a Wild Circus Candidate',100,'cf0921'),(12,'Workshop or Live Coding',100,'ff6c33');
+INSERT INTO `activity` VALUES (1,'Wild Breakfast',100,'69c7b5'),(2,'Organise RNCP',200,'3b5998'),(3,'Buy Advertising',350,'bf49a0'),(4,'Talk',100,'cf0921'),(5,'Networking',50,'ff6c33'),(6,'Organize a Trade Fair',450,'55c671'),(7,'Internal Management',100,'ff83da'),(8,'Weekly Meeting',100,'69c7b5'),(9,'Prepare a Course',100,'3b5998'),(10,'Give a Course',100,'bf49a0'),(11,'Correction of a Wild Circus Candidate',100,'cf0921'),(12,'Workshop or Live Coding',100,'ff6c33');
 /*!40000 ALTER TABLE `activity` ENABLE KEYS */;
 UNLOCK TABLES;
 

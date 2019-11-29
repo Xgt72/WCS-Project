@@ -1,19 +1,31 @@
 import "reflect-metadata";
-import request from 'supertest';
 import { Activity } from "../src/entities/Activity";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { app, server } from "../src/app";
+import { server } from "../src/app";
 import { Mutator } from "../src/entities/Mutator";
 import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
-
+import { indicatorsTemplates } from "../src/models/Templates";
+import { getWithToken, postWithToken, deleteWithToken } from "./requestFunctions";
 
 let connection: Connection = null;
+let playerToken: string = null;
 
 describe('Activity', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
+        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
+        // create the indicators templates
+        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates, );
+
+        // create the player
+        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
+
+        // login the player
+        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
+        playerToken = loginResponse.header['auth-token'];
+
         done();
     });
 
@@ -32,7 +44,7 @@ describe('Activity', () => {
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
 
-            const response = await post("/saveActivity", activity);
+            const response = await postWithToken("/saveActivity", activity, playerToken);
             expect(response.status).toBe(200);
             expect(response.body.name).toEqual(activity.name);
             expect(response.body.value).toEqual(activity.value);
@@ -50,7 +62,7 @@ describe('Activity', () => {
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
 
-            const response = await post("/saveAllActivities", [activity, activity, activity, activity]);
+            const response = await postWithToken("/saveAllActivities", [activity, activity, activity, activity], playerToken);
             expect(response.status).toBe(200);
             expect(parseInt(response.body.length)).toEqual(4);
             done();
@@ -61,7 +73,7 @@ describe('Activity', () => {
     test(
         "should return at least one activity",
         async (done) => {
-            const response = await get("/getAllActivities");
+            const response = await getWithToken("/getAllActivities", playerToken);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -76,9 +88,9 @@ describe('Activity', () => {
                 new Mutator("dec" + BUDGET, 2, -100)
             ];
 
-            let response = await post("/saveActivity", activity);
+            let response = await postWithToken("/saveActivity", activity, playerToken);
             activity = response.body;
-            response = await get("/getActivityById/" + activity.id);
+            response = await getWithToken("/getActivityById/" + activity.id, playerToken);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(activity);
             done();
@@ -88,8 +100,8 @@ describe('Activity', () => {
     test(
         "should update one activity",
         async (done) => {
-            const activity = new Activity("Buy Publicities", 350, "75FF05");
-            let response = await post("/updateActivity", { id: 1, ...activity });
+            const activity = new Activity("Buy Advertising", 350, "75FF05");
+            let response = await postWithToken("/updateActivity", { id: 1, ...activity }, playerToken);
             expect(response.status).toEqual(200);
             expect(response.body.id).toEqual(1);
             expect(response.body.name).toEqual(activity.name);
@@ -102,31 +114,9 @@ describe('Activity', () => {
     test(
         "should delete one activity",
         async (done) => {
-            let response = await deleteActivity("/deleteActivity/1");
+            let response = await deleteWithToken("/deleteActivity/1", playerToken);
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
-
-export function get(url: string) {
-    const httpRequest = request(app).get(url);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}
-
-export function post(url: string, body: any) {
-    const httpRequest = request(app).post(url);
-    httpRequest.send(body);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}
-
-export function deleteActivity(url: string) {
-    const httpRequest = request(app).delete(url);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}
