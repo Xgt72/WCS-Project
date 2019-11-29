@@ -6,11 +6,36 @@ function Indicator({
   name, value,
 }) {
   return (
-    <p className="playerIndicator">
-      {name}
-      {' '}
-      {value}
-    </p>
+    <div className="playerIndicator d-inline-block m-2">
+      {name === "Reputation" &&
+        <i className="fas fa-star">
+          {' '}
+          {value}
+          {' '}
+          <i className="fas fa-percentage"></i>
+        </i>
+      }
+      {name === "Budget" &&
+        <i className="fas fa-coins">
+          {' '}
+          {value}
+          {' '}
+          <i className="fas fa-euro-sign"></i>
+        </i>
+      }
+      {name === "ActualStudentsNumber" &&
+        <i className="fas fa-graduation-cap">
+          {' '}
+          {value}
+        </i>
+      }
+      {name === "FutureStudentsNumber" &&
+        <i className="fas fa-user-graduate">
+          {' '}
+          {value}
+        </i>
+      }
+    </div>
   );
 }
 
