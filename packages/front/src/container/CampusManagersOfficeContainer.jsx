@@ -27,8 +27,14 @@ class CampusManagersOfficeComponent extends Component {
     }
 
     componentDidMount() {
-        const { playerId, updateCampusManagersOffice } = this.props;
-        fetch(`/getOnePlayerCampusManagers/${playerId}`)
+        const { playerId, updateCampusManagersOffice, playerToken } = this.props;
+        fetch(`/getOnePlayerCampusManagers/${playerId}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'auth-token': `${playerToken}`,
+            }),
+        })
             .then((res) => {
                 if (res.ok) {
                     return res.json();
@@ -37,7 +43,6 @@ class CampusManagersOfficeComponent extends Component {
             })
             .then(data => {
                 if (data.length > 0) {
-                    console.log(data);
                     updateCampusManagersOffice(data);
                 }
             })
@@ -56,7 +61,7 @@ class CampusManagersOfficeComponent extends Component {
                 zIndex: "100",
             },
         });
-    }
+    };
 
     render() {
         const { opacity, zIndex } = this.state.hireCampusManagerDisplay;
@@ -120,7 +125,7 @@ const mapStateToProps = (state) => ({
     playerId: state.playerId,
     campusManagersOffice: state.campusManagersOffice,
     hireCampusManagerIsDisplay: state.hireCampusManagerIsDisplay,
-    // campusManagerId: state.campusManagerCalendar.campusManagerId,
+    playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
@@ -135,7 +140,7 @@ CampusManagersOfficeComponent.propTypes = {
     playerId: PropTypes.number.isRequired,
     campusManagersOffice: PropTypes.array.isRequired,
     hireCampusManagerIsDisplay: PropTypes.bool.isRequired,
-    // campusManagerId: PropTypes.number.isRequired,
+    playerToken: PropTypes.string.isRequired,
     updateCampusManagersOffice: PropTypes.func.isRequired,
     displayHireCampusManager: PropTypes.func.isRequired,
     campusManagerIdCalendarToDisplay: PropTypes.func.isRequired,

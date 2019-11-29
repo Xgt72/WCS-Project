@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import "./app.css";
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 import { initActivitiesTemplate } from './redux/actions/actions';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import CampusManagementComponent from "./container/CampusManagementContainer";
 import CampusManagersScheduleContainer from "./container/CampusManagersScheduleContainer";
 import TrainersComponent from "./container/TrainersContainer";
 import CampusManagersOfficeContainer from './container/CampusManagersOfficeContainer';
+import PlayerLoginContainer from "./container/PlayerLoginContainer";
 
 class AppComponent extends Component {
 
@@ -25,16 +26,28 @@ class AppComponent extends Component {
   }
 
   render() {
+    const { isLogged } = this.props;
     return (
       <div>
         <PlayerMenuComponent />
         <Switch>
           <Route exact path="/" component={Header} />
-          <Route exact path="/buildings" component={BuildingsContainer} />
-          <Route exact path="/campusManagement" component={CampusManagementComponent} />
-          <Route exact path="/campusManagersOffice" component={CampusManagersOfficeContainer} />
-          <Route exact path="/campusManagers" component={CampusManagersScheduleContainer} />
-          <Route exact path="/trainers" component={TrainersComponent} />
+          <Route exact path="/buildings">
+            {isLogged ? <BuildingsContainer /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/campusManagement">
+            {isLogged ? <CampusManagementComponent /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/campusManagersOffice">
+            {isLogged ? <CampusManagersOfficeContainer /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/campusManagers">
+            {isLogged ? <CampusManagersScheduleContainer /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/trainers">
+            {isLogged ? <TrainersComponent /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/playerLogin" component={PlayerLoginContainer} />
         </Switch>
       </div>
     );
@@ -42,7 +55,8 @@ class AppComponent extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  playerId: state.playerId
+  playerId: state.playerId,
+  isLogged: state.isLogged,
 });
 
 const mapDispatchToProps = {
@@ -53,6 +67,7 @@ const AppContainer = connect(mapStateToProps, mapDispatchToProps)(AppComponent);
 
 AppComponent.propTypes = {
   playerId: PropTypes.number.isRequired,
+  isLogged: PropTypes.bool.isRequired,
   initActivitiesTemplate: PropTypes.func.isRequired,
 };
 

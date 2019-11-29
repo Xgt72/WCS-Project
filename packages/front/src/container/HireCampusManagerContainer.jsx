@@ -19,7 +19,13 @@ import {
 class HireCampusManagerComponent extends Component {
 
     hireCampusManager = (name) => {
-        const { playerId, campusManagersOffice, displayHireCampusManager, updateCampusManagersOffice } = this.props;
+        const {
+            playerId,
+            campusManagersOffice,
+            displayHireCampusManager,
+            updateCampusManagersOffice,
+            playerToken
+        } = this.props;
         const campusManager = {
             player_id: playerId,
             campusManagerName: name
@@ -29,6 +35,7 @@ class HireCampusManagerComponent extends Component {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
+                    'auth-token': `${playerToken}`,
                 }),
                 body: JSON.stringify(campusManager),
             })
@@ -135,6 +142,7 @@ class HireCampusManagerComponent extends Component {
 const mapStateToProps = (state) => ({
     playerId: state.playerId,
     campusManagersOffice: state.campusManagersOffice,
+    playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
@@ -147,6 +155,7 @@ const HireCampusManagerContainer = connect(mapStateToProps, mapDispatchToProps)(
 HireCampusManagerComponent.propTypes = {
     playerId: PropTypes.number.isRequired,
     campusManagersOffice: PropTypes.array.isRequired,
+    playerToken: PropTypes.string.isRequired,
     displayHireCampusManager: PropTypes.func.isRequired,
     updateCampusManagersOffice: PropTypes.func.isRequired,
 };

@@ -1,35 +1,21 @@
 import "reflect-metadata";
+import request from 'supertest';
 import { PlayerCampusManager } from "../src/entities/PlayerCampusManager";
 import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { server } from "../src/app";
+import { app, server } from "../src/app";
 import { REPUTATION, BUDGET } from "../src/constants";
-import { indicatorsTemplates } from "../src/models/Templates";
-import { getWithToken, postWithToken, deleteWithToken } from "./requestFunctions";
 
 
 let connection: Connection = null;
 let lastId = 1;
-let playerToken: string = null;
 
 describe('Player Campus Manager', () => {
 
     beforeAll(async (done) => {
 
         connection = await getSingletonConnection("test");
-        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
-
-        // create the indicators templates
-        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates);
-
-        // create the player
-        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
-
-        // login the player
-        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
-        playerToken = loginResponse.header['auth-token'];
-
         done();
     });
 
@@ -48,7 +34,7 @@ describe('Player Campus Manager', () => {
                 new Mutator("dec" + BUDGET, 1, -100)
             ];
 
-            const response = await postWithToken("/savePlayerCampusManager", pCampusManager, playerToken);
+            const response = await post("/savePlayerCampusManager", pCampusManager);
             expect(response.status).toBe(200);
             expect(response.body.player_id).toEqual(pCampusManager.player_id);
             expect(response.body.name).toEqual(pCampusManager.name);
@@ -60,7 +46,7 @@ describe('Player Campus Manager', () => {
     test(
         "should return at least one player campus manager",
         async (done) => {
-            const response = await getWithToken("/getAllPlayersCampusManagers", playerToken);
+            const response = await get("/getAllPlayersCampusManagers");
             expect(response.status).toBe(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -76,9 +62,9 @@ describe('Player Campus Manager', () => {
                 new Mutator("dec" + BUDGET, 1, -100)
             ];
 
-            let response = await postWithToken("/savePlayerCampusManager", pCampusManager, playerToken);
+            let response = await post("/savePlayerCampusManager", pCampusManager);
             pCampusManager = response.body;
-            response = await getWithToken("/getPlayerCampusManagerById/" + pCampusManager.id, playerToken);
+            response = await get("/getPlayerCampusManagerById/" + pCampusManager.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(pCampusManager);
             done();
@@ -94,10 +80,10 @@ describe('Player Campus Manager', () => {
                 new Mutator("dec" + BUDGET, 1, -100)
             ];
 
-            let response = await postWithToken("/savePlayerCampusManager", pCampusManager, playerToken);
+            let response = await post("/savePlayerCampusManager", pCampusManager);
             pCampusManager = response.body;
             lastId = pCampusManager.id;
-            response = await getWithToken("/getOnePlayerCampusManagers/" + pCampusManager.player_id, playerToken);
+            response = await get("/getOnePlayerCampusManagers/" + pCampusManager.player_id);
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
@@ -109,7 +95,7 @@ describe('Player Campus Manager', () => {
         async (done) => {
             const pCampusManager = new PlayerCampusManager(4, "Luke", 280);
 
-            let response = await postWithToken("/updatePlayerCampusManager", { id: 1, ...pCampusManager }, playerToken);
+            let response = await post("/updatePlayerCampusManager", { id: 1, ...pCampusManager });
             expect(response.status).toEqual(200);
             expect(response.body.id).toEqual(1);
             expect(response.body.player_id).toEqual(pCampusManager.player_id);
@@ -122,9 +108,31 @@ describe('Player Campus Manager', () => {
     test(
         "should delete one player campus manager",
         async (done) => {
-            let response = await deleteWithToken("/deletePlayerCampusManager/" + lastId, playerToken);
+            let response = await deletePlayerCampusManager("/deletePlayerCampusManager/" + lastId);
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
+
+export function get(url: string) {
+    const httpRequest = request(app).get(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function post(url: string, body: any) {
+    const httpRequest = request(app).post(url);
+    httpRequest.send(body);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function deletePlayerCampusManager(url: string) {
+    const httpRequest = request(app).delete(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}

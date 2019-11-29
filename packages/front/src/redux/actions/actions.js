@@ -9,6 +9,9 @@ export const CAMPUS_MANAGER_ID_CALENDAR_TO_DISPLAY = "CAMPUS_MANAGER_ID_CALENDAR
 export const UPDATE_CAMPUS_MANAGERS_OFFICE = "UPDATE_CAMPUS_MANAGERS_OFFICE";
 export const DISPLAY_HIRE_CAMPUS_MANAGER = "DISPLAY_HIRE_CAMPUS_MANAGER";
 export const CAMPUS_MANAGER_CALENDAR_IS_SAVED = "CAMPUS_MANAGER_CALENDAR_IS_SAVED";
+export const UPDATE_PLAYER_TOKEN = "UPDATE_PLAYER_TOKEN";
+export const UPDATE_PLAYER_ID = "UPDATE_PLAYER_ID";
+export const UPDATE_IS_LOGGED = "UPDATE_IS_LOGGED";
 
 export function addBuilding(building) {
   return { type: ADD_BUILDING, building: building };
@@ -52,4 +55,16 @@ export function displayHireCampusManager(value) {
 
 export function campusManagerCalendarIsSaved(campusManagerId) {
   return { type: CAMPUS_MANAGER_CALENDAR_IS_SAVED, campusManagerId: campusManagerId };
+}
+
+export function updatePlayerToken(token) {
+  return { type: UPDATE_PLAYER_TOKEN, playerToken: token };
+}
+
+export function updatePlayerId(id) {
+  return { type: UPDATE_PLAYER_ID, playerId: id };
+}
+
+export function updateIsLogged() {
+  return { type: UPDATE_IS_LOGGED };
 }

@@ -64,7 +64,7 @@ campusManagerActivityTwo.mutators = [
     new Mutator("inc" + FUTURE_STUDENTS_NUMBER, 3, 1)
 ];
 
-let campusManagerActivityThree: Activity = new Activity("Buy Publicities", 350, "bf49a0");
+let campusManagerActivityThree: Activity = new Activity("Buy Advertising", 350, "bf49a0");
 campusManagerActivityThree.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.5),
     new Mutator("dec" + BUDGET, 2, -350),
@@ -72,7 +72,7 @@ campusManagerActivityThree.mutators = [
 
 ];
 
-let campusManagerActivityFour: Activity = new Activity("Wild Aperitif", 100, "cf0921");
+let campusManagerActivityFour: Activity = new Activity("Talk", 100, "cf0921");
 campusManagerActivityFour.mutators = [
     new Mutator("inc" + REPUTATION, 1, 0.4),
     new Mutator("dec" + BUDGET, 2, -100),

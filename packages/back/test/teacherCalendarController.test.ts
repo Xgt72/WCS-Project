@@ -1,46 +1,39 @@
 import "reflect-metadata";
-import request from "supertest";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { app, server } from "../src/app";
-import { Player } from "../src/entities/Player";
+import { server } from "../src/app";
 import { TeacherActivitiesCalendar } from "../src/entities/TeacherActivitiesCalendar";
-import { Indicator } from "../src/entities/Indicator";
-import { teacherActivitiesTemplates } from "../src/models/Templates";
-import { REPUTATION, BUDGET, ACTUAL_STUDENTS_NUMBER, FUTURE_STUDENTS_NUMBER, FORECAST_SALES_TURNOVER } from "../src/constants";
-
+import { teacherActivitiesTemplates, indicatorsTemplates } from "../src/models/Templates";
+import { postWithToken } from "./requestFunctions";
 
 let connection: Connection = null;
 let playerId: number = 0;
 let teacherId: number = 0;
-let reputation: Indicator = null;
-let budget: Indicator = null;
+let playerToken: string = null;
 
 describe('Teacher calendar', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
+        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
 
-        // create one player
-        let player = new Player("Sharky");
-        let response = await post("/savePlayer", player);
-        playerId = response.body.id;
+        // create the indicators templates
+        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates);
 
-        // creation of 2 indicators
-        let reputationIndicator = new Indicator(REPUTATION, playerId, 30);
-        response = await post("/saveIndicator", reputationIndicator);
-        reputation = response.body;
+        // create the player
+        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
+        playerId = response.body.player.id;
 
-        let budgetIndicator = new Indicator(BUDGET, playerId, 5000);
-        response = await post("/saveIndicator", budgetIndicator);
-        budget = response.body;
+        // login the player
+        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
+        playerToken = loginResponse.header['auth-token'];
 
         // hire one teacher for the player
-        response = await post("/hireTeacher", { player_id: playerId, teacherName: "Zelda" });
+        response = await postWithToken("/hireTeacher", { player_id: playerId, teacherName: "Zelda" }, playerToken);
         teacherId = response.body.teacher.id;
 
         // create activities template
-        response = await post("/saveAllActivities", teacherActivitiesTemplates);
+        response = await postWithToken("/saveAllActivities", teacherActivitiesTemplates, playerToken);
 
         done();
     });
@@ -60,12 +53,13 @@ describe('Teacher calendar', () => {
                 new TeacherActivitiesCalendar(teacherId, 3, true, false, 2)
             ];
 
-            let response = await post(
+            let response = await postWithToken(
                 "/addActivitiesInTeacherCalendar",
                 {
                     teacher_id: teacherId,
                     activities: activitiesCalendar
-                }
+                },
+                playerToken
             );
             expect(response.status).toEqual(200);
             expect(parseInt(response.body.length)).toEqual(3);
@@ -74,11 +68,3 @@ describe('Teacher calendar', () => {
         }
     );
 });
-
-export function post(url: string, body: any) {
-    const httpRequest = request(app).post(url);
-    httpRequest.send(body);
-    httpRequest.set('Accept', 'application/json');
-    httpRequest.set('Origin', 'http://localhost:5000');
-    return httpRequest;
-}

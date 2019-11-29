@@ -6,6 +6,14 @@ export class MutatorRepository {
         return getManager().getRepository(Mutator).find();
     }
 
+    getMutatorByIndicatorId(indicatorId: number) {
+        return getManager()
+            .getRepository(Mutator)
+            .createQueryBuilder("m")
+            .where("m.indicator_id = :id", {id: indicatorId})
+            .getMany();
+    } 
+
     saveMutator(mutator: Mutator) {
         return getManager().getRepository(Mutator).save(mutator);
     }

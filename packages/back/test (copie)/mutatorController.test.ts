@@ -1,35 +1,20 @@
 import "reflect-metadata";
+import request from 'supertest';
 import { Mutator } from "../src/entities/Mutator";
 import { Connection } from "typeorm";
 import { getSingletonConnection } from "../src/connection";
-import { server } from "../src/app";
-import { indicatorsTemplates } from "../src/models/Templates";
-import { getWithToken, postWithToken, deleteWithToken } from "./requestFunctions";
+import {app, server} from "../src/app";
+let connection:Connection = null;
 
-
-let connection: Connection = null;
-let playerToken: string = null;
 
 describe('Mutator', () => {
 
     beforeAll(async (done) => {
         connection = await getSingletonConnection("test");
-        process.env.TOKEN_SECRET = "ghtyuririigjjhlmmqqkkdddgfzrapmmknv";
-
-        // create the indicators templates
-        let response = await postWithToken("/saveAllIndicators", indicatorsTemplates);
-
-        // create the player
-        response = await postWithToken("/api/createPlayer", { player_name: "Sharky", email: "sharky@gmail.fr", password: "123456" });
-
-        // login the player
-        let loginResponse = await postWithToken("/api/player/login", { email: "sharky@gmail.fr", password: "123456" });
-        playerToken = loginResponse.header['auth-token'];
-
         done();
     });
 
-    afterAll(async (done) => {
+    afterAll( async(done) => {
         connection.close();
         server.close();
         done();
@@ -38,8 +23,8 @@ describe('Mutator', () => {
     test(
         "should save one mutator",
         async (done) => {
-            const mut = new Mutator("multiply", 1, 5);
-            const response = await postWithToken("/saveMutator", mut, playerToken);
+            const mut =  new Mutator("multiply", 1, 5);
+            const response = await post("/saveMutator",mut);
             expect(response.status).toBe(200);
             expect(response.body.name).toEqual(mut.name);
             expect(response.body.indicator_id).toEqual(mut.indicator_id);
@@ -51,7 +36,7 @@ describe('Mutator', () => {
     test(
         "should return at least one mutator",
         async (done) => {
-            const response = await getWithToken("/getAllMutators", playerToken);
+            const response = await get("/getAllMutators");
             expect(parseInt(response.body.length)).toBeGreaterThan(0);
             done();
         }
@@ -60,23 +45,23 @@ describe('Mutator', () => {
     test(
         "should return mutator by ID",
         async (done) => {
-            let mut = new Mutator("substract", 3, 500);
-            let response = await postWithToken("/saveMutator", mut, playerToken);
+            let mut =  new Mutator("substract", 3, 500);
+            let response = await post("/saveMutator",mut);
             mut = response.body;
-            response = await getWithToken("/getMutatorsById/" + mut.id, playerToken);
+            response = await get("/getMutatorsById/" + mut.id);
             expect(response.status).toEqual(200);
             expect(response.body).toEqual(mut);
             done();
         }
     );
-
+    
     test(
         "should update one mutator",
         async (done) => {
             const mut = new Mutator("mutatorTest", 3, 1000);
-            let response = await postWithToken("/updateMutator", { id: 1, ...mut }, playerToken);
+            let response = await post("/updateMutator", {id: 1, ...mut});
             expect(response.status).toEqual(200);
-            expect(response.body).toEqual({ id: 1, ...mut });
+            expect(response.body).toEqual({id: 1, ...mut});
             done();
         }
     );
@@ -84,9 +69,31 @@ describe('Mutator', () => {
     test(
         "should delete one mutator",
         async (done) => {
-            let response = await deleteWithToken("/deleteMutator/2", playerToken);
+            let response = await deleteMutator("/deleteMutator/2");
             expect(response.status).toEqual(200);
             done();
         }
     );
 });
+
+export function get(url: string) {
+    const httpRequest = request(app).get(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function post(url: string, body: any) {
+    const httpRequest = request(app).post(url);
+    httpRequest.send(body);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
+
+export function deleteMutator(url: string) {
+    const httpRequest = request(app).delete(url);
+    httpRequest.set('Accept', 'application/json');
+    httpRequest.set('Origin', 'http://localhost:5000');
+    return httpRequest;
+}
