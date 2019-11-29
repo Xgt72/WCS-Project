@@ -9,6 +9,7 @@ import {
 import DayActivities from "../components/DayActivities";
 import DayHours from "../components/DayHours";
 import ChooseActivityContainer from './ChooseActivityContainer';
+import PlayerIndicatorsContainer from "./PlayerIndicatorsContainer";
 
 class CampusManagersScheduleComponent extends Component {
     constructor(props) {
@@ -252,6 +253,7 @@ class CampusManagersScheduleComponent extends Component {
         return (
             <>
                 <Container>
+                    <PlayerIndicatorsContainer />
                     {this.state.campusManagerName !== "" &&
                         <Row>
                             <h2 className="w-100">Schedule of {this.state.campusManagerName}</h2>
