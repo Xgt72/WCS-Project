@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import {
-    Container, Row, Col, Button
+    Container, Row, Button
 } from 'reactstrap';
 
 class PlayerMenuComponent extends Component {
-
-    login = () => {
-        alert("you're login");
-    }
 
     render() {
         return (
@@ -45,6 +39,13 @@ class PlayerMenuComponent extends Component {
                                 Trainers
                             </Button>
                         </Link>
+                        <Link to="/playerRegister">
+                            <Button
+                                className="genericButton m-2"
+                            >
+                                Register
+                            </Button>
+                        </Link>
                         <Link to="/playerLogin">
                             <Button
                                 className="genericButton m-2"
@@ -58,24 +59,5 @@ class PlayerMenuComponent extends Component {
         );
     }
 }
-
-// const mapStateToProps = (state) => ({
-//     playerId: state.playerId,
-//     playerBuildings: state.playerBuildings,
-//   });
-
-//   const mapDispatchToProps = {
-//     addBuilding,
-//     updateIndicators,
-//   };
-
-//   const BuildingsContainer = connect(mapStateToProps, mapDispatchToProps)(BuildingsComponent);
-
-//   BuildingsComponent.propTypes = {
-//     playerId: PropTypes.number.isRequired,
-//     playerBuildings: PropTypes.array.isRequired,
-//     addBuilding: PropTypes.func.isRequired,
-//     updateIndicators: PropTypes.func.isRequired,
-//   };
 
 export default PlayerMenuComponent;

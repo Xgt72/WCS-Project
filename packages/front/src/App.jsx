@@ -12,6 +12,7 @@ import CampusManagersScheduleContainer from "./container/CampusManagersScheduleC
 import TrainersComponent from "./container/TrainersContainer";
 import CampusManagersOfficeContainer from './container/CampusManagersOfficeContainer';
 import PlayerLoginContainer from "./container/PlayerLoginContainer";
+import RegisterPlayerContainer from "./container/RegisterPlayerContainer"
 
 class AppComponent extends Component {
 
@@ -48,6 +49,7 @@ class AppComponent extends Component {
             {isLogged ? <TrainersComponent /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/playerLogin" component={PlayerLoginContainer} />
+          <Route exact path="/playerRegister" component={RegisterPlayerContainer} />
         </Switch>
       </div>
     );

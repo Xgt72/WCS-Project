@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row } from 'reactstrap';
 import { updateIndicators } from '../redux/actions/actions';
 import './playerIndicators.css';
 import Indicator from '../components/Indicator';

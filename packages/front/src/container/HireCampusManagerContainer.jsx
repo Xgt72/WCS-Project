@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./hireCampusManager.css";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { displayHireCampusManager, updateCampusManagersOffice } from '../redux/actions/actions';
+import { displayHireCampusManager, updateCampusManagersOffice, updateIndicators } from '../redux/actions/actions';
 import {
     Container,
     Row,
@@ -11,26 +11,25 @@ import {
     CardImg,
     CardBody,
     CardTitle,
-    CardSubtitle,
-    CardText,
     Button,
 } from "reactstrap";
 
 class HireCampusManagerComponent extends Component {
 
-    hireCampusManager = (name) => {
+    async hireCampusManager(name) {
         const {
             playerId,
             campusManagersOffice,
             displayHireCampusManager,
             updateCampusManagersOffice,
+            updateIndicators,
             playerToken
         } = this.props;
         const campusManager = {
             player_id: playerId,
             campusManagerName: name
         }
-        fetch("/hireCampusManager",
+        await fetch("/hireCampusManager",
             {
                 method: 'POST',
                 headers: new Headers({
@@ -48,13 +47,38 @@ class HireCampusManagerComponent extends Component {
             .then(
                 (res) => {
                     if (typeof res === 'object') {
-                        // console.log(res);
                         updateCampusManagersOffice([...campusManagersOffice, res.campusManager]);
                         alert("you hired this campus manager");
                         displayHireCampusManager(false);
                     } else {
                         alert(res);
                     }
+                },
+            )
+            .catch(
+                (err) => {
+                    console.log(err.message);
+                },
+            );
+
+        await fetch(`/getIndicatorsByPlayerId/${playerId}`,
+            {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'auth-token': `${playerToken}`,
+                }),
+            })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw new Error(res.statusText);
+            })
+            .then(
+                (res) => {
+                    const indicators = res.slice(0, 4);
+                    updateIndicators(indicators);
                 },
             )
             .catch(
@@ -148,6 +172,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     displayHireCampusManager,
     updateCampusManagersOffice,
+    updateIndicators,
 };
 
 const HireCampusManagerContainer = connect(mapStateToProps, mapDispatchToProps)(HireCampusManagerComponent);
@@ -158,6 +183,7 @@ HireCampusManagerComponent.propTypes = {
     playerToken: PropTypes.string.isRequired,
     displayHireCampusManager: PropTypes.func.isRequired,
     updateCampusManagersOffice: PropTypes.func.isRequired,
+    updateIndicators: PropTypes.func.isRequired,
 };
 
 export default HireCampusManagerContainer;
