@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Container, Row, Col, Button,
+  Container, Row, Button,
 } from 'reactstrap';
 import { addBuilding, updateIndicators, initBuildings } from '../redux/actions/actions';
 import PlayerIndicatorsContainer from './PlayerIndicatorsContainer';
