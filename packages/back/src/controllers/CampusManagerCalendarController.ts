@@ -131,14 +131,14 @@ export let addActivitiesInCampusManagerCalendar = async (req: Request, res: Resp
         for (let i = 0; i < updatedActivities.length; i++) {
             if (updatedActivities[i].morning) {
                 let morningActivity: CampusManagerActivitiesCalendar = await campusManagerCalendarRepo.getActivityByCampusManagerIdByDayByMorning(
-                    req.body.teacher_id, updatedActivities[i].day
+                    req.body.campus_manager_id, updatedActivities[i].day
                 );
                 if (morningActivity != null) {
                     updatedActivities[i].id = morningActivity.id;
                 }
             } else if (updatedActivities[i].afternoon) {
                 let afternoonActivity: CampusManagerActivitiesCalendar = await campusManagerCalendarRepo.getActivityByCampusManagerIdByDayByAfternoon(
-                    req.body.teacher_id, updatedActivities[i].day
+                    req.body.campus_manager_id, updatedActivities[i].day
                 );
                 if (afternoonActivity != null) {
                     updatedActivities[i].id = afternoonActivity.id;

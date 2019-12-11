@@ -144,7 +144,7 @@ describe('Teacher Calendar', () => {
     test(
         "should delete one teacher activity calendar",
         async (done) => {
-            let response = await deleteWithToken("/deleteTeacherAcitvityCalendar/1", playerToken);
+            let response = await deleteWithToken("/deleteTeacherActivityCalendar/1", playerToken);
             expect(response.status).toEqual(200);
             done();
         }

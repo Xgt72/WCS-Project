@@ -58,9 +58,10 @@ export let addActivitiesInTeacherCalendar = async (req: Request, res: Response) 
                     updatedActivities[i].id = afternoonActivity.id;
                 }
             }
+            
         }
 
-        let teacherCalendar: TeacherActivitiesCalendar[] = await teacherCalendarRepo.saveMultipleActivitiesTeacher(updatedActivities);
+        let teacherCalendar: TeacherActivitiesCalendar[] = await teacherCalendarRepo.saveMultipleActivitiesTeacher(updatedActivities);// the problem is here
         res.send(teacherCalendar);
     }
     catch (e) {

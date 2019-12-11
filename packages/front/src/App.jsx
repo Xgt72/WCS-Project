@@ -9,7 +9,8 @@ import BuildingsContainer from './container/BuildingsContainer';
 import PlayerMenuComponent from './container/PlayerMenu';
 import CampusManagementComponent from "./container/CampusManagementContainer";
 import CampusManagersScheduleContainer from "./container/CampusManagersScheduleContainer";
-import TrainersComponent from "./container/TrainersContainer";
+import TeachersOfficeContainer from "./container/TeachersOfficeContainer";
+import TeachersScheduleContainer from "./container/TeachersScheduleContainer";
 import CampusManagersOfficeContainer from './container/CampusManagersOfficeContainer';
 import PlayerLoginContainer from "./container/PlayerLoginContainer";
 import RegisterPlayerContainer from "./container/RegisterPlayerContainer"
@@ -42,11 +43,14 @@ class AppComponent extends Component {
           <Route exact path="/campusManagersOffice">
             {isLogged ? <CampusManagersOfficeContainer /> : <Redirect to="/" />}
           </Route>
-          <Route exact path="/campusManagers">
+          <Route exact path="/campusManagerSchedule">
             {isLogged ? <CampusManagersScheduleContainer /> : <Redirect to="/" />}
           </Route>
-          <Route exact path="/trainers">
-            {isLogged ? <TrainersComponent /> : <Redirect to="/" />}
+          <Route exact path="/teachersOffice">
+            {isLogged ? <TeachersOfficeContainer /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/teacherSchedule">
+            {isLogged ? <TeachersScheduleContainer /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/playerLogin" component={PlayerLoginContainer} />
           <Route exact path="/playerRegister" component={RegisterPlayerContainer} />
