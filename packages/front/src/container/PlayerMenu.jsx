@@ -32,11 +32,11 @@ class PlayerMenuComponent extends Component {
                                 Campus Managers Office
                             </Button>
                         </Link>
-                        <Link to="/trainers">
+                        <Link to="/teachersOffice">
                             <Button
                                 className="genericButton m-2"
                             >
-                                Trainers
+                                Trainers Office
                             </Button>
                         </Link>
                         <Link to="/playerRegister">

@@ -106,7 +106,7 @@ app.get("/getActivityByTeacherIdByDayByPeriod/:id/:day/:period", [verifyToken], 
 app.post("/saveTeacherActivity", [verifyToken], teacherActivitiesCalendarController.saveTeacherActivity);
 app.post("/saveMultipleActivitiesTeacher", [verifyToken], teacherActivitiesCalendarController.saveMultipleActivitiesTeacher);
 app.post("/updateTeacherActivityCalendar", [verifyToken], teacherActivitiesCalendarController.updateTeacherActivityCalendar);
-app.delete("/deleteTeacherAcitvityCalendar/:id", [verifyToken], teacherActivitiesCalendarController.deleteTeacherAcitvityCalendar);
+app.delete("/deleteTeacherActivityCalendar/:id", [verifyToken], teacherActivitiesCalendarController.deleteTeacherAcitvityCalendar);
 
 /**
  * Player Campus Manager routes.
