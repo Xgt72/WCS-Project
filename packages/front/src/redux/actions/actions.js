@@ -9,6 +9,12 @@ export const CAMPUS_MANAGER_ID_CALENDAR_TO_DISPLAY = "CAMPUS_MANAGER_ID_CALENDAR
 export const UPDATE_CAMPUS_MANAGERS_OFFICE = "UPDATE_CAMPUS_MANAGERS_OFFICE";
 export const DISPLAY_HIRE_CAMPUS_MANAGER = "DISPLAY_HIRE_CAMPUS_MANAGER";
 export const CAMPUS_MANAGER_CALENDAR_IS_SAVED = "CAMPUS_MANAGER_CALENDAR_IS_SAVED";
+export const ADD_ACTIVITY_IN_TC = "ADD_ACTIVITY_IN_TC";
+export const REMOVE_ACTIVITY_IN_TC = "REMOVE_ACTIVITY_IN_TC";
+export const TEACHER_ID_CALENDAR_TO_DISPLAY = "TEACHER_ID_CALENDAR_TO_DISPLAY";
+export const UPDATE_TEACHERS_OFFICE = "UPDATE_TEACHERS_OFFICE";
+export const DISPLAY_HIRE_TEACHER = "DISPLAY_HIRE_TEACHER";
+export const TEACHER_CALENDAR_IS_SAVED = "TEACHER_CALENDAR_IS_SAVED";
 export const UPDATE_PLAYER_TOKEN = "UPDATE_PLAYER_TOKEN";
 export const UPDATE_PLAYER_ID = "UPDATE_PLAYER_ID";
 export const UPDATE_IS_LOGGED = "UPDATE_IS_LOGGED";
@@ -55,6 +61,30 @@ export function displayHireCampusManager(value) {
 
 export function campusManagerCalendarIsSaved(campusManagerId) {
   return { type: CAMPUS_MANAGER_CALENDAR_IS_SAVED, campusManagerId: campusManagerId };
+}
+
+export function addActivityInTC(activity, teacherId) {
+  return { type: ADD_ACTIVITY_IN_TC, activity: activity, teacherId: teacherId };
+}
+
+export function removeActivityInTC(activity, teacherId) {
+  return { type: REMOVE_ACTIVITY_IN_TC, activity: activity, teacherId: teacherId };
+}
+
+export function teacherIdCalendarToDisplay(teacherId) {
+  return { type: TEACHER_ID_CALENDAR_TO_DISPLAY, teacherId: teacherId };
+}
+
+export function updateTeachersOffice(teachers) {
+  return { type: UPDATE_TEACHERS_OFFICE, teachers: teachers };
+}
+
+export function displayHireTeacher(value) {
+  return { type: DISPLAY_HIRE_TEACHER, value: value };
+}
+
+export function teacherCalendarIsSaved(teacherId) {
+  return { type: TEACHER_CALENDAR_IS_SAVED, teacherId: teacherId };
 }
 
 export function updatePlayerToken(token) {

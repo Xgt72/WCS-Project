@@ -12,7 +12,13 @@ import {
   CAMPUS_MANAGER_CALENDAR_IS_SAVED,
   UPDATE_PLAYER_TOKEN,
   UPDATE_PLAYER_ID,
-  UPDATE_IS_LOGGED
+  UPDATE_IS_LOGGED,
+  ADD_ACTIVITY_IN_TC,
+  REMOVE_ACTIVITY_IN_TC,
+  TEACHER_ID_CALENDAR_TO_DISPLAY,
+  UPDATE_TEACHERS_OFFICE,
+  DISPLAY_HIRE_TEACHER,
+  TEACHER_CALENDAR_IS_SAVED
 } from '../actions/actions';
 
 const initialState = {
@@ -37,6 +43,19 @@ const initialState = {
   campusManagersOffice: [],
   campusManagerIdToDisplaySchedule: 0,
   hireCampusManagerIsDisplay: false,
+  teacherOneCalendar: {
+    teacherId: 0,
+    calendar: [],
+    isSaved: false
+  },
+  teacherTwoCalendar: {
+    teacherId: 0,
+    calendar: [],
+    isSaved: false
+  },
+  teachersOffice: [],
+  teacherIdToDisplaySchedule: 0,
+  hireTeacherIsDisplay: false,
 };
 
 function rootReducer(state = initialState, action) {
@@ -90,7 +109,6 @@ function rootReducer(state = initialState, action) {
       }
       return updatedState;
 
-
     case CAMPUS_MANAGER_ID_CALENDAR_TO_DISPLAY:
       updatedState.campusManagerIdToDisplaySchedule = action.campusManagerId;
       return updatedState;
@@ -122,10 +140,65 @@ function rootReducer(state = initialState, action) {
       }
       return updatedState;
 
+    case ADD_ACTIVITY_IN_TC:
+      if (action.teacherId === updatedState.teacherOneCalendar.teacherId) {
+        previousCalendar = [...updatedState.teacherOneCalendar.calendar];
+        updatedState.teacherOneCalendar = { ...state.teacherOneCalendar };
+        updatedState.teacherOneCalendar.calendar = addActivity(previousCalendar, action);
+      } else if (action.teacherId === updatedState.teacherTwoCalendar.teacherId) {
+        previousCalendar = [...updatedState.teacherTwoCalendar.calendar];
+        updatedState.teacherTwoCalendar = { ...state.teacherTwoCalendar };
+        updatedState.teacherTwoCalendar.calendar = addActivity(previousCalendar, action);
+      }
+      return updatedState;
+
+    case REMOVE_ACTIVITY_IN_TC:
+      if (action.teacherId === updatedState.teacherOneCalendar.teacherId) {
+        previousCalendar = [...updatedState.teacherOneCalendar.calendar];
+        updatedState.teacherOneCalendar = { ...state.teacherOneCalendar };
+        updatedState.teacherOneCalendar.calendar = removeActivity(previousCalendar, action);
+      } else {
+        previousCalendar = [...updatedState.teacherTwoCalendar.calendar];
+        updatedState.teacherTwoCalendar = { ...state.teacherTwoCalendar };
+        updatedState.teacherTwoCalendar.calendar = removeActivity(previousCalendar, action);
+      }
+      return updatedState;
+
+    case TEACHER_ID_CALENDAR_TO_DISPLAY:
+      updatedState.teacherIdToDisplaySchedule = action.teacherId;
+      return updatedState;
+
+    case UPDATE_TEACHERS_OFFICE:
+      updatedState.teachersOffice = [...action.teachers];
+      if (updatedState.teachersOffice.length === 1) {
+        updatedState.teacherOneCalendar = { ...state.teacherOneCalendar };
+        updatedState.teacherOneCalendar.teacherId = updatedState.teachersOffice[0].id;
+      } else if (updatedState.teachersOffice.length === 2) {
+        updatedState.teacherOneCalendar = { ...state.teacherOneCalendar };
+        updatedState.teacherOneCalendar.teacherId = updatedState.teachersOffice[0].id;
+        updatedState.teacherTwoCalendar = { ...state.teacherTwoCalendar };
+        updatedState.teacherTwoCalendar.teacherId = updatedState.teachersOffice[1].id;
+      }
+      return updatedState;
+
+    case DISPLAY_HIRE_TEACHER:
+      updatedState.hireTeacherIsDisplay = action.value;
+      return updatedState;
+
+    case TEACHER_CALENDAR_IS_SAVED:
+      if (action.teacherId === updatedState.teachersOffice[0].id) {
+        updatedState.teacherOneCalendar = { ...state.teacherOneCalendar };
+        updatedState.teacherOneCalendar.isSaved = !updatedState.teacherOneCalendar.isSaved;
+      } else if (action.teacherId === updatedState.teachersOffice[1].id) {
+        updatedState.teacherTwoCalendar = { ...state.teacherTwoCalendar };
+        updatedState.teacherTwoCalendar.isSaved = !updatedState.teacherTwoCalendar.isSaved;
+      }
+      return updatedState;
+
     case UPDATE_PLAYER_TOKEN:
       updatedState.playerToken = action.playerToken;
       return updatedState;
-    
+
     case UPDATE_PLAYER_ID:
       updatedState.playerId = action.playerId;
       return updatedState;

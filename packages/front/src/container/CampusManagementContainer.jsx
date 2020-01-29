@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from "react-router-dom";
 import {
-    Container, Row, Col, Button,
+    Container, Row, Col,
 } from 'reactstrap';
 
 class CampusManagementComponent extends Component {
@@ -21,24 +18,5 @@ class CampusManagementComponent extends Component {
         );
     }
 }
-
-// const mapStateToProps = (state) => ({
-//     playerId: state.playerId,
-//     playerBuildings: state.playerBuildings,
-//   });
-
-//   const mapDispatchToProps = {
-//     addBuilding,
-//     updateIndicators,
-//   };
-
-//   const BuildingsContainer = connect(mapStateToProps, mapDispatchToProps)(BuildingsComponent);
-
-//   BuildingsComponent.propTypes = {
-//     playerId: PropTypes.number.isRequired,
-//     playerBuildings: PropTypes.array.isRequired,
-//     addBuilding: PropTypes.func.isRequired,
-//     updateIndicators: PropTypes.func.isRequired,
-//   };
 
 export default CampusManagementComponent;

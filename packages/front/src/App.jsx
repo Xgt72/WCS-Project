@@ -9,15 +9,19 @@ import BuildingsContainer from './container/BuildingsContainer';
 import PlayerMenuComponent from './container/PlayerMenu';
 import CampusManagementComponent from "./container/CampusManagementContainer";
 import CampusManagersScheduleContainer from "./container/CampusManagersScheduleContainer";
-import TrainersComponent from "./container/TrainersContainer";
+import TeachersOfficeContainer from "./container/TeachersOfficeContainer";
+import TeachersScheduleContainer from "./container/TeachersScheduleContainer";
 import CampusManagersOfficeContainer from './container/CampusManagersOfficeContainer';
 import PlayerLoginContainer from "./container/PlayerLoginContainer";
+import RegisterPlayerContainer from "./container/RegisterPlayerContainer"
+
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
 
 class AppComponent extends Component {
 
   componentDidMount() {
     const { initActivitiesTemplate } = this.props;
-    fetch("/getAllActivities")
+    fetch(SERVER_ADDRESS + "/getAllActivities")
       .then(res => res.json())
       .then(data => {
         let activities = data.length > 12 ? data.splice(0, 12) : data;
@@ -41,13 +45,17 @@ class AppComponent extends Component {
           <Route exact path="/campusManagersOffice">
             {isLogged ? <CampusManagersOfficeContainer /> : <Redirect to="/" />}
           </Route>
-          <Route exact path="/campusManagers">
+          <Route exact path="/campusManagerSchedule">
             {isLogged ? <CampusManagersScheduleContainer /> : <Redirect to="/" />}
           </Route>
-          <Route exact path="/trainers">
-            {isLogged ? <TrainersComponent /> : <Redirect to="/" />}
+          <Route exact path="/teachersOffice">
+            {isLogged ? <TeachersOfficeContainer /> : <Redirect to="/" />}
+          </Route>
+          <Route exact path="/teacherSchedule">
+            {isLogged ? <TeachersScheduleContainer /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/playerLogin" component={PlayerLoginContainer} />
+          <Route exact path="/playerRegister" component={RegisterPlayerContainer} />
         </Switch>
       </div>
     );

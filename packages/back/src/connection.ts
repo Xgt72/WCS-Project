@@ -1,18 +1,35 @@
 import "reflect-metadata";
 import { createConnection, Connection } from "typeorm";
 
+require('dotenv').config();
+
 let singleConnection: Connection = null;
 let toggle: boolean = false;
 
 const config: any = {
-    "dev": null,
+    "dev": {
+        "type": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "username": process.env.PROD_USERNAME,
+        "password": process.env.PROD_PASSWORD,
+        "database": process.env.PROD_DATABASE,
+        "synchronize": true,
+        "logging": false,
+        "entities": [
+           "dist/entities/*.js"
+        ],
+        "cli": {
+           "entitiesDir": ["dist/entities"]
+        }
+     },
     "test": {
         "type": "mysql",
         "host": "localhost",
         "port": 3306,
-        "username": "root",
-        "password": "Xgt72@web-dev!",
-        "database": "wcs_game_test",
+        "username": process.env.TEST_USERNAME,
+        "password": process.env.TEST_PASSWORD,
+        "database": process.env.TEST_DATABASE,
         "synchronize": true,
         "logging": false,
         "entities": [
@@ -35,7 +52,7 @@ export async function getSingletonConnection(mode: string = "dev") {
     let options: any = (config[mode] != undefined) ? config[mode] : null;
 
     console.log("*************** " + mode + " mode **********************");
-    console.log("try to connect to DB with options: ", options);
+    // console.log("try to connect to DB with options: ", options);
 
     return await createConnection(options).then(
         connection => {

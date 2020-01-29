@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
-import { updateCampusManagersOffice, displayHireCampusManager, campusManagerIdCalendarToDisplay } from '../redux/actions/actions';
+import { updateTeachersOffice, displayHireTeacher, teacherIdCalendarToDisplay } from '../redux/actions/actions';
 import {
     Container,
     Row,
@@ -13,16 +13,16 @@ import {
     CardTitle,
     Button,
 } from 'reactstrap';
-import HireCampusManagerContainer from "../container/HireCampusManagerContainer";
 import PlayerIndicatorsContainer from "../container/PlayerIndicatorsContainer";
+import HireTeacherContainer from "../container/HireTeacherContainer";
 
 const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
 
-class CampusManagersOfficeComponent extends Component {
+class TeachersOfficeComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            hireCampusManagerDisplay: {
+            hireTeacherDisplay: {
                 opacity: "0",
                 zIndex: "-100",
             }
@@ -30,8 +30,8 @@ class CampusManagersOfficeComponent extends Component {
     }
 
     componentDidMount() {
-        const { playerId, updateCampusManagersOffice, playerToken } = this.props;
-        fetch(`${SERVER_ADDRESS}/getOnePlayerCampusManagers/${playerId}`, {
+        const { playerId, updateTeachersOffice, playerToken } = this.props;
+        fetch(`${SERVER_ADDRESS}/getOnePlayerTeachers/${playerId}`, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ class CampusManagersOfficeComponent extends Component {
             })
             .then(data => {
                 if (data.length > 0) {
-                    updateCampusManagersOffice(data);
+                    updateTeachersOffice(data);
                 }
             })
             .catch(
@@ -56,10 +56,10 @@ class CampusManagersOfficeComponent extends Component {
             );
     }
 
-    hireCampusManager = (e) => {
-        this.props.displayHireCampusManager(true);
+    hireTeacher = (e) => {
+        this.props.displayHireTeacher(true);
         this.setState({
-            hireCampusManagerDisplay: {
+            hireTeacherDisplay: {
                 opacity: "1",
                 zIndex: "100",
             },
@@ -67,39 +67,39 @@ class CampusManagersOfficeComponent extends Component {
     };
 
     render() {
-        const { opacity, zIndex } = this.state.hireCampusManagerDisplay;
-        const { campusManagersOffice, hireCampusManagerIsDisplay, campusManagerIdCalendarToDisplay } = this.props;
+        const { opacity, zIndex } = this.state.hireTeacherDisplay;
+        const { teachersOffice, hireTeacherIsDisplay, teacherIdCalendarToDisplay } = this.props;
 
         return (
             <>
                 <Container>
                     <PlayerIndicatorsContainer />
                     <Row>
-                        <h2 className="w-100">Campus Managers Office</h2>
+                        <h2 className="w-100">Trainers Office</h2>
                     </Row>
                     {
-                        campusManagersOffice.length < 2 &&
+                        teachersOffice.length < 2 &&
                         <Row className="justify-content-center">
                             <Button
                                 type="button"
                                 className="genericButton"
-                                onClick={this.hireCampusManager}
+                                onClick={this.hireTeacher}
                             >
-                                Hire a new campus manager
+                                Hire a new trainer
                             </Button>
                         </Row>
                     }
                     {
-                        campusManagersOffice.length > 0 &&
+                        teachersOffice.length > 0 &&
                         <Row className="no-gutters justify-content-around">
                             {
-                                campusManagersOffice.map(campusManager =>
-                                    <Col key={campusManager.id} className="campusManager m-3" xs="8" md="5" lg="3">
+                                teachersOffice.map(teacher =>
+                                    <Col key={teacher.id} className="teacher m-3" xs="8" md="5" lg="3">
                                         <Card>
-                                            <CardImg top width="20%" src="https://via.placeholder.com/300" alt={campusManager.name} />
+                                            <CardImg top width="20%" src="https://via.placeholder.com/300" alt={teacher.name} />
                                             <CardBody className="d-flex flex-column align-items-center">
-                                                <CardTitle className="text-center">{campusManager.name}</CardTitle>
-                                                <Link to="/campusManagerSchedule" onClick={() => campusManagerIdCalendarToDisplay(campusManager.id)}>
+                                                <CardTitle className="text-center">{teacher.name}</CardTitle>
+                                                <Link to="/teacherSchedule" onClick={() => teacherIdCalendarToDisplay(teacher.id)}>
                                                     <Button
                                                         className="genericButton d-block"
                                                     >
@@ -114,8 +114,8 @@ class CampusManagersOfficeComponent extends Component {
                         </Row>
                     }
                 </Container>
-                {hireCampusManagerIsDisplay &&
-                    <HireCampusManagerContainer
+                {hireTeacherIsDisplay &&
+                    <HireTeacherContainer
                         opacity={opacity}
                         zIndex={zIndex}
                     />
@@ -127,27 +127,27 @@ class CampusManagersOfficeComponent extends Component {
 
 const mapStateToProps = (state) => ({
     playerId: state.playerId,
-    campusManagersOffice: state.campusManagersOffice,
-    hireCampusManagerIsDisplay: state.hireCampusManagerIsDisplay,
+    teachersOffice: state.teachersOffice,
+    hireTeacherIsDisplay: state.hireTeacherIsDisplay,
     playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
-    updateCampusManagersOffice,
-    displayHireCampusManager,
-    campusManagerIdCalendarToDisplay,
+    updateTeachersOffice,
+    displayHireTeacher,
+    teacherIdCalendarToDisplay,
 };
 
-const CampusManagersOfficeContainer = connect(mapStateToProps, mapDispatchToProps)(CampusManagersOfficeComponent);
+const TeachersOfficeContainer = connect(mapStateToProps, mapDispatchToProps)(TeachersOfficeComponent);
 
-CampusManagersOfficeComponent.propTypes = {
+TeachersOfficeComponent.propTypes = {
     playerId: PropTypes.number.isRequired,
-    campusManagersOffice: PropTypes.array.isRequired,
-    hireCampusManagerIsDisplay: PropTypes.bool.isRequired,
+    teachersOffice: PropTypes.array.isRequired,
+    hireTeacherIsDisplay: PropTypes.bool.isRequired,
     playerToken: PropTypes.string.isRequired,
-    updateCampusManagersOffice: PropTypes.func.isRequired,
-    displayHireCampusManager: PropTypes.func.isRequired,
-    campusManagerIdCalendarToDisplay: PropTypes.func.isRequired,
+    updateTeachersOffice: PropTypes.func.isRequired,
+    displayHireTeacher: PropTypes.func.isRequired,
+    teacherIdCalendarToDisplay: PropTypes.func.isRequired,
 };
 
-export default CampusManagersOfficeContainer;
+export default TeachersOfficeContainer;
