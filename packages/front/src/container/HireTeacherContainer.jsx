@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import "./hireCampusManager.css";
+import "./hireTeacher.css";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { displayHireCampusManager, updateCampusManagersOffice, updateIndicators } from '../redux/actions/actions';
+import { displayHireTeacher, updateTeachersOffice, updateIndicators } from '../redux/actions/actions';
 import {
     Container,
     Row,
@@ -14,29 +14,29 @@ import {
     Button,
 } from "reactstrap";
 
-class HireCampusManagerComponent extends Component {
+class HireTeacherComponent extends Component {
 
-    async hireCampusManager(name) {
+    async hireTeacher(name) {
         const {
             playerId,
-            campusManagersOffice,
-            displayHireCampusManager,
-            updateCampusManagersOffice,
+            teachersOffice,
+            displayHireTeacher,
+            updateTeachersOffice,
             updateIndicators,
             playerToken
         } = this.props;
-        const campusManager = {
+        const teacher = {
             player_id: playerId,
-            campusManagerName: name
+            teacherName: name
         }
-        await fetch("/hireCampusManager",
+        await fetch("/hireTeacher",
             {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
                     'auth-token': `${playerToken}`,
                 }),
-                body: JSON.stringify(campusManager),
+                body: JSON.stringify(teacher),
             })
             .then((res) => {
                 if (res.ok) {
@@ -47,9 +47,9 @@ class HireCampusManagerComponent extends Component {
             .then(
                 (res) => {
                     if (typeof res === 'object') {
-                        updateCampusManagersOffice([...campusManagersOffice, res.campusManager]);
-                        alert("you hired this campus manager");
-                        displayHireCampusManager(false);
+                        updateTeachersOffice([...teachersOffice, res.teacher]);
+                        alert("you hired this trainer");
+                        displayHireTeacher(false);
                     } else {
                         alert(res);
                     }
@@ -91,62 +91,62 @@ class HireCampusManagerComponent extends Component {
     render() {
         const { opacity, zIndex } = this.props;
         return (
-            <div className="hireCampusManager" style={{ opacity: opacity, zIndex: zIndex }}>
+            <div className="hireTeacher" style={{ opacity: opacity, zIndex: zIndex }}>
                 <Container>
                     <Row className="justify-content-center align-items-center">
                         <Col className="activitiesChoice">
-                            <h3>Choose the campus manager you want to hire</h3>
+                            <h3>Choose the trainer you want to hire</h3>
                             <Row className="no-gutters justify-content-around">
-                                <Col className="campusManager m-3" xs="8" md="5" lg="3">
+                                <Col className="teacher m-3" xs="8" md="5" lg="3">
                                     <Card>
-                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Marylou" />
+                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Elisabeth" />
                                         <CardBody className="d-flex flex-column align-items-center">
-                                            <CardTitle className="text-center">Marylou</CardTitle>
+                                            <CardTitle className="text-center">Elisabeth</CardTitle>
                                             <Button
                                                 className="genericButton d-block"
-                                                onClick={() => { this.hireCampusManager("Marylou") }}
+                                                onClick={() => { this.hireTeacher("Elisabeth") }}
                                             >
                                                 Hire
                                             </Button>
                                         </CardBody>
                                     </Card>
                                 </Col>
-                                <Col className="campusManager m-3" xs="8" md="5" lg="3">
+                                <Col className="teacher m-3" xs="8" md="5" lg="3">
                                     <Card>
-                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Maxime" />
+                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Nicolas" />
                                         <CardBody className="d-flex flex-column align-items-center">
-                                            <CardTitle className="text-center">Maxime</CardTitle>
+                                            <CardTitle className="text-center">Nicolas</CardTitle>
                                             <Button
                                                 className="genericButton d-block"
-                                                onClick={() => { this.hireCampusManager("Maxime") }}
+                                                onClick={() => { this.hireTeacher("Nicolas") }}
                                             >
                                                 Hire
                                             </Button>
                                         </CardBody>
                                     </Card>
                                 </Col>
-                                <Col className="campusManager m-3" xs="8" md="5" lg="3">
+                                <Col className="teacher m-3" xs="8" md="5" lg="3">
                                     <Card>
-                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Clément" />
+                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Basile" />
                                         <CardBody className="d-flex flex-column align-items-center">
-                                            <CardTitle className="text-center">Clément</CardTitle>
+                                            <CardTitle className="text-center">Basile</CardTitle>
                                             <Button
                                                 className="genericButton d-block"
-                                                onClick={() => { this.hireCampusManager("Clément") }}
+                                                onClick={() => { this.hireTeacher("Basile") }}
                                             >
                                                 Hire
                                             </Button>
                                         </CardBody>
                                     </Card>
                                 </Col>
-                                <Col className="campusManager m-3" xs="8" md="5" lg="3">
+                                <Col className="teacher m-3" xs="8" md="5" lg="3">
                                     <Card>
-                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Laëticia" />
+                                        <CardImg top width="20%" src="https://via.placeholder.com/300" alt="Jenny" />
                                         <CardBody className="d-flex flex-column align-items-center">
-                                            <CardTitle className="text-center">Laëticia</CardTitle>
+                                            <CardTitle className="text-center">Jenny</CardTitle>
                                             <Button
                                                 className="genericButton d-block"
-                                                onClick={() => { this.hireCampusManager("Laëticia") }}
+                                                onClick={() => { this.hireTeacher("Jenny") }}
                                             >
                                                 Hire
                                             </Button>
@@ -165,25 +165,25 @@ class HireCampusManagerComponent extends Component {
 
 const mapStateToProps = (state) => ({
     playerId: state.playerId,
-    campusManagersOffice: state.campusManagersOffice,
+    teachersOffice: state.teachersOffice,
     playerToken: state.playerToken,
 });
 
 const mapDispatchToProps = {
-    displayHireCampusManager,
-    updateCampusManagersOffice,
+    displayHireTeacher,
+    updateTeachersOffice,
     updateIndicators,
 };
 
-const HireCampusManagerContainer = connect(mapStateToProps, mapDispatchToProps)(HireCampusManagerComponent);
+const HireTeacherContainer = connect(mapStateToProps, mapDispatchToProps)(HireTeacherComponent);
 
-HireCampusManagerComponent.propTypes = {
+HireTeacherComponent.propTypes = {
     playerId: PropTypes.number.isRequired,
-    campusManagersOffice: PropTypes.array.isRequired,
+    teachersOffice: PropTypes.array.isRequired,
     playerToken: PropTypes.string.isRequired,
-    displayHireCampusManager: PropTypes.func.isRequired,
-    updateCampusManagersOffice: PropTypes.func.isRequired,
+    displayHireTeacher: PropTypes.func.isRequired,
+    updateTeachersOffice: PropTypes.func.isRequired,
     updateIndicators: PropTypes.func.isRequired,
 };
 
-export default HireCampusManagerContainer;
+export default HireTeacherContainer;

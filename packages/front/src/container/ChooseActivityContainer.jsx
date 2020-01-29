@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import "./chooseActivity.css";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { displayChooseActivities, addActivityInCMC, removeActivityInCMC } from '../redux/actions/actions';
+import { displayChooseActivities, addActivityInCMC, removeActivityInCMC, addActivityInTC, removeActivityInTC } from '../redux/actions/actions';
 import { Container, Row, Col } from "reactstrap";
 
 class ChooseActivityComponent extends Component {
 
     validateActivity = (e) => {
-        const { addActivityInCMC, campusManagerIdToDisplaySchedule, playerToken } = this.props;
+        const { addActivityInCMC, campusManagerIdToDisplaySchedule, playerToken, campusManagerOrTeacher, periodSelected, addActivityInTC, teacherIdToDisplaySchedule } = this.props;
         let activityId = e.currentTarget.id;
         let activityDay = this.props.periodSelected.offsetParent.childNodes[0].childNodes[0].innerText;
         switch (activityDay) {
@@ -30,15 +30,19 @@ class ChooseActivityComponent extends Component {
             default:
                 break;
         }
-        let activityPeriod = this.props.periodSelected.classList[1];
+        let activityPeriod = periodSelected.classList[1];
 
         let activity = {
-            campus_manager_id: this.props.campusManagerIdToDisplaySchedule,
             activity_id: activityId,
             morning: activityPeriod === "morning" ? true : false,
             afternoon: activityPeriod === "afternoon" ? true : false,
             day: activityDay
         };
+        if (campusManagerOrTeacher === "campusManager") {
+            activity.campus_manager_id = campusManagerIdToDisplaySchedule;
+        } else {
+            activity.teacher_id = teacherIdToDisplaySchedule;
+        }
 
         fetch(`/getActivityById/${activityId}`,
             {
@@ -54,15 +58,20 @@ class ChooseActivityComponent extends Component {
                 this.props.periodSelected.style.backgroundColor = `#${data.color}`;
                 this.props.periodSelected.childNodes[0].style.color = "black";
 
-                // update the state of campusManagerPlanning, in the store
-                addActivityInCMC(activity, campusManagerIdToDisplaySchedule);
+                if (campusManagerOrTeacher === "campusManager") {
+                    // update the state of campusManagerPlanning, in the store
+                    addActivityInCMC(activity, campusManagerIdToDisplaySchedule);
+                } else {
+                    // update the state of teacherPlanning, in the store
+                    addActivityInTC(activity, teacherIdToDisplaySchedule);
+                }
 
                 this.props.displayChooseActivities(false);
             });
     }
 
     removeActivity = () => {
-        const { removeActivityInCMC, campusManagerIdToDisplaySchedule } = this.props;
+        const { removeActivityInCMC, campusManagerIdToDisplaySchedule, campusManagerOrTeacher, removeActivityInTC, teacherIdToDisplaySchedule } = this.props;
         if (this.props.periodSelected.innerHTML !== "<p>Add activity</p>") {
             let activityDay = this.props.periodSelected.offsetParent.childNodes[0].childNodes[0].innerText;
             switch (activityDay) {
@@ -92,9 +101,13 @@ class ChooseActivityComponent extends Component {
                 day: activityDay
             };
 
-            // remove activity into the state of campusManagerPlanning, in the store
-            removeActivityInCMC(activityToRemove, campusManagerIdToDisplaySchedule);
-
+            if (campusManagerOrTeacher === "campusManager") {
+                // remove activity into the state of campusManagerPlanning, in the store
+                removeActivityInCMC(activityToRemove, campusManagerIdToDisplaySchedule);
+            } else {
+                // remove activity into the state of teacherPlanning, in the store
+                removeActivityInTC(activityToRemove, teacherIdToDisplaySchedule);
+            }
             this.props.periodSelected.innerHTML = "<p>Add activity</>";
             this.props.periodSelected.style.backgroundColor = "rgba(244, 113, 115, 0.3)";
             this.props.periodSelected.childNodes[0].style.color = "grey";
@@ -147,12 +160,15 @@ class ChooseActivityComponent extends Component {
 const mapStateToProps = (state) => ({
     campusManagerIdToDisplaySchedule: state.campusManagerIdToDisplaySchedule,
     playerToken: state.playerToken,
+    teacherIdToDisplaySchedule: state.teacherIdToDisplaySchedule,
 });
 
 const mapDispatchToProps = {
     displayChooseActivities,
     addActivityInCMC,
     removeActivityInCMC,
+    addActivityInTC,
+    removeActivityInTC,
 };
 
 const ChooseActivityContainer = connect(mapStateToProps, mapDispatchToProps)(ChooseActivityComponent);
@@ -163,6 +179,9 @@ ChooseActivityComponent.propTypes = {
     removeActivityInCMC: PropTypes.func.isRequired,
     campusManagerIdToDisplaySchedule: PropTypes.number.isRequired,
     playerToken: PropTypes.string.isRequired,
+    addActivityInTC: PropTypes.func.isRequired,
+    removeActivityInTC: PropTypes.func.isRequired,
+    teacherIdToDisplaySchedule: PropTypes.number.isRequired,
 };
 
 export default ChooseActivityContainer;
