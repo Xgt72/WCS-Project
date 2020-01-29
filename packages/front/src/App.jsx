@@ -15,11 +15,13 @@ import CampusManagersOfficeContainer from './container/CampusManagersOfficeConta
 import PlayerLoginContainer from "./container/PlayerLoginContainer";
 import RegisterPlayerContainer from "./container/RegisterPlayerContainer"
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
+
 class AppComponent extends Component {
 
   componentDidMount() {
     const { initActivitiesTemplate } = this.props;
-    fetch("/getAllActivities")
+    fetch(SERVER_ADDRESS + "/getAllActivities")
       .then(res => res.json())
       .then(data => {
         let activities = data.length > 12 ? data.splice(0, 12) : data;

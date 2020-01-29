@@ -11,6 +11,8 @@ import DayHours from "../components/DayHours";
 import ChooseActivityContainer from './ChooseActivityContainer';
 import PlayerIndicatorsContainer from "./PlayerIndicatorsContainer";
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
+
 class TeachersScheduleComponent extends Component {
     constructor(props) {
         super(props);
@@ -49,7 +51,7 @@ class TeachersScheduleComponent extends Component {
     componentDidMount() {
         const { playerToken } = this.props;
         this.organizeCalendar();
-        fetch(`/getPlayerTeacherById/${this.props.teacherIdToDisplaySchedule}`,
+        fetch(`${SERVER_ADDRESS}/getPlayerTeacherById/${this.props.teacherIdToDisplaySchedule}`,
             {
                 method: 'GET',
                 headers: new Headers({
@@ -100,7 +102,7 @@ class TeachersScheduleComponent extends Component {
             teacherTwoCalendar.calendar;
 
         if (updatedCalendar.length > 0) {
-            fetch(`/getTeacherActivitiesCalendarByTeacherId/${teacherIdToDisplaySchedule}`,
+            fetch(`${SERVER_ADDRESS}/getTeacherActivitiesCalendarByTeacherId/${teacherIdToDisplaySchedule}`,
                 {
                     method: 'GET',
                     headers: new Headers({
@@ -118,7 +120,7 @@ class TeachersScheduleComponent extends Component {
                     (res) => {
                         if (res.length > 0) {
                             for (let i = 0; i < res.length; i++) {
-                                fetch(`/deleteTeacherActivityCalendar/${res[i].id}`,
+                                fetch(`${SERVER_ADDRESS}/deleteTeacherActivityCalendar/${res[i].id}`,
                                     {
                                         method: 'DELETE',
                                         headers: new Headers({
@@ -144,7 +146,7 @@ class TeachersScheduleComponent extends Component {
                             activities: updatedCalendar
                         };
 
-                        fetch("/addActivitiesInTeacherCalendar",
+                        fetch(`${SERVER_ADDRESS}/addActivitiesInTeacherCalendar`,
                             {
                                 method: 'POST',
                                 headers: new Headers({
