@@ -26,7 +26,7 @@ class SceneManager {
 
   buildScene() {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#000');
+    scene.background = new THREE.Color('#f47173');
 
     return scene;
   }
