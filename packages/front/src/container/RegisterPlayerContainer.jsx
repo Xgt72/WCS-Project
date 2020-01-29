@@ -13,6 +13,7 @@ import {
 import { Redirect, Link } from "react-router-dom";
 import { updatePlayerId } from '../redux/actions/actions';
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
 
 class RegisterPlayerComponent extends Component {
     constructor(props) {
@@ -37,7 +38,7 @@ class RegisterPlayerComponent extends Component {
         const { updatePlayerId } = this.props;
         if (username !== "" && email !== "" && password !== "" && validPassword !== "") {
             if (password === validPassword) {
-                fetch("/api/createPlayer/", {
+                fetch(`${SERVER_ADDRESS}/api/createPlayer/`, {
                     method: 'POST',
                     headers: new Headers({
                         'Content-Type': 'application/json',

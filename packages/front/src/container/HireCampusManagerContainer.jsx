@@ -14,6 +14,8 @@ import {
     Button,
 } from "reactstrap";
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
+
 class HireCampusManagerComponent extends Component {
 
     async hireCampusManager(name) {
@@ -29,7 +31,7 @@ class HireCampusManagerComponent extends Component {
             player_id: playerId,
             campusManagerName: name
         }
-        await fetch("/hireCampusManager",
+        await fetch(`${SERVER_ADDRESS}/hireCampusManager`,
             {
                 method: 'POST',
                 headers: new Headers({
@@ -61,7 +63,7 @@ class HireCampusManagerComponent extends Component {
                 },
             );
 
-        await fetch(`/getIndicatorsByPlayerId/${playerId}`,
+        await fetch(`${SERVER_ADDRESS}/getIndicatorsByPlayerId/${playerId}`,
             {
                 method: 'GET',
                 headers: new Headers({

@@ -13,6 +13,8 @@ import {
     Input
 } from 'reactstrap';
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
+
 class PlayerLoginComponent extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +34,7 @@ class PlayerLoginComponent extends Component {
         const { email, password } = this.state;
         const { updatePlayerToken, updatePlayerId, updateIsLogged } = this.props;
         if (email !== "" && password !== "") {
-            fetch("/api/player/login", {
+            fetch(`${SERVER_ADDRESS}/api/player/login`, {
                 method: 'POST',
                 headers: new Headers({
                     'Content-Type': 'application/json',
