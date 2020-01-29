@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { displayChooseActivities, addActivityInCMC, removeActivityInCMC, addActivityInTC, removeActivityInTC } from '../redux/actions/actions';
 import { Container, Row, Col } from "reactstrap";
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
+
 class ChooseActivityComponent extends Component {
 
     validateActivity = (e) => {
@@ -44,7 +46,7 @@ class ChooseActivityComponent extends Component {
             activity.teacher_id = teacherIdToDisplaySchedule;
         }
 
-        fetch(`/getActivityById/${activityId}`,
+        fetch(`${SERVER_ADDRESS}/getActivityById/${activityId}`,
             {
                 method: 'GET',
                 headers: new Headers({

@@ -11,6 +11,8 @@ import DayHours from "../components/DayHours";
 import ChooseActivityContainer from './ChooseActivityContainer';
 import PlayerIndicatorsContainer from "./PlayerIndicatorsContainer";
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
+
 class CampusManagersScheduleComponent extends Component {
     constructor(props) {
         super(props);
@@ -49,7 +51,7 @@ class CampusManagersScheduleComponent extends Component {
     componentDidMount() {
         const { playerToken } = this.props;
         this.organizeCalendar();
-        fetch(`/getPlayerCampusManagerById/${this.props.campusManagerIdToDisplaySchedule}`,
+        fetch(`${SERVER_ADDRESS}/getPlayerCampusManagerById/${this.props.campusManagerIdToDisplaySchedule}`,
             {
                 method: 'GET',
                 headers: new Headers({
@@ -100,7 +102,7 @@ class CampusManagersScheduleComponent extends Component {
             campusManagerTwoCalendar.calendar;
 
         if (updatedCalendar.length > 0) {
-            fetch(`/getCampusManagerActivitiesCalendarByCampusManagerId/${campusManagerIdToDisplaySchedule}`,
+            fetch(`${SERVER_ADDRESS}/getCampusManagerActivitiesCalendarByCampusManagerId/${campusManagerIdToDisplaySchedule}`,
                 {
                     method: 'GET',
                     headers: new Headers({
@@ -118,7 +120,7 @@ class CampusManagersScheduleComponent extends Component {
                     (res) => {
                         if (res.length > 0) {
                             for (let i = 0; i < res.length; i++) {
-                                fetch(`/deleteCampusManagerActivityCalendar/${res[i].id}`,
+                                fetch(`${SERVER_ADDRESS}/deleteCampusManagerActivityCalendar/${res[i].id}`,
                                     {
                                         method: 'DELETE',
                                         headers: new Headers({
@@ -144,7 +146,7 @@ class CampusManagersScheduleComponent extends Component {
                             activities: updatedCalendar
                         };
 
-                        fetch("/addActivitiesInCampusManagerCalendar",
+                        fetch(`${SERVER_ADDRESS}/addActivitiesInCampusManagerCalendar`,
                             {
                                 method: 'POST',
                                 headers: new Headers({

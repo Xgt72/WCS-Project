@@ -7,6 +7,7 @@ import {
 import { addBuilding, updateIndicators, initBuildings } from '../redux/actions/actions';
 import PlayerIndicatorsContainer from './PlayerIndicatorsContainer';
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
 
 class BuildingsComponent extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class BuildingsComponent extends Component {
   componentDidMount() {
     const { playerId, addBuilding, updateIndicators, playerToken } = this.props;
 
-    fetch(`/getOnePlayerBuildings/${playerId}`,
+    fetch(`${SERVER_ADDRESS}/getOnePlayerBuildings/${playerId}`,
       {
         method: 'GET',
         headers: new Headers({
@@ -45,7 +46,7 @@ class BuildingsComponent extends Component {
       );
 
 
-    fetch(`/getIndicatorsByPlayerId/${playerId}`,
+    fetch(`${SERVER_ADDRESS}/getIndicatorsByPlayerId/${playerId}`,
       {
         method: 'GET',
         headers: new Headers({
@@ -75,7 +76,7 @@ class BuildingsComponent extends Component {
   async buyBuilding(template_id) {
     const { playerId, addBuilding, updateIndicators, playerToken } = this.props;
     const buildingInfo = { player_id: playerId, building_template_id: template_id };
-    await fetch('/buyBuilding',
+    await fetch(`${SERVER_ADDRESS}/buyBuilding`,
       {
         method: 'POST',
         headers: new Headers({
@@ -105,7 +106,7 @@ class BuildingsComponent extends Component {
         },
       );
 
-    await fetch(`/getIndicatorsByPlayerId/${playerId}`,
+    await fetch(`${SERVER_ADDRESS}/getIndicatorsByPlayerId/${playerId}`,
       {
         method: 'GET',
         headers: new Headers({

@@ -16,6 +16,8 @@ import {
 import PlayerIndicatorsContainer from "../container/PlayerIndicatorsContainer";
 import HireTeacherContainer from "../container/HireTeacherContainer";
 
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
+
 class TeachersOfficeComponent extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +31,7 @@ class TeachersOfficeComponent extends Component {
 
     componentDidMount() {
         const { playerId, updateTeachersOffice, playerToken } = this.props;
-        fetch(`/getOnePlayerTeachers/${playerId}`, {
+        fetch(`${SERVER_ADDRESS}/getOnePlayerTeachers/${playerId}`, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
