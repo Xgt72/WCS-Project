@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row } from 'reactstrap';
 import { updateIndicators } from '../redux/actions/actions';
 import './playerIndicators.css';
 import Indicator from '../components/Indicator';
+
+const SERVER_ADDRESS = process.env.REACT_APP_SERVER_ADDRESS;
 
 class PlayerIndicatorsComponent extends Component {
   constructor(props) {
@@ -17,7 +19,7 @@ class PlayerIndicatorsComponent extends Component {
   componentDidMount() {
     const { playerId, playerToken } = this.props;
     // get the player name
-    fetch(`/getPlayerById/${playerId}`,
+    fetch(`${SERVER_ADDRESS}/getPlayerById/${playerId}`,
       {
         method: 'GET',
         headers: new Headers({
