@@ -17,10 +17,10 @@ const config: any = {
         "synchronize": true,
         "logging": false,
         "entities": [
-           "dist/entities/*.js"
+           __dirname+"/entities/*.js"
         ],
         "cli": {
-           "entitiesDir": ["dist/entities"]
+           "entitiesDir": [__dirname+"/entities"]
         }
      },
     "test": {
