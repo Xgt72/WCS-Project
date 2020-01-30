@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import alphaTexture from "../../assets/abstract-4431599_1920.jpg";
-import classroom from '../../assets/building-06.gltf';
+import classroom from '../../assets/building-07.gltf';
 const loader = new GLTFLoader();
 
 class SceneSubject {
@@ -33,7 +32,7 @@ class SceneSubject {
 		const angle = time * this.speed;
 
 		this.group.rotation.y = angle;
-		this.group.rotation.x = angle;
+		// this.group.rotation.x = angle;
 	}
 }
 export default SceneSubject;
