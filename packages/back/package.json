@@ -5,14 +5,14 @@
   "main": "dist/app.js",
   "scripts": {
     "lint": "npx eslint --fix *.js src test *.js",
-    "precommit": "lint-staged && yarn test",
+    "precommit": "lint-staged && pnpm test",
     "build": "npx babel src -d build",
     "start": "tsc && nodemon ./dist/app.js",
     "test": "jest --config ./test/jest.config.json --forceExit --runInBand"
   },
   "lint-staged": {
     "**/*.js": [
-      "yarn lint",
+      "pnpm lint",
       "git add"
     ]
   },
@@ -27,7 +27,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mysql": "^2.17.1",
+    "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.19",
     "typescript": "^3.6.3"
@@ -44,7 +44,7 @@
     "@types/hapi__joi": "^16.0.3",
     "@types/jest": "^24.0.18",
     "@types/jsonwebtoken": "^8.3.5",
-    "@types/node": "^12.7.8",
+    "@types/node": "^16.0.0",
     "@types/supertest": "^2.0.8",
     "eslint": "6.2.2",
     "eslint-config-airbnb-base": "^14.0.0",

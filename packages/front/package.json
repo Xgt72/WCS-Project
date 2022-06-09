@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "precommit": "lint-staged && yarn test",
+    "precommit": "lint-staged && pnpm test",
     "lolcommit": "lint-staged",
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
@@ -26,7 +26,7 @@
   },
   "lint-staged": {
     "src/**/*.js*": [
-      "yarn lint",
+      "pnpm lint",
       "git add"
     ]
   },
